@@ -6,30 +6,17 @@ head
 	meta(name='description', content='')
 	meta(name='author', content='Alexandru Olaru')
 	block stylesheets
-		link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.min.css')
+		link(rel='stylesheet', href='bootstrap/dist/css/bootstrap.min.css')
+		link(rel='stylesheet', href='font-awesome/css/font-awesome.min.css')
+		link(rel='stylesheet', href='css/style.css')
+		link(rel='stylesheet', href='css/prism.css')
 	block title
 		title #{title} - ALXOLR.COM
 body
-	block nav
-		nav.navbar.navbar-default
-			.container-fluid
-				.navbar-header
-					button.navbar-toggle.collapsed(data-toggle="collapse" data-target="#bs-alxolr-navbar-collapse" area-expanded="false")
-						span.sr-only Toggle navigation
-						span.icon-bar
-						span.icon-bar
-						span.icon-bar
-					a.navbar-brand(href="/") ALXOLR.COM
-				#bs-alxolr-navbar-collapse.collapse.navbar-collapse
-					ul.nav.navbar-nav
-						li
-							a(href='/articles') Articles
-						li
-							a(href='/info') About
-						li
-							a(href='/connect') Connect
+	include ./partials/nav.jade
 	block content
-	block footer
+	include ./partials/footer.jade
 	block javascripts
 		script(src='jquery/dist/jquery.min.js')
 		script(src='bootstrap/dist/js/bootstrap.min.js')
+		script(src='js/prism.js')

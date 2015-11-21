@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function (req, res, next) {
-	res.render('homepage', {title: 'Homepage'})
+	res.render('homepage', {title: 'Homepage', authorised: true})
 });
 
 router.get('/contact', function (req, res) {

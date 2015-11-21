@@ -1,0 +1,47 @@
+-var user = {name: "Alexander"}
+block nav
+	nav.navbar.navbar-default
+		.container-fluid
+			.navbar-header
+				button.navbar-toggle.collapsed(data-toggle="collapse" data-target="#bs-alxolr-navbar-collapse" area-expanded="false")
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href="/") ALXOLR.COM
+			#bs-alxolr-navbar-collapse.collapse.navbar-collapse
+				ul.nav.navbar-nav
+					li
+						a(href='/articles') Articles
+					li
+						a(href='/info') About
+					li
+						a(href='/connect') Connect
+
+				if authorised
+					ul.nav.navbar-nav.navbar-right
+						li.dropdown
+							a.dropdown-toggle(href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+								span #{user.name} &nbsp;
+								i.fa.fa-user
+								span.caret
+							ul.dropdown-menu
+								li
+									a(href="/user/settings")
+										i.fa.fa-cogs
+										span &nbsp; Settings
+								li.divider(role="separator")
+								li
+									a(href="/logout")
+										i.fa.fa-sign-out
+										span &nbsp; Logout
+
+				else
+					.navbar-right
+						.btn-group(role="group")
+							a.btn.navbar-btn.btn-md.btn-default(href="/login")
+								i.fa.fa-sign-in
+								span &nbsp;Sign in
+							a.btn.navbar-btn.btn-md.btn-success(href="/register")
+								i.fa.fa-user-plus
+								span &nbsp;Register
