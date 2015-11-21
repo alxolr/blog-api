@@ -1,0 +1,31 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "Technical blog",
+  "main": "app.js",
+  "dependencies": {
+    "jade": "^1.11.0",
+    "mongoose": "^4.2.5",
+    "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://alxolr@bitbucket.org/alxolr/blog.git"
+  },
+  "keywords": [
+    "blog",
+    "nodejs",
+    "mongoose",
+    "mongo"
+  ],
+  "author": "Alexandru Olaru",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/alxolr/blog#readme"
+}
