@@ -9,9 +9,11 @@ body {
   margin-bottom: 60px;
 }
 .footer {
+  border: 1px solid lightgray;
   position: absolute;
   bottom: 0;
   width: 100%;
+  padding: 20px 0px 20px 0px;
   /* Set the fixed height of the footer here */
   /*height: 60px; */
   background-color: #f5f5f5;

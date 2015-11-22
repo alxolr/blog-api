@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function (req, res, next) {
-	res.render('homepage', {title: 'Homepage', authorised: true})
+	res.render('index', {title: 'Homepage', authorised: false});
 });
 
-router.get('/contact', function (req, res) {
-	res.render('contact', {title: 'Contact'});
+router.get('/articles', function (req, res) {
+	res.render('articles', {title: 'Articles'});
 });
 
 module.exports = router;
