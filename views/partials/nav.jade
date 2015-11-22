@@ -7,13 +7,19 @@ block nav
 					span.icon-bar
 					span.icon-bar
 					span.icon-bar
-				a.navbar-brand(href="/") ALXOLR.COM
+				a.navbar-brand(href="/")
+					i.fa.fa-home
+					span &nbsp;ALXOLR.COM
 			#bs-alxolr-navbar-collapse.collapse.navbar-collapse
 				ul.nav.navbar-nav
 					li(class=(title == 'Articles' ? 'active' : ''))
-						a(href='/articles') Articles
+						a(href='/articles')
+							i.fa.fa-files-o
+							span &nbsp;Articles
 					li
-						a(href='/info') About
+						a(href='/about')
+							i.fa.fa-info
+							span &nbsp;About me
 
 				if user
 					ul.nav.navbar-nav.navbar-right
