@@ -4,9 +4,12 @@
   "description": "Technical blog",
   "main": "app.js",
   "dependencies": {
+    "express": "^4.13.3",
     "jade": "^1.11.0",
-    "mongoose": "^4.2.5",
-    "express": "^4.13.3"
+    "mongoose": "^4.2.7",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^3.1.0"
   },
   "scripts": {
     "start": "node app.js",
