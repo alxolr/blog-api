@@ -1,53 +1,37 @@
-var express       = require('express');
-var User          = require('../models/users');
-var passport      = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var router        = express.Router();
+function isLoggedIn(req, res, next) {
+	if (req.isAuthenticated()) return next();
 
-passport.serializeUser(function(user, done) {
-	done(null, user.id);
-});
+	res.redirect('/login');
+}
 
-passport.deserializeUser(function(id, done) {
-	User.findById(id, function(err, user) {
-		done(err, user);
+module.exports = function(app, passport) {
+
+	app.get('/', function(req, res) {
+		res.render('index', {title: 'Homepage', user: req.user});
 	});
-});
 
-passport.use(new LocalStrategy({
-	usernameField: 'email',
-	passwordField: 'password',
-	passReqToCallback: true
-}, function(req, email, password, done) {
-	process.nextTick(function() {
-		User.findOne({'email': email}, function(err, user) {
-			if (err) return done(err);
-
-			if (!user) {
-				return done(null, false, req.flash('loginMessage', 'No user found.'));
-			}
-
-			if (!user.validPassword(password)) {
-				return done(null, false, req.flash('loginMessage', 'Invalid password.'));
-			}
-
-			return done(null, user);
-		});
+	app.get('/login', function(req, res) {
+		res.render('login', {title: 'Login page', message: req.flash('loginMessage')});
 	});
-}));
 
-router.get('/', function (req, res) {
-	res.render('index', {title: 'Homepage'});
-});
+	app.post('/login', passport.authenticate('login', {
+		successRedirect: '/',
+		failureRedirect: '/login',
+		failureFlash: true
+	}));
 
-router.get('/login', function (req, res) {
-	res.render('login', {title: 'Login', message: req.flash('loginMessage')});
-});
+	app.get('/register', function(req, res) {
+		res.render('register', {title: 'Register a new account', message: req.flash('signupMessage')});
+	});
 
-router.post('/login', passport.authenticate('local', {
-	successRedirect: '/',
-	failureRedirect: '/login',
-	failureFlash: true
-}));
+	app.post('/register', passport.authenticate('register', {
+		successRedirect: '/',
+		failureRedirect: '/register',
+		failureFlash: true
+	}));
 
-module.exports = router;
+	app.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
+	});
+};

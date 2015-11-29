@@ -13,11 +13,6 @@ head
 		title #{title} - ALXOLR.COM
 body
 	include ./partials/nav.jade
-	block flash
-		.container
-			.row
-				.col-sm-6
-					.well #{message}
 	block content
 	include ./partials/footer.jade
 	block javascripts

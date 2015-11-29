@@ -16,7 +16,7 @@ block nav
 						a(href='/articles')
 							i.fa.fa-files-o
 							span &nbsp;Articles
-					li
+					li(class=(title == 'About' ? 'active' : ''))
 						a(href='/about')
 							i.fa.fa-info
 							span &nbsp;About me
@@ -25,7 +25,7 @@ block nav
 					ul.nav.navbar-nav.navbar-right
 						li.dropdown
 							a.dropdown-toggle(href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-								span #{user.name} &nbsp;
+								span #{user.firstname} &nbsp;
 								i.fa.fa-user
 								span.caret
 							ul.dropdown-menu

@@ -31,5 +31,8 @@
   ],
   "author": "Alexandru Olaru",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/alxolr/blog#readme"
+  "homepage": "https://bitbucket.org/alxolr/blog#readme",
+  "devDependencies": {
+    "morgan": "^1.6.1"
+  }
 }
