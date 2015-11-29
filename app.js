@@ -5,7 +5,6 @@ var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
 var passport      = require('passport');
 var mongoose      = require('mongoose');
-var morgan		  = require('morgan');
 var flash         = require('connect-flash');
 var port          = process.env.PORT || 3000;
 
@@ -36,7 +35,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(flash());
-app.use(morgan('dev'));
 
 app.use(express.static(__dirname + '/bower_components'));
 app.use(express.static(__dirname + '/public'));
