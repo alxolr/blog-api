@@ -34,4 +34,8 @@ module.exports = function(app, passport) {
 		req.logout();
 		res.redirect('/');
 	});
+
+	app.get('/forgot-password', function(req, res) {
+		res.render('forgot-password', {title: 'Forgot password', message: req.flash('forgotPasswordMessage')});
+	});
 };

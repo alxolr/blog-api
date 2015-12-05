@@ -28,8 +28,19 @@ module.exports = function(passport) {
 					var user       = new User();
 					user.email     = email;
 					user.password  = user.generateHash(password);
-					user.firstname = req.body.firstname;
-					user.surname   = req.body.surname;
+					user.name      = req.body.name;
+					user.link      = user.generateValidationLink();
+
+					var sendgrid  = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
+					sendgrid.send({
+					  to:       user.email,
+					  from:     'admin@alxolr.com',
+					  subject:  'Verify your account',
+					  text:     'Hi ' + user.name + ' in order to validate your account please click on the following link ' + 'http://www.alxolr.com/user/verify/' + user.link
+					}, function(err, json) {
+					  if (err) { return console.error(err); }
+					  console.log(json);
+					});
 
 					user.save(function(err) {
 						if (err) return done(err);
