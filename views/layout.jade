@@ -13,7 +13,8 @@ head
 		title #{title} - ALXOLR.COM
 body
 	include ./partials/nav.jade
-	block content
+	#wrap
+		block content
 	include ./partials/footer.jade
 	block javascripts
 		script(src='/jquery/dist/jquery.min.js')

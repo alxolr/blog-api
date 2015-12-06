@@ -38,4 +38,8 @@ module.exports = function(app, passport) {
 	app.get('/forgot-password', function(req, res) {
 		res.render('forgot-password', {title: 'Forgot password', message: req.flash('forgotPasswordMessage')});
 	});
+
+	app.get('/about', function(req, res) {
+		res.render('about', {title: 'About'});
+	});
 };
