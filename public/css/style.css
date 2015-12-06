@@ -19,6 +19,7 @@ body {
     background-repeat: repeat-x;
     background-color: #eee;
     position: relative;
+    margin-top: 20px;
     border-top: 1px solid gray;
 }
 
