@@ -2,7 +2,28 @@ block footer
 	footer.footer
 		.container
 			.row
+				.col-sm-1.text-center
+					img(alt='ALXOLR.COM Logo' src="/images/logo.png" width="64px")
+				.col-sm-2.text-center
+					h4.text-muted ALXOLR.COM
+				.col-sm-3.text-center
+					h4
+						a.text-muted.nounderline(href='/articles')
+							i.fa.fa-files-o
+							span &nbsp; Articles
+				.col-sm-3.text-center
+					h4
+						a.text-muted.nounderline(href='/about')
+							i.fa.fa-info
+							span &nbsp; About me
+				.col-sm-3.text-center
+					h4
+						a.text-muted.nounderline(href='/connect')
+							i.fa.fa-link
+							span &nbsp; Connect
+			.row
+				hr
 				.col-sm-12.text-center
 					span &copy;
-					a(href="https://www.linkedin.com/in/olaru-alexandru-82454238") ALXOLR.COM
+					a.nounderline(href="https://www.linkedin.com/in/olaru-alexandru-82454238")  Alexandru Olaru
 					span &nbsp;- 2015

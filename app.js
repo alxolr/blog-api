@@ -6,6 +6,7 @@ var session       = require('express-session');
 var passport      = require('passport');
 var mongoose      = require('mongoose');
 var flash         = require('connect-flash');
+var favicon       = require('serve-favicon')
 var port          = process.env.PORT || 3000;
 
 var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost:27017/blog';
@@ -38,6 +39,7 @@ app.use(flash());
 
 app.use(express.static(__dirname + '/bower_components'));
 app.use(express.static(__dirname + '/public'));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 require('./routes/index')(app, passport);
 
