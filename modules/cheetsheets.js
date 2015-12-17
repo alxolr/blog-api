@@ -1,5 +1,26 @@
 module.exports = {
 	php: {
+		http: [{
+			"method": "header()",
+			"doc": "http://php.net/manual/en/function.header.php",
+			"title": "Sends a raw HTTP header to a client"
+		}, {
+			"method": "headers_list()",
+			"doc": "http://php.net/manual/en/function.headers-list.php",
+			"title": "Returns a list of response headers sent "
+		}, {
+			"method": "headers_sent()",
+			"doc": "http://php.net/manual/en/function.headers-sent.php",
+			"title": "Checks if "
+		}, {
+			"method": "setcookie()",
+			"doc": "http://php.net/manual/en/function.setcookie.php",
+			"title": "Sends an HTTP cookie to a client"
+		}, {
+			"method": "setrawcookie()",
+			"doc": "http://php.net/manual/en/function.setrawcookie.php",
+			"title": "Sends an HTTP cookie without URL encoding the cookie value"
+		}],
 		variables: [{
 			"method": "boolval()",
 			"doc": "http://www.php.net/manual/en/function.boolval.php",
