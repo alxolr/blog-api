@@ -1,0 +1,51 @@
+extends ../layout
+
+block content
+	.container
+		.row
+			H1 PHP Cheetsheet v1.0
+			hr
+			.col-sm-4
+				.panel.panel-primary
+					.panel-heading
+						h4.board-card-title &nbsp;Array Functions
+					.panel-body
+						ul
+						each obj in cheet.arrays
+							ul
+								li
+									a(href='#{obj.doc}') #{obj.method}
+									i  - #{obj.title}
+			.col-sm-4
+				.panel.panel-info
+					.panel-heading
+						h4.board-card-title &nbsp;String Functions
+					.panel-body
+						ul
+						each obj in cheet.strings
+							ul
+								li
+									a(href='#{obj.doc}') #{obj.method}
+									i  - #{obj.title}
+			.col-sm-4
+				.panel.panel-success
+					.panel-heading
+						h4.board-card-title &nbsp;Directory Functions
+					.panel-body
+						ul
+						each obj in cheet.directory
+							ul
+								li
+									a(href='#{obj.doc}') #{obj.method}
+									i  - #{obj.title}
+			.col-sm-4
+				.panel.panel-warning
+					.panel-heading
+						h4.board-card-title &nbsp;Variables Functions
+					.panel-body
+						ul
+						each obj in cheet.variables
+							ul
+								li
+									a(href='#{obj.doc}') #{obj.method}
+									i  - #{obj.title}

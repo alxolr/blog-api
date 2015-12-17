@@ -20,6 +20,13 @@ block nav
 						a(href='/about')
 							i.fa.fa-info
 							span &nbsp;About me
+					li.dropdown
+						a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
+							i.fa.fa-file-code-o
+							span &nbsp;Cheetsheets
+						ul.dropdown-menu
+							li
+								a(href="/cheetsheets/php") PHP
 
 				if user
 					ul.nav.navbar-nav.navbar-right
