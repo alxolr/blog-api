@@ -1,4 +1,110 @@
 module.exports = {
+	rest: {
+		requestMethods: [{
+			title: "GET",
+			doc: "The GET method requests a representation of the specified resource. Requests using GET should only retrieve data and should have no other effect."
+		}, {
+			title: 'HEAD',
+			doc: "The HEAD method asks for a response identical to that of a GET request, but without the response body."
+		}, {
+			title: 'POST',
+			doc: 'The POST method requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.'
+		}, {
+			title: 'PUT',
+			doc: 'The PUT method requests that the enclosed entity be stored under the supplied URI. If the URI refers to an already existing resource, it is modified; if the URI does not point to an existing resource, then the server can create the resource with that URI.'
+		}, {
+			title: 'DELETE',
+			doc: 'The DELETE method deletes the specified resource.'
+		}, {
+			title: 'TRACE',
+			doc: 'The TRACE method echoes the received request so that a client can see what (if any) changes or additions have been made by intermediate servers.'
+		}, {
+			title: 'OPTIONS',
+			doc: 'The OPTIONS method returns the HTTP methods that the server supports for the specified URL. This can be used to check the functionality of a web server by requesting \' * \' instead of a specific resource.'
+		}, {
+			title: 'CONNECT',
+			doc: 'The CONNECT method converts the request connection to a transparent TCP/IP tunnel, usually to facilitate SSL-encrypted communication (HTTPS) through an unencrypted HTTP proxy.'
+		}, {
+			title: 'PATCH',
+			doc: 'The PATCH method applies partial modifications to a resource.'
+		}],
+		statusCodes: {
+			groups: [{
+				title: '1xx Informational',
+				codes: [{
+					number: '100',
+					title: 'Continue',
+					doc: 'This means that the server has received the request headers, and that the client should proceed to send the request body.'
+				}, {
+					number: '101',
+					title: 'Switching Protocols',
+					doc: 'This means the requester has asked the server to switch protocols and the server is acknowledging that it will do so.'
+				}, {
+					number: '102',
+					title: 'Processing',
+					doc: 'As a WebDAV request may contain many sub-requests involving file operations, it may take a long time to complete the request.'
+				}]
+			}, {
+				title: '2xx Success',
+				codes: [{
+					number: '200',
+					title: 'OK',
+					doc: 'Standard response for successful HTTP requests. The actual response will depend on the request method used.'
+				}, {
+					number: '201',
+					title: 'Created',
+					doc: 'The request has been fulfilled and resulted in a new resource being created.'
+				}, {
+					number: '202',
+					title: 'Accepted',
+					doc: 'The request has been accepted for processing, but the processing has not been completed.'
+				}, {
+					number: '203',
+					title: 'Non-Authoritative Information',
+					doc: 'The server successfully processed the request, but is returning information that may be from another source.'
+				}, {
+					number: '204',
+					title: 'No Content',
+					doc: 'The server successfully processed the request, but is not returning any content.'
+				}, {
+					number: '205',
+					title: 'Reset Content',
+					doc: 'The server successfully processed the request, but is not returning any content.'
+				}, {
+					number: '206',
+					title: 'Partial Content',
+					doc: 'The server is delivering only part of the resource (byte serving) due to a range header sent by the client.'
+				}, {
+					number: '207',
+					title: 'Multi-status',
+					doc: 'The message body that follows is an XML message and can contain a number of separate response codes, depending on how many sub-requests were made.'
+				}, {
+					number: '208',
+					title: 'Already Reported',
+					doc: 'The members of a DAV binding have already been enumerated in a previous reply to this request, and are not being included again.'
+				}, {
+					number: '226',
+					title: 'IM Used',
+					doc: 'The server has fulfilled a request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance.'
+				}]
+			}, {
+				title: '3xx Redirection',
+				codes: [{
+					number: '300',
+					title: 'Multiple Choices',
+					doc: 'Indicates multiple options for the resource that the client may follow. '
+				}, {
+					number: '301',
+					title: 'Moved Permanently',
+					doc: 'This and all future requests should be directed to the given URI.'
+				}, {
+					number: '302',
+					title: 'Found',
+					doc: 'Popular browsers implemented 302 with the functionality of a 303 See Other'
+				}]
+			}]
+		}
+	},
 	php: {
 		http: [{
 			"method": "header()",

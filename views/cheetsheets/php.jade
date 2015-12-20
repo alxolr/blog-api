@@ -15,7 +15,8 @@ block content
 							each obj in cheet.strings
 								ul
 									li
-										a(href='#{obj.doc}') #{obj.method}
+										a(href='#{obj.doc}')
+											code #{obj.method}
 										i  - #{obj.title}
 			.col-sm-4
 				.col-sm-12
@@ -27,7 +28,8 @@ block content
 							each obj in cheet.http
 								ul
 									li
-										a(href='#{obj.doc}') #{obj.method}
+										a(href='#{obj.doc}')
+											code #{obj.method}
 										i  - #{obj.title}
 				.col-sm-12
 					.panel.panel-success
@@ -38,7 +40,8 @@ block content
 							each obj in cheet.directory
 								ul
 									li
-										a(href='#{obj.doc}') #{obj.method}
+										a(href='#{obj.doc}')
+											code #{obj.method}
 										i  - #{obj.title}
 				.col-sm-12
 					.panel.panel-warning
@@ -49,7 +52,8 @@ block content
 							each obj in cheet.variables
 								ul
 									li
-										a(href='#{obj.doc}') #{obj.method}
+										a(href='#{obj.doc}')
+											code #{obj.method}
 										i  - #{obj.title}
 			.col-sm-4
 				.col-sm-12
@@ -61,5 +65,6 @@ block content
 							each obj in cheet.arrays
 								ul
 									li
-										a(href='#{obj.doc}') #{obj.method}
+										a(href='#{obj.doc}')
+											code #{obj.method}
 										i  - #{obj.title}

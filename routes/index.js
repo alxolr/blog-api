@@ -66,4 +66,36 @@ module.exports = function(app, passport) {
 			cheet: cheetsheets.php
 		});
 	});
+
+	app.get('/cheetsheets/rest', function(req, res) {
+		res.render('cheetsheets/rest', {
+			title: "Web Services REST - Cheetsheet",
+			user: req.user,
+			cheet: cheetsheets.rest
+		});
+	});
+
+	app.get('/cheetsheets/soap', function(req, res) {
+		res.render('cheetsheets/soap', {
+			title: "Web Services SOAP - Cheetsheet",
+			user: req.user,
+			cheet: cheetsheets.php
+		});
+	});
+
+	app.get('/cheetsheets/symfony2', function(req, res) {
+		res.render('cheetsheets/symfony', {
+			title: "Symfony 2 - Cheetsheet",
+			user: req.user,
+			cheet: cheetsheets.php
+		});
+	});
+
+	app.get('/cheetsheets/laravel', function(req, res) {
+		res.render('cheetsheets/laravel', {
+			title: "Laravel - Cheetsheet",
+			user: req.user,
+			cheet: cheetsheets.php
+		});
+	});
 };
