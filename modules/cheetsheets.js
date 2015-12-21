@@ -100,7 +100,42 @@ module.exports = {
 				}, {
 					number: '302',
 					title: 'Found',
-					doc: 'Popular browsers implemented 302 with the functionality of a 303 See Other'
+					doc: 'Web applications and frameworks use the 302 status code as if it were the 303.'
+				}, {
+					number: '303',
+					title: 'See Other',
+					doc: 'The response to the request can be found under another URI using a GET method. When received in response to a POST (or PUT/DELETE), it should be assumed that the server has received the data and the redirect should be issued with a separate GET message.'
+				}, {
+					number: '304',
+					title: 'Not Modified',
+					doc: 'Indicates that the resource has not been modified since the version specified by the request headers If-Modified-Since or If-None-Match.'
+				}, {
+					number: '305',
+					title: 'Use Proxy',
+					doc: 'The requested resource is only available through a proxy, whose address is provided in the response.'
+				}, {
+					number: '306',
+					title: 'Switch Proxy',
+					doc: 'No longer used. Originally meant "Subsequent requests should use the specified proxy."'
+				}, {
+					number: '307',
+					title: 'Temporary Redirect',
+					doc: ''
+				}, {
+					number: '308',
+					title: 'Permanent Redirect',
+					doc: 'The request, and all future requests should be repeated using another URI. '
+				}]
+			}, {
+				title: '4xx Client Error',
+				codes: [{
+					number: '400',
+					title: 'Bad Request',
+					doc: 'The server cannot or will not process the request due to something that is perceived to be a client error.'
+				}, {
+					number: '401',
+					title: 'Unauthorized',
+					doc: 'The server cannot or will not process the request due to something that is perceived to be a client error.'
 				}]
 			}]
 		}
