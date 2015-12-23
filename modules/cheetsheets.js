@@ -136,6 +136,77 @@ module.exports = {
 					number: '401',
 					title: 'Unauthorized',
 					doc: 'The server cannot or will not process the request due to something that is perceived to be a client error.'
+				}, {
+					number: '402',
+					title: 'Payment Required',
+					doc: 'Reserved for future use. The original intention was that this code might be used as part of some form of digital cash or micropayment scheme, but that has not happened, and this code is not usually used.'
+				}, {
+					number: '403',
+					title: 'Forbidden',
+					doc: 'The request was a valid request, but the server is refusing to respond to it. Unlike a 401 Unauthorized response, authenticating will make no difference.'
+				}, {
+					number: '404',
+					title: 'Not Found',
+					doc: 'The requested resource could not be found but may be available again in the future. Subsequent requests by the client are permissible.'
+				}, {
+					number: '405',
+					title: 'Method Not Allowed',
+					doc: 'A request was made of a resource using a request method not supported by that resource; for example, using GET on a form which requires data to be presented via POST, or using PUT on a read-only resource.'
+				}, {
+					number: '406',
+					title: 'Method Not Allowed',
+					doc: 'The requested resource is only capable of generating content not acceptable according to the Accept headers sent in the request.'
+				}, {
+					number: '406',
+					title: 'Not Acceptable',
+					doc: 'The requested resource is only capable of generating content not acceptable according to the Accept headers sent in the request.'
+				}, {
+					number: '407',
+					title: 'Proxy Authentication Required',
+					doc: 'The client must first authenticate itself with the proxy.'
+				}]
+			}, {
+				title: '5xx Server Error',
+				codes: [{
+					number: '500',
+					title: 'Internal Server Error',
+					doc: 'A generic error message, given when an unexpected condition was encountered and no more specific message is suitable.'
+				}, {
+					number: '501',
+					title: 'Not Implemented',
+					doc: 'The server either does not recognize the request method, or it lacks the ability to fulfill the request.'
+				}, {
+					number: '502',
+					title: 'Bad Gateway',
+					doc: 'The server was acting as a gateway or proxy and received an invalid response from the upstream server.'
+				}, {
+					number: '503',
+					title: 'Service Unavailable',
+					doc: 'The server is currently unavailable (because it is overloaded or down for maintenance).'
+				}, {
+					number: '504',
+					title: 'Gateway Timeout',
+					doc: 'The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.'
+				}, {
+					number: '505',
+					title: 'HTTP Version Not Supported',
+					doc: 'The server does not support the HTTP protocol version used in the request.'
+				}, {
+					number: '506',
+					title: 'Variant Also Negotiates',
+					doc: 'Transparent content negotiation for the request results in a circular reference.'
+				}, {
+					number: '507',
+					title: 'Insufficient Storage',
+					doc: 'The server is unable to store the representation needed to complete the request.'
+				}, {
+					number: '508',
+					title: 'Loop Detected',
+					doc: 'The server detected an infinite loop while processing the request'
+				}, {
+					number: '509',
+					title: 'Bandwidth Limit Exceeded',
+					doc: 'This status code is not specified in any RFCs. Its use is unknown.'
 				}]
 			}]
 		}
