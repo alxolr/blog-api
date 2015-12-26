@@ -1,0 +1,36 @@
+.container
+	if undefined !== flashbag && flashbag.hasOwnProperty('success')
+		each msg in flashbag.success
+			.row
+				.col-sm-offset-6.col-sm-6
+					.alert.alert-success.alert-dismissible(id="alert")
+						button.close(type="button" data-dismiss="alert" aria-label="close")
+							span(aria-hidden="true") &times;
+						p #{msg}
+
+	if undefined !== flashbag && flashbag.hasOwnProperty('warning')
+		each msg in flashbag.warning
+			.row
+				.col-sm-offset-6.col-sm-6
+					.alert.alert-warning.alert-dismissible(id="alert")
+						button.close(type="button" data-dismiss="alert" aria-label="close")
+							span(aria-hidden="true") &times;
+						p #{msg}
+
+	if undefined !== flashbag && flashbag.hasOwnProperty('error')
+		each msg in flashbag.error
+			.row
+				.col-sm-offset-6.col-sm-6
+					.alert.alert-danger.alert-dismissible(id="alert")
+						button.close(type="button" data-dismiss="alert" aria-label="close")
+							span(aria-hidden="true") &times;
+						p #{msg}
+
+	if undefined !== flashbag && flashbag.hasOwnProperty('info')
+		each msg in flashbag.info
+			.row
+				.col-sm-offset-6.col-sm-6
+					.alert.alert-info.alert-dismissible(id="alert")
+						button.close(type="button" data-dismiss="alert" aria-label="close")
+							span(aria-hidden="true") &times;
+						p #{msg}

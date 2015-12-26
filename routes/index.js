@@ -1,4 +1,5 @@
 var cheetsheets = require('../modules/cheetsheets');
+var flashbag = require('../modules/flashbag');
 
 function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) return next();
@@ -11,7 +12,8 @@ module.exports = function(app, passport) {
 	app.get('/', function(req, res) {
 		res.render('index', {
 			title: 'Homepage',
-			user: req.user
+			user: req.user,
+			flashbag: flashbag.getMessages()
 		});
 	});
 
@@ -31,7 +33,8 @@ module.exports = function(app, passport) {
 	app.get('/register', function(req, res) {
 		res.render('register', {
 			title: 'Register a new account',
-			message: req.flash('signupMessage')
+			message: req.flash('signupMessage'),
+			flashbag: flashbag.getMessages()
 		});
 	});
 
@@ -49,7 +52,8 @@ module.exports = function(app, passport) {
 	app.get('/forgot-password', function(req, res) {
 		res.render('forgot-password', {
 			title: 'Forgot password',
-			message: req.flash('forgotPasswordMessage')
+			message: req.flash('forgotPasswordMessage'),
+			flashbag: flashbag.getMessages()
 		});
 	});
 
@@ -72,30 +76,6 @@ module.exports = function(app, passport) {
 			title: "Web Services REST - Cheetsheet",
 			user: req.user,
 			cheet: cheetsheets.rest
-		});
-	});
-
-	app.get('/cheetsheets/soap', function(req, res) {
-		res.render('cheetsheets/soap', {
-			title: "Web Services SOAP - Cheetsheet",
-			user: req.user,
-			cheet: cheetsheets.php
-		});
-	});
-
-	app.get('/cheetsheets/symfony2', function(req, res) {
-		res.render('cheetsheets/symfony', {
-			title: "Symfony 2 - Cheetsheet",
-			user: req.user,
-			cheet: cheetsheets.php
-		});
-	});
-
-	app.get('/cheetsheets/laravel', function(req, res) {
-		res.render('cheetsheets/laravel', {
-			title: "Laravel - Cheetsheet",
-			user: req.user,
-			cheet: cheetsheets.php
 		});
 	});
 };

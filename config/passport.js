@@ -1,5 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 var User          = require('../models/users');
+var flashbag	  = require('../modules/flashbag');
 
 module.exports = function(passport) {
 
@@ -30,6 +31,8 @@ module.exports = function(passport) {
 					user.password  = user.generateHash(password);
 					user.name      = req.body.name;
 					user.link      = user.generateValidationLink();
+					flashbag.pushMessage('success', 'The users was added successfuly');
+					flashbag.pushMessage('info', 'A confirmation email was sent to ' + email);
 
 					var sendgrid  = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 					sendgrid.send({
