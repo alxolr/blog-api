@@ -1,6 +1,7 @@
 var LocalStrategy = require('passport-local').Strategy;
 var User          = require('../models/users');
 var flashbag	  = require('../modules/flashbag');
+var sanitizer     = require('../modules/sanitizer');
 
 module.exports = function(passport) {
 
@@ -29,8 +30,9 @@ module.exports = function(passport) {
 					var user       = new User();
 					user.email     = email;
 					user.password  = user.generateHash(password);
-					user.name      = req.body.name;
+					user.name      = sanitizer.clean(req.body.name);
 					user.link      = user.generateValidationLink();
+
 					flashbag.pushMessage('success', 'The users was added successfuly');
 					flashbag.pushMessage('info', 'A confirmation email was sent to ' + email);
 
