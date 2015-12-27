@@ -101,3 +101,7 @@ body {
 a.nounderline {
     text-decoration: none !important;
 }
+
+.navbar-brand-logo {
+    padding: 5px;
+}

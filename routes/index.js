@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
 		res.render('index', {
-			title: 'Homepage',
+			title: 'Alexandru Olaru\'s Personal Blog',
 			user: req.user,
 			flashbag: flashbag.getMessages()
 		});
