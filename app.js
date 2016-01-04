@@ -42,6 +42,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 require('./routes/index')(app, passport);
+require('./routes/todos')(app, passport);
 
 app.use(function (req, res, next) {
 	res.status(404).render('404', {title: 'Resource not found', user: req.user});

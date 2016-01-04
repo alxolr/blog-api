@@ -1,0 +1,23 @@
+extends layout
+
+block content
+	.container
+		.row
+			.col-sm-offset-3.col-sm-6
+				h1 Todo List
+				hr
+				each todo in todos
+					ul
+						li
+							h3
+								span #{todo.content}
+								a.nounderline.text-danger(href="/todo/delete/#{todo._id}")
+									span &nbsp;
+									i.fa.fa-close
+				hr
+				form(action="/todo/add", method="post")
+					h2.form-signin-heading Add a task
+					input.form-control(type="text" id="todo" placeholder="Add task" name="todo" required autofocus)
+					button.btn.btn-md.btn-primary(type="submit")
+						i.fa.fa-sign-in
+						span &nbsp;Submit
