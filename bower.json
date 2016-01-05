@@ -1,0 +1,23 @@
+{
+  "name": "blog",
+  "description": "Technical blog",
+  "main": "app.js",
+  "authors": [
+    "Alexandru Olaru"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "blog",
+    "nodejs",
+    "mongoose",
+    "mongo"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "angular": "1.4.8",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.4.0"
+  }
+}

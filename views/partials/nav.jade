@@ -17,12 +17,18 @@ block nav
 						a(href='/articles')
 							i.fa.fa-files-o
 							span &nbsp;Articles
-					li(class=(title == 'About' ? 'active' : ''))
-						a(href='/about')
-							i.fa.fa-info
-							span &nbsp;About me
 					li.dropdown
-						a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
+						a.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
+							i.fa.fa-cubes
+							span &nbsp;Apps
+								span.caret
+						ul.dropdown-menu
+							li
+								a(href="/apps/todo")
+									i.fa.fa-list-ul
+									span &nbsp;Todo List
+					li.dropdown
+						a.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
 							i.fa.fa-file-code-o
 							span &nbsp;Cheetsheets
 								span.caret
