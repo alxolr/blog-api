@@ -10,8 +10,11 @@ block content
 				hr
 				div(ng-app="alxolrTodo")
 					div(ng-controller="TodoListCtrl")
-						div(ng-repeat="todo in todos")
+						div(ng-repeat="todo in todos | orderBy:'-priority'")
 							h3(ng-if="todo.done_at === undefined")
+								button.btn.btn-sm(ng-click="addPriority(todo._id)")
+									i.fa.fa-plus.text-success
+								span &nbsp;
 								input(type="checkbox" ng-click="deleteTodo(todo._id)")
 								span &nbsp;{{ todo.content }}
 							h3(ng-if="todo.done_at")

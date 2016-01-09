@@ -4,6 +4,10 @@ var Schema = mongoose.Schema;
 var TodoSchema = new Schema({
 	user_id: String,
 	content: String,
+	priority: {
+		type: Number,
+		default: 0
+	},
 	created_at: Date,
 	done_at: Date
 });
