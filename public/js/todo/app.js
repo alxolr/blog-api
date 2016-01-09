@@ -22,7 +22,7 @@ alxolrTodo.controller('TodoListCtrl', function($scope, $http) {
 			});
 	};
 
-	$scope.addPriority = function(id) {
+	$scope.incPriority = function(id) {
 		$http.post('/apps/api/todo/priority/' + id)
 			.success(function(data) {
 				$scope.todos = data;

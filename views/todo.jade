@@ -12,8 +12,11 @@ block content
 					div(ng-controller="TodoListCtrl")
 						div(ng-repeat="todo in todos | orderBy:'-priority'")
 							h3(ng-if="todo.done_at === undefined")
-								button.btn.btn-sm(ng-click="addPriority(todo._id)")
-									i.fa.fa-plus.text-success
+								button.btn.btn-sm(ng-click="incPriority(todo._id)" data-toggle="tooltip" data-placement="left" title="Increase priority")
+									span
+										i.fa.fa-arrow-up.text-success
+										&nbsp;
+										{{ todo.priority }}
 								span &nbsp;
 								input(type="checkbox" ng-click="deleteTodo(todo._id)")
 								span &nbsp;{{ todo.content }}
