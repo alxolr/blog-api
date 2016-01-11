@@ -1,38 +1,62 @@
 extends layout
 
+block append stylesheets
+	link(rel="stylesheet" href="/angular-bootstrap-datetimepicker/src/css/datetimepicker.css")
+
 block content
-	.container
+	.container(ng-app="alxolrTodo")
 		.row
 			.col-sm-offset-2.col-sm-8
-				h1
+				h1(ng-controller="TodoMainCtrl")
 					i.fa.fa-list-ul.text-success
-					span &nbsp;Todo List
+					span &nbsp;Todo List - for &nbsp;
+					span.text-primary {{ date | date:'dd MMM, yyyy'}}
 				hr
-				div(ng-app="alxolrTodo")
-					div(ng-controller="TodoListCtrl")
-						div(ng-repeat="todo in todos | orderBy:'-priority'")
-							h3(ng-if="todo.done_at === undefined")
-								button.btn.btn-sm(ng-click="incPriority(todo._id)" data-toggle="tooltip" data-placement="left" title="Increase priority")
-									span
-										i.fa.fa-arrow-up.text-success
-										&nbsp;
-										{{ todo.priority }}
-								span &nbsp;
-								input(type="checkbox" ng-click="deleteTodo(todo._id)")
-								span &nbsp;{{ todo.content }}
-							h3(ng-if="todo.done_at")
-								input(type="checkbox" checked="checked" disabled="disabled")
+				div(ng-controller="TodoListCtrl")
+					div(ng-repeat="todo in todos | orderBy:'-priority'")
+						h3(ng-if="todo.done_at === undefined")
+							button.btn.btn-sm(ng-click="incPriority(todo._id)" data-toggle="tooltip" data-placement="left" title="Increase priority")
 								span
+									i.fa.fa-arrow-up.text-success
 									span &nbsp;
-									i
-										del.text-muted {{ todo.content }}
-						hr
-						form
-							div.form-group
-								input.form-control.input-lg.text-center(ng-model="formData.content")
-							button.btn.btn-primary.btn-lg(type="submit" ng-click="createTodo()") Add
+									span {{ todo.priority }}
+							span &nbsp;
+							input(type="checkbox" ng-click="deleteTodo(todo._id)")
+							span &nbsp;{{ todo.content }}
+							span.text-danger(ng-if="todo.deadline_at") &nbsp; - {{ todo.deadline_at | date:'dd MMM, yyyy' }}
 
+						h3(ng-if="todo.done_at")
+							input(type="checkbox" checked="checked" disabled="disabled")
+							span
+								span &nbsp;
+								del.text-muted {{ todo.content }}
+					hr
+					form
+						.row
+							.col-sm-12.col-md-6
+								.input-group.input-group-lg
+									span.input-group-addon
+										i.fa.fa-file-o
+									input.form-control.input-large(type="text" data-ng-model="formData.content")
+							.col-sm-12.col-md-3
+								.dropdown
+									a.dropdown-toggle.my-toggle-select(id="dpickerLabel" role="button" data-toggle="dropdown" data-target="#")
+										.input-group.input-group-lg
+											input.form-control.input-large(type="text" ng-model="formData.deadline_at")
+											span.input-group-addon
+												i.fa.fa-calendar
+									ul.dropdown-menu(role="menu" aria-labelledby="dpickerLabel")
+										datetimepicker(ng-model="formData.deadline_at"
+		                        data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select' }")
+
+							.col-sm-12.col-md-3
+								button.btn.btn-primary.btn-lg.btn-group(type="submit" ng-click="createTodo()")
+									i.fa.fa-plus
+									span &nbsp;Add
+	br
 
 block prepend javascripts
+	script(src='/moment/moment.js')
 	script(src='/angular/angular.min.js')
+	script(src='/angular-bootstrap-datetimepicker/src/js/datetimepicker.js')
 	script(src='/js/todo/app.js')

@@ -1,4 +1,8 @@
-var alxolrTodo = angular.module('alxolrTodo', []);
+var alxolrTodo = angular.module('alxolrTodo', ['ui.bootstrap.datetimepicker']);
+
+alxolrTodo.controller('TodoMainCtrl', function($scope) {
+	$scope.date = new Date();
+});
 
 alxolrTodo.controller('TodoListCtrl', function($scope, $http) {
 	$scope.formData = {};

@@ -9,7 +9,8 @@ var TodoSchema = new Schema({
 		default: 0
 	},
 	created_at: Date,
-	done_at: Date
+	done_at: Date,
+	deadline_at: Date,
 });
 
 TodoSchema.statics.findTodaysTodosFor = function(userId, cb) {

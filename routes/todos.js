@@ -33,7 +33,8 @@ module.exports = function(app, passport) {
 		Todo.create({
 			content: req.body.content,
 			user_id: req.user.id,
-			created_at: new Date()
+			created_at: new Date(),
+			deadline_at: req.body.deadline_at
 		}, function(err, todo) {
 			if (err) res.send(err);
 

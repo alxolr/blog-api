@@ -4,9 +4,10 @@
   "description": "Technical blog",
   "main": "app.js",
   "dependencies": {
-    "bower": "1.7.2",
+    "angular-bootstrap-datetimepicker": "^0.4.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
+    "bower": "1.7.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.0",
     "express": "^4.13.3",
@@ -40,6 +41,7 @@
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
     "mocha": "^2.3.4",
+    "moment": "^2.11.1",
     "morgan": "^1.6.1",
     "wd": "^0.4.0"
   }
