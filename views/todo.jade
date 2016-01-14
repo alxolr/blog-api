@@ -23,7 +23,7 @@ block content
 							span &nbsp;
 							input(type="checkbox" ng-click="deleteTodo(todo._id)")
 							span &nbsp;{{ todo.content }}
-							span.text-danger(ng-if="todo.deadline_at") &nbsp; - {{ todo.deadline_at | date:'dd MMM, yyyy HH:ii' }}
+							span.text-danger(ng-if="todo.deadline_at") &nbsp; - {{ todo.deadline_at | date:'dd MMM, yyyy' }}
 
 						h3(ng-if="todo.done_at")
 							input(type="checkbox" checked="checked" disabled="disabled")
