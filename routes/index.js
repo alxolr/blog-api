@@ -24,11 +24,17 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/login', passport.authenticate('login', {
-		successRedirect: '/',
-		failureRedirect: '/login',
-		failureFlash: true
-	}));
+	app.post('/login', passport.authenticate('login'), function(req, res) {
+		var path = req.session.returnTo;
+
+		if (path !== null) {
+			res.redirect(path);
+			delete req.session.returnTo;
+		} else {
+			res.redirect('/');
+		}
+
+	});
 
 	app.get('/register', function(req, res) {
 		res.render('register', {

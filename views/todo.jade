@@ -9,7 +9,7 @@ block content
 			.col-sm-offset-2.col-sm-8
 				h1(ng-controller="TodoMainCtrl")
 					i.fa.fa-list-ul.text-success
-					span &nbsp;Todo List - for &nbsp;
+					span &nbsp;Todo List - for&nbsp;
 					span.text-primary {{ date | date:'dd MMM, yyyy'}}
 				hr
 				div(ng-controller="TodoListCtrl")
@@ -23,7 +23,7 @@ block content
 							span &nbsp;
 							input(type="checkbox" ng-click="deleteTodo(todo._id)")
 							span &nbsp;{{ todo.content }}
-							span.text-danger(ng-if="todo.deadline_at") &nbsp; - {{ todo.deadline_at | date:'dd MMM, yyyy' }}
+							span.text-danger(ng-if="todo.deadline_at") &nbsp; - {{ todo.deadline_at | date:'dd MMM, yyyy HH:ii' }}
 
 						h3(ng-if="todo.done_at")
 							input(type="checkbox" checked="checked" disabled="disabled")

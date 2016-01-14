@@ -1,5 +1,6 @@
 var Todo = require('../models/todo');
 var sanitizer = require('../modules/sanitizer');
+var auth = require('../modules/auth');
 
 function isAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) return next();
@@ -7,14 +8,9 @@ function isAuthenticated(req, res, next) {
 	res.sendStatus(401);
 }
 
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated()) return next();
-	res.redirect('/login');
-}
-
 module.exports = function(app, passport) {
 
-	app.get('/apps/todo', isLoggedIn, function(req, res) {
+	app.get('/apps/todo', auth.isLoggedIn, function(req, res) {
 		res.render('todo', {
 			user: req.user,
 			title: 'Todo List'
