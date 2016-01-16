@@ -47,7 +47,7 @@ module.exports = function(app, passport) {
 			user_id: req.user.id
 		}, {
 			$inc: {
-				priority: 1
+				priority: -1
 			}
 		}, function(err, done) {
 			if (err) res.send(err);
