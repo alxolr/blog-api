@@ -16,7 +16,6 @@ todoControllers.controller('ListCtrl', function($scope, $http) {
         });
 
     $scope.createTodo = function() {
-        console.log($scope.formData);
         $http.post('/apps/api/todo', $scope.formData)
             .success(function(data) {
                 $scope.formData = {}; // clear the form so our user is ready to enter another
