@@ -41,7 +41,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/apps/api/todo/priority/:id', isAuthenticated, function(req, res) {
+	app.post('/apps/api/todo/priority/down/:id', isAuthenticated, function(req, res) {
 		Todo.update({
 			_id: req.params.id,
 			user_id: req.user.id
@@ -57,11 +57,26 @@ module.exports = function(app, passport) {
 				res.json(todos);
 			});
 		});
+	});
+	app.post('/apps/api/todo/priority/up/:id', isAuthenticated, function(req, res) {
+		Todo.update({
+			_id: req.params.id,
+			user_id: req.user.id
+		}, {
+			$inc: {
+				priority: 1
+			}
+		}, function(err, done) {
+			if (err) res.send(err);
 
+			Todo.findTodaysTodosFor(req.user.id, function(err, todos) {
+				if (err) res.send(err);
+				res.json(todos);
+			});
+		});
 	});
 
-
-	app.delete('/apps/api/todo/:id', isAuthenticated, function(req, res) {
+	app.delete('/apps/api/todo/:id/done', isAuthenticated, function(req, res) {
 		Todo.update({
 			_id: req.params.id,
 			user_id: req.user.id
@@ -78,4 +93,19 @@ module.exports = function(app, passport) {
 			});
 		});
 	});
+
+	app.delete('/apps/api/todo/:id', isAuthenticated, function(req, res) {
+		Todo.remove({
+			_id: req.params.id,
+			user_id: req.user.id
+		}, function(err, done) {
+			if (err) res.send(err);
+
+			Todo.findTodaysTodosFor(req.user.id, function(err, todos) {
+				if (err) res.send(err);
+				res.json(todos);
+			});
+		});
+	});
+
 }

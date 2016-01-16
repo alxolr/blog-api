@@ -4,34 +4,19 @@ block append stylesheets
 	link(rel="stylesheet" href="/angular-bootstrap-datetimepicker/src/css/datetimepicker.css")
 
 block content
-	.container(ng-app="alxolrTodo")
+	.container(ng-app="todo")
 		.row
 			.col-sm-offset-2.col-sm-8
-				h1(ng-controller="TodoMainCtrl")
+				h1(ng-controller="MainCtrl")
 					i.fa.fa-list-ul.text-success
-					span &nbsp;Todo List - for&nbsp;
+					span &nbsp;Todo - for&nbsp;
 					span.text-primary {{ date | date:'dd MMM, yyyy'}}
 				hr
-				div(ng-controller="TodoListCtrl")
+				div(ng-controller="ListCtrl")
 					div(ng-repeat="todo in todos | orderBy:'-priority'")
-						h3(ng-if="todo.done_at === undefined")
-							button.btn.btn-sm(ng-click="incPriority(todo._id)" data-toggle="tooltip" data-placement="left" title="Increase priority")
-								span
-									i.fa.fa-arrow-up.text-success
-									span &nbsp;
-									span {{ todo.priority }}
-							span &nbsp;
-							input(type="checkbox" ng-click="deleteTodo(todo._id)")
-							span &nbsp;{{ todo.content }}
-							span.text-danger(ng-if="todo.deadline_at") &nbsp; - {{ todo.deadline_at | date:'dd MMM, yyyy' }}
-
-						h3(ng-if="todo.done_at")
-							input(type="checkbox" checked="checked" disabled="disabled")
-							span
-								span &nbsp;
-								del.text-muted {{ todo.content }}
+						todo
 					hr
-					form
+					form.form-horizontal
 						.row
 							.col-sm-12.col-md-6
 								.input-group.input-group-lg
@@ -50,6 +35,10 @@ block content
 		                        data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select' }")
 
 							.col-sm-12.col-md-3
+								select.form-control.input-group.input-group-lg(ng-model="formData.category" style="font-family: 'FontAwesome', Helvetica;")
+									option(value="meeting") &#xf073; Meeting
+						.row
+							.col-sm-12.col-md-3
 								button.btn.btn-primary.btn-lg.btn-group(type="submit" ng-click="createTodo()")
 									i.fa.fa-plus
 									span &nbsp;Add
@@ -60,3 +49,5 @@ block prepend javascripts
 	script(src='/angular/angular.min.js')
 	script(src='/angular-bootstrap-datetimepicker/src/js/datetimepicker.js')
 	script(src='/js/todo/app.js')
+	script(src='/js/todo/controllers.js')
+	script(src='/js/todo/directives.js')

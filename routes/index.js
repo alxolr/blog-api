@@ -1,12 +1,6 @@
 var cheetsheets = require('../modules/cheetsheets');
 var flashbag = require('../modules/flashbag');
 
-// function isLoggedIn(req, res, next) {
-// 	if (req.isAuthenticated()) return next();
-
-// 	res.redirect('/login');
-// }
-
 module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
