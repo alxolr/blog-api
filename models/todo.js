@@ -8,6 +8,10 @@ var TodoSchema = new Schema({
 		type: Number,
 		default: 0
 	},
+	category: {
+		type: String,
+		default: 'code'
+	},
 	created_at: Date,
 	done_at: Date,
 	deadline_at: Date,

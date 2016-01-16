@@ -6,7 +6,10 @@
 		<i class="fa fa-arrow-down text-warning"></i>
 	</span>
 	<input class="pointer" type="checkbox" ng-click="markDone(todo._id)"/>
+
+	<todoicon></todoicon>
 	<span> {{ todo.content }} </span>
+
 	<span class="text-danger" ng-if="todo.deadline_at">
 		- {{ todo.deadline_at | date:'dd MMM, yyyy' }}
 	</span>
@@ -23,6 +26,7 @@
 		<i class="fa fa-arrow-down text-warning"></i>
 	</span>
 	<i class="fa fa-check-square-o text-success"></i>
+	<todoicon></todoicon>
 	<span>
 		<del class="text-muted">{{ todo.content }}</del>
 	</span>

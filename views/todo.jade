@@ -6,7 +6,7 @@ block append stylesheets
 block content
 	.container(ng-app="todo")
 		.row
-			.col-sm-offset-2.col-sm-8
+			.col-sm-offset-3.col-sm-6
 				h1(ng-controller="MainCtrl")
 					i.fa.fa-list-ul.text-success
 					span &nbsp;Todo - for&nbsp;
@@ -16,34 +16,8 @@ block content
 					div(ng-repeat="todo in todos | orderBy:'-priority'")
 						todo
 					hr
-					form.form-horizontal
-						.row
-							.col-sm-12.col-md-6
-								.input-group.input-group-lg
-									span.input-group-addon
-										i.fa.fa-file-o
-									input.form-control.input-large(type="text" data-ng-model="formData.content")
-							.col-sm-12.col-md-3
-								.dropdown
-									a.dropdown-toggle.my-toggle-select(id="dpickerLabel" role="button" data-toggle="dropdown" data-target="#")
-										.input-group.input-group-lg
-											input.form-control.input-large(type="text" ng-model="formData.deadline_at")
-											span.input-group-addon
-												i.fa.fa-calendar
-									ul.dropdown-menu(role="menu" aria-labelledby="dpickerLabel")
-										datetimepicker(ng-model="formData.deadline_at"
-		                        data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select' }")
-
-							.col-sm-12.col-md-3
-								select.form-control.input-group.input-group-lg(ng-model="formData.category" style="font-family: 'FontAwesome', Helvetica;")
-									option(value="meeting") &#xf073; Meeting
-						.row
-							.col-sm-12.col-md-3
-								button.btn.btn-primary.btn-lg.btn-group(type="submit" ng-click="createTodo()")
-									i.fa.fa-plus
-									span &nbsp;Add
+					todoform
 	br
-
 block prepend javascripts
 	script(src='/moment/moment.js')
 	script(src='/angular/angular.min.js')

@@ -30,7 +30,8 @@ module.exports = function(app, passport) {
 			content: req.body.content,
 			user_id: req.user.id,
 			created_at: new Date(),
-			deadline_at: req.body.deadline_at
+			deadline_at: req.body.deadline_at,
+			category: req.body.category
 		}, function(err, todo) {
 			if (err) res.send(err);
 
