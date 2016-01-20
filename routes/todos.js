@@ -18,14 +18,14 @@ module.exports = function(app, passport) {
 	});
 
 	//API for Angular Js
-	app.get('/apps/api/todo', isAuthenticated, function(req, res) {
+	app.get('/apps/api/todo', auth.isAuthenticated, function(req, res) {
 		Todo.findTodaysTodosFor(req.user.id, function(err, todos) {
 			if (err) res.send(err);
 			res.json(todos);
 		});
 	});
 
-	app.post('/apps/api/todo', isAuthenticated, function(req, res) {
+	app.post('/apps/api/todo', auth.isAuthenticated, function(req, res) {
 		Todo.create({
 			content: req.body.content,
 			user_id: req.user.id,
@@ -42,7 +42,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/apps/api/todo/priority/down/:id', isAuthenticated, function(req, res) {
+	app.post('/apps/api/todo/priority/down/:id', auth.isAuthenticated, function(req, res) {
 		Todo.update({
 			_id: req.params.id,
 			user_id: req.user.id
@@ -59,7 +59,7 @@ module.exports = function(app, passport) {
 			});
 		});
 	});
-	app.post('/apps/api/todo/priority/up/:id', isAuthenticated, function(req, res) {
+	app.post('/apps/api/todo/priority/up/:id', auth.isAuthenticated, function(req, res) {
 		Todo.update({
 			_id: req.params.id,
 			user_id: req.user.id
@@ -77,7 +77,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.delete('/apps/api/todo/:id/done', isAuthenticated, function(req, res) {
+	app.delete('/apps/api/todo/:id/done', auth.isAuthenticated, function(req, res) {
 		Todo.update({
 			_id: req.params.id,
 			user_id: req.user.id
@@ -95,7 +95,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.delete('/apps/api/todo/:id', isAuthenticated, function(req, res) {
+	app.delete('/apps/api/todo/:id', auth.isAuthenticated, function(req, res) {
 		Todo.remove({
 			_id: req.params.id,
 			user_id: req.user.id
@@ -108,5 +108,4 @@ module.exports = function(app, passport) {
 			});
 		});
 	});
-
 }
