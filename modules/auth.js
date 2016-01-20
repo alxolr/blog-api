@@ -14,6 +14,16 @@ module.exports = {
 		if (req.isAuthenticated()) return next();
 		res.redirect('/login');
 	},
+	isAdmin: function(req, res, next) {
+		req.session.returnTo = req.path;
+		if (req.isAuthenticated()) {
+			if (req.user.role == 'ROLE_ADMIN') {
+				return next();
+			}
+		}
+
+		res.redirect('/login');
+	},
 	/**
 	 * @param  {[type]}   req  [description]
 	 * @param  {[type]}   res  [description]

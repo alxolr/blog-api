@@ -1,12 +1,19 @@
 var flashbag = require('../modules/flashbag');
+var Article = require('../models/article');
+var markdown = require( "markdown" ).markdown;
 
 module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
-		res.render('index', {
-			title: 'Alexandru Olaru\'s Personal Blog',
-			user: req.user,
-			flashbag: flashbag.getMessages()
+
+		Article.find({}, function(err, articles) {
+			res.render('index', {
+				title: 'Alexandru Olaru\'s Personal Blog',
+				user: req.user,
+				marked: markdown,
+				articles: articles,
+				flashbag: flashbag.getMessages()
+			});
 		});
 	});
 

@@ -9,7 +9,11 @@ var userSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	link: String
+	link: String,
+	role: {
+		type: String,
+		default: 'ROLE_USER'
+	}
 });
 
 userSchema.methods.generateHash = function(password) {

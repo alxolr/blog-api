@@ -1,7 +1,9 @@
 extends ./layout.jade
 
 block content
-	.jumbotron
-		.container
-			h2 ALXOLR.COM - technical blogging
-			p Comming soon!
+	.container
+		.col-sm-8
+			each article in articles
+				h1 #{ article.title }
+				article
+					!= article.body

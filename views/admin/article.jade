@@ -1,0 +1,24 @@
+extend ../layout
+
+block content
+	.container
+		h1 Article Dashboard
+		.table-responsive
+			table.table.table-striped
+				thead
+					th Title
+					th Author
+					th Created At
+					th Updated At
+					th Actions
+				tbody
+				each article in articles
+					tr
+						td #{ article.title }
+						td #{ article.author }
+						td #{ article.created_at }
+						td #{ article.updated_at }
+						td delete edit
+		a.btn.btn-success(href="/admin/article/add")
+			i.fa.fa-plus
+			span &nbsp;Add
