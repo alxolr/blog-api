@@ -2,14 +2,7 @@ var Todo = require('../models/todo');
 var sanitizer = require('../modules/sanitizer');
 var auth = require('../modules/auth');
 
-function isAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) return next();
-
-	res.sendStatus(401);
-}
-
 module.exports = function(app, passport) {
-
 	app.get('/apps/todo', auth.isLoggedIn, function(req, res) {
 		res.render('todo', {
 			user: req.user,
