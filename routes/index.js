@@ -1,4 +1,3 @@
-var cheetsheets = require('../modules/cheetsheets');
 var flashbag = require('../modules/flashbag');
 
 module.exports = function(app, passport) {
@@ -60,22 +59,6 @@ module.exports = function(app, passport) {
 	app.get('/about', function(req, res) {
 		res.render('about', {
 			title: 'About'
-		});
-	});
-
-	app.get('/cheetsheets/php', function(req, res) {
-		res.render('cheetsheets/php', {
-			title: "PHP - Cheetsheet",
-			user: req.user,
-			cheet: cheetsheets.php
-		});
-	});
-
-	app.get('/cheetsheets/rest', function(req, res) {
-		res.render('cheetsheets/rest', {
-			title: "Web Services REST - Cheetsheet",
-			user: req.user,
-			cheet: cheetsheets.rest
 		});
 	});
 };
