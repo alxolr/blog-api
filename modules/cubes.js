@@ -28,7 +28,7 @@ module.exports = {
 					result += sum;
 					cb(null, result);
 				});
-			})
+			});
 		});
 	}
 };

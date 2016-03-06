@@ -6,7 +6,7 @@ var session       = require('express-session');
 var passport      = require('passport');
 var mongoose      = require('mongoose');
 var flash         = require('connect-flash');
-var favicon       = require('serve-favicon')
+var favicon       = require('serve-favicon');
 var port          = process.env.PORT || 3000;
 
 var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost:27017/blog';

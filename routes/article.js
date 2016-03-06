@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
 		res.render('admin/article-add', {
 			user: req.user,
 			title: "Add new Article"
-		})
+		});
 	});
 
 	app.post('/admin/article/add', auth.isAdmin, function(req, res) {
@@ -38,4 +38,4 @@ module.exports = function(app, passport) {
 
 		});
 	});
-}
+};
