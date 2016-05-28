@@ -1,0 +1,24 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "engine": {
+    "node": "v6.2.0"
+  },
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.4",
+    "pug": "^2.0.0-alpha8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://alxolr@bitbucket.org/alxolr/blog.git"
+  },
+  "author": "Alexandru Olaru",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/alxolr/blog#readme"
+}
