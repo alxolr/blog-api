@@ -1,9 +1,0 @@
-extends ./layout.jade
-
-block content
-	.container
-		.col-sm-8
-			each article in articles
-				h1 #{ article.title }
-				article
-					!= article.body
