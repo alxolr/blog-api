@@ -10,7 +10,10 @@
     "express": "^4.13.4",
     "pug": "^2.0.0-alpha8"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "selenium-server-standalone-jar": "^2.53.0",
+    "selenium-webdriver": "^2.53.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
