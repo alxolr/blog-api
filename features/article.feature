@@ -1,0 +1,1 @@
+Feature: Articles administration feature
