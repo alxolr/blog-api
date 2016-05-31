@@ -11,6 +11,14 @@
     "pug": "^2.0.0-alpha8"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-jshint": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.1",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
+    "jshint": "^2.9.2",
     "selenium-server-standalone-jar": "^2.53.0",
     "selenium-webdriver": "^2.53.2"
   },
