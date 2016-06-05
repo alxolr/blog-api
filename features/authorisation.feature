@@ -12,7 +12,15 @@ Feature: Authorisation feature
   Scenario: Admin user authentification login
     Given I am a guest username
     And I follow "/admin/"
-    When I insert "admin" in "username"
-    And I insert "admin-password" in "password"
+    When I fill "admin" as "username"
+    And I fill "admin-password" as "password"
     And I press "Login"
     Then I should see "Administration board"
+
+  Scenario: Admin user authentification failed login
+    Given I am a guest user
+    And I follow "/admin/"
+    When I fill "admin" as "username"
+    And I fill "bad-password" as "password"
+    Then I should see "The password does not match!"
+    And I should see "Please Login"
