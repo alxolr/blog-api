@@ -5,6 +5,7 @@
   "engine": {
     "node": "v6.3.0"
   },
+  "start": "app.js",
   "main": "app.js",
   "dependencies": {
     "ejs": "^2.4.2",
