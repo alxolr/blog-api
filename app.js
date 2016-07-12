@@ -2,21 +2,18 @@
   "use strict";
   const express = require('express'),
     app = express(),
-    pdfService = require('./services/pdf.service');
+    configs = require('./configs/config');
 
-  app.set("view engine", "ejs");
+  app.set('view engine', 'ejs');
+  app.use(express.static('public'));
 
   app.get('/', (req, res) => {
-    pdfService({
-      "projects": [{
-        "name": "Little Fashion Gallery"
-      }]
-    }, err => res.end('The file was prepared for download, proceed at http://localhost:8080/download'));
-  });
-  app.get('/download', function(req, res) {
-    res.download('output.pdf');
+    res.render('index', {
+      title: "ALXOLR Homepage"
+    });
   });
 
-  app.listen(8080, () => console.log('APP is working!'));
-
+  app.listen(configs.PORT, () => {
+    console.log('Application is running at http://localhost:' + configs.PORT + '/');
+  });
 })();
