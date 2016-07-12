@@ -5,7 +5,6 @@
   "engine": {
     "node": "v6.3.0"
   },
-  "start": "app.js",
   "main": "app.js",
   "dependencies": {
     "ejs": "^2.4.2",
@@ -13,7 +12,8 @@
     "pdfkit": "^0.7.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
