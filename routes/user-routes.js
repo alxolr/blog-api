@@ -10,26 +10,30 @@
 
     router.post('/', (req, res) => {
         let user = new User(req.body);
-
         user.save((err) => {
             if (err) {
-                res.json({
-                    success: false,
-                    errors: utils.listifyErrors(err)
-                });
+                if (err.code === 11000) {
+                    res.json({
+                        success: false,
+                        errors: "User already registered in the system"
+                    });
+                } else {
+                    res.json({
+                        success: false,
+                        errors: utils.listifyErrors(err)
+                    });
+                }
             } else {
                 let jwt = require('jsonwebtoken'),
                     token = jwt.sign(user, config.secretKey, {
                         expiresIn: 60
                     });
-
                 res.json({
                     success: true,
                     message: "User was successfully created",
                     user: user,
                     token: token
                 });
-
             }
         });
 

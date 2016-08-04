@@ -31,6 +31,10 @@
                     }, 0);
                 },
                 message: `{VALUE} is not a valid email address`
+            },
+            index: {
+                unique: true,
+                dropDups: true,
             }
         },
         'rights': {

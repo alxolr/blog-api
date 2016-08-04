@@ -3,7 +3,7 @@
 
     module.exports = {
         listifyErrors: (err) => {
-
+            console.log(err);
             let errorMessages = [];
             for (let property in err.errors) {
                 errorMessages.push({
