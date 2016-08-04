@@ -1,10 +1,39 @@
 (() => {
     "use strict";
-    
+
     const router = require('express').Router(),
-    path = require('path'),
-    middlewares = require(path.join(__dirname + '../midlewares/acl'));
-    User = require(path.join(__dirname + '../models/user'));
+        User = require('../models/user'),
+        assert = require('assert'),
+        config = require('../config'),
+        utils = require('../helpers/utils');
+
+
+    router.post('/', (req, res) => {
+        let user = new User(req.body);
+
+        user.save((err) => {
+            if (err) {
+                res.json({
+                    success: false,
+                    errors: utils.listifyErrors(err)
+                });
+            } else {
+                let jwt = require('jsonwebtoken'),
+                    token = jwt.sign(user, config.secretKey, {
+                        expiresIn: 60
+                    });
+
+                res.json({
+                    success: true,
+                    message: "User was successfully created",
+                    user: user,
+                    token: token
+                });
+
+            }
+        });
+
+    });
 
     module.exports = router;
 })();
