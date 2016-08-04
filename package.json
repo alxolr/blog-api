@@ -1,15 +1,12 @@
 {
   "name": "blog",
   "version": "1.0.0",
-  "description": "",
+  "description": "Web blog api",
   "engine": {
     "node": "v6.3.0"
   },
   "main": "app.js",
   "dependencies": {
-    "ejs": "^2.4.2",
-    "express": "^4.13.4",
-    "pdfkit": "^0.7.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
