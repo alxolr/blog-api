@@ -12,10 +12,10 @@
         let user = new User(req.body);
         user.save((err) => {
             if (err) {
-                if (err.code === 11000) {
+                if (err.hasOwnProperty('code') && err.code === utils.mongo.UNIQUE_KEY_VIOLATION) {
                     res.json({
                         success: false,
-                        errors: "User already registered in the system"
+                        errors: "User already registered in the system."
                     });
                 } else {
                     res.json({
@@ -30,12 +30,15 @@
                     });
                 res.json({
                     success: true,
-                    message: "User was successfully created",
+                    message: "User was successfully created.",
                     user: user,
                     token: token
                 });
             }
         });
+    });
+
+    router.post('/login', (req, res) => {
 
     });
 

@@ -13,6 +13,9 @@
             }
 
             return errorMessages;
+        },
+        mongo: {
+            UNIQUE_KEY_VIOLATION: 11000
         }
     };
 })();
