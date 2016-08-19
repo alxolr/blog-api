@@ -45,42 +45,46 @@
 
         User.findOne({
             email: email
-        }, (err, user) => {
-            if (err) {
-                res.json({
-                    success: false,
-                    error: utils.listifyErrors(err)
-                });
-            } else {
-                if (user) {
-                    let hash = crypto.createHash('sha256'),
-                        providedEncryptedPassword = hash.update(password).digest('hex');
+        }).then(handleSuccess, handleErrors)
 
-                    if (user.password === providedEncryptedPassword) {
-                        let token = jwt.sign(user, config.secretKey, {
-                            expiresIn: 60
-                        });
+        function handleSuccess(user) {
+            if (user) {
+                let hash = crypto.createHash('sha256'),
+                    providedEncryptedPassword = hash.update(password).digest('hex');
 
-                        res.json({
-                            success: true,
-                            user: user,
-                            token: token,
-                            message: "The user was successfully logged in"
-                        });
-                    } else {
-                        res.json({
-                            success: false,
-                            message: "The provided password does not match existing one"
-                        });
-                    }
+                if (user.password === providedEncryptedPassword) {
+                    let token = jwt.sign(user, config.secretKey, {
+                        expiresIn: 60
+                    });
+
+                    res.json({
+                        success: true,
+                        user: user,
+                        token: token,
+                        message: "The user was successfully logged in."
+                    });
                 } else {
                     res.json({
-                        sucess: false,
-                        message: "The provided email was not found in the system."
+                        success: false,
+                        message: "The provided password does not match."
                     });
                 }
+            } else {
+                res.json({
+                    sucess: false,
+                    message: "The provided email was not found in the system."
+                });
             }
-        });
+
+        }
+
+        function handleErrors(err) {
+            res.json({
+                success: false,
+                error: utils.listifyErrors(err)
+            });
+
+        }
     });
 
     module.exports = router;
