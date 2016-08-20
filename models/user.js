@@ -49,6 +49,7 @@
         }
     });
 
+
     UserSchema.pre('save', function(next) {
         let password = this.password,
             hash = crypto.createHash('sha256');
@@ -64,6 +65,18 @@
         this.updated_at = new Date();
         next();
     });
+
+
+    UserSchema.pre('update', function(next) {
+
+        this.update({}, {
+            $set: {
+                updated_at: new Date()
+            }
+        })
+        next();
+    });
+
 
     module.exports = mongoose.model('User', UserSchema);
 })();

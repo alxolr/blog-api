@@ -39,6 +39,42 @@
         });
     });
 
+    router.put('/:id', (req, res) => {
+        
+        if (req.body['password'] !== undefined) {
+            let hash = crypto.createHash('sha256');
+            req.body.password = hash.update(req.body.password).digest('hex');  
+        }
+
+        User.update({
+            _id: req.params.id
+        }, {'$set': req.body}).then(handleSuccess, handleErrors);
+
+        function handleSuccess(result) {
+            User.findOne({
+                _id: req.params.id
+            }).then(generateToken, throwErrors);
+
+            function generateToken(user) {
+                generateTokenForUser(user, res, "The user was successfully updated");
+            }
+
+            function throwErrors(err) {
+                res.json({
+                    success: false,
+                    message: utils.listifyErrors(err)
+                });
+            }
+        }
+
+        function handleErrors(err) {
+            res.json({
+                success: false,
+                message: utils.listifyErrors(err)
+            });
+        }
+    });
+
     router.post('/login', (req, res) => {
         let email = req.body.email,
             password = req.body.password;
@@ -53,16 +89,7 @@
                     providedEncryptedPassword = hash.update(password).digest('hex');
 
                 if (user.password === providedEncryptedPassword) {
-                    let token = jwt.sign(user, config.secretKey, {
-                        expiresIn: 60
-                    });
-
-                    res.json({
-                        success: true,
-                        user: user,
-                        token: token,
-                        message: "The user was successfully logged in."
-                    });
+                    generateTokenForUser(user, res, "The user was successfully logged in.")
                 } else {
                     res.json({
                         success: false,
@@ -86,6 +113,19 @@
 
         }
     });
+
+    function generateTokenForUser(user, res, message) {
+        let token = jwt.sign(user, config.secretKey, {
+            expiresIn: 60
+        });
+
+        res.json({
+            success: true,
+            user: user,
+            token: token,
+            message: message
+        });
+    }
 
     module.exports = router;
 })();
