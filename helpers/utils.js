@@ -22,7 +22,7 @@
             PASSWORD_NO_MATCH: "The provided password does not match.",
             EMAIL_REQUIRED: "User should provide a valid email address.",
             EMAIL_NO_MATCH: "The provided email was not found in the system.",
-            DUPLICATE_USER: "User already registered in the system.",
+            USER_DUPLICATE: "User already registered in the system.",
             USER_CREATED_SUCCESS: "User was succesfully created.",
             USER_UPDATED_SUCCESS: "The user was successfully updated",
             USER_LOGGEDIN_SUCCESS: "The user was successfully logged in."

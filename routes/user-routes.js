@@ -16,7 +16,7 @@
                 if (err.hasOwnProperty('code') && err.code === utils.mongo.UNIQUE_KEY_VIOLATION) {
                     res.json({
                         success: false,
-                        message: utils.messages.DUPLICATE_USER
+                        message: utils.messages.USER_DUPLICATE
                     });
                 } else {
                     res.json({
