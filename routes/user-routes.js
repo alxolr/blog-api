@@ -16,7 +16,7 @@
                 if (err.hasOwnProperty('code') && err.code === utils.mongo.UNIQUE_KEY_VIOLATION) {
                     res.json({
                         success: false,
-                        message: "User already registered in the system."
+                        message: utils.messages.DUPLICATE_USER
                     });
                 } else {
                     res.json({
@@ -25,16 +25,7 @@
                     });
                 }
             } else {
-                let jwt = require('jsonwebtoken'),
-                    token = jwt.sign(user, config.secretKey, {
-                        expiresIn: 60
-                    });
-                res.json({
-                    success: true,
-                    message: "User was successfully created.",
-                    user: user,
-                    token: token
-                });
+                generateTokenForUser(user, res, utils.messages.USER_CREATED_SUCCESS);
             }
         });
     });
@@ -56,7 +47,7 @@
             }).then(generateToken, throwErrors);
 
             function generateToken(user) {
-                generateTokenForUser(user, res, "The user was successfully updated");
+                generateTokenForUser(user, res, utils.messages.USER_UPDATED_SUCCESS);
             }
 
             function throwErrors(err) {
@@ -89,17 +80,17 @@
                     providedEncryptedPassword = hash.update(password).digest('hex');
 
                 if (user.password === providedEncryptedPassword) {
-                    generateTokenForUser(user, res, "The user was successfully logged in.")
+                    generateTokenForUser(user, res, utils.messages.USER_LOGGEDIN_SUCCESS);
                 } else {
                     res.json({
                         success: false,
-                        message: "The provided password does not match."
+                        message: utils.messages.PASSWORD_NO_MATCH
                     });
                 }
             } else {
                 res.json({
                     sucess: false,
-                    message: "The provided email was not found in the system."
+                    message: utils.messages.EMAIL_NO_MATCH
                 });
             }
 

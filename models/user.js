@@ -2,7 +2,8 @@
     "use strict";
     const mongoose = require('mongoose'),
         Schema = mongoose.Schema,
-        crypto = require('crypto');
+        crypto = require('crypto'),
+        utils = require('../helpers/utils');
 
     const USER_RIGHTS = 'USER';
     const ADMIN_RIGHTS = 'ADMIN';
@@ -19,11 +20,11 @@
         },
         'password': {
             type: String,
-            required: [true, "User should provide a password."]
+            required: [true, utils.messages.PASSWORD_REQUIRED]
         },
         'email': {
             type: String,
-            required: [true, "User should provide an email address."],
+            required: [true, utils.messages.EMAIL_REQUIRED],
             validate: {
                 validator: (v, cb) => {
                     setTimeout(() => {
