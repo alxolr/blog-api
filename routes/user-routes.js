@@ -32,7 +32,7 @@
 
     router.put('/:id', (req, res) => {
         
-        if (req.body['password'] !== undefined) {
+        if (req.body.password !== undefined) {
             let hash = crypto.createHash('sha256');
             req.body.password = hash.update(req.body.password).digest('hex');  
         }
@@ -72,7 +72,7 @@
 
         User.findOne({
             email: email
-        }).then(handleSuccess, handleErrors)
+        }).then(handleSuccess, handleErrors);
 
         function handleSuccess(user) {
             if (user) {
