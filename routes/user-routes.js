@@ -89,7 +89,7 @@
                 }
             } else {
                 res.json({
-                    sucess: false,
+                    success: false,
                     message: utils.messages.EMAIL_NO_MATCH
                 });
             }
