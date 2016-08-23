@@ -74,7 +74,7 @@
             $set: {
                 updated_at: new Date()
             }
-        })
+        });
         next();
     });
 
