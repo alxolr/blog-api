@@ -6,7 +6,7 @@
         assert = require('assert'),
         config = require('../config'),
         utils = require('../helpers/utils'),
-        crypto = require('crypto'),
+        security = require('../modules/security')(config),
         jwt = require('jsonwebtoken');
 
     router.post('/', (req, res) => {
@@ -31,15 +31,16 @@
     });
 
     router.put('/:id', (req, res) => {
-        
+
         if (req.body.password !== undefined) {
-            let hash = crypto.createHash('sha256');
-            req.body.password = hash.update(req.body.password).digest('hex');  
+            req.body.password = security.hashify(req.body.password);
         }
 
         User.update({
             _id: req.params.id
-        }, {'$set': req.body}).then(handleSuccess, handleErrors);
+        }, {
+            '$set': req.body
+        }).then(handleSuccess, handleErrors);
 
         function handleSuccess(result) {
             User.findOne({
@@ -76,8 +77,7 @@
 
         function handleSuccess(user) {
             if (user) {
-                let hash = crypto.createHash('sha256'),
-                    providedEncryptedPassword = hash.update(password).digest('hex');
+                let providedEncryptedPassword = security.hashify(password);
 
                 if (user.password === providedEncryptedPassword) {
                     generateTokenForUser(user, res, utils.messages.USER_LOGGEDIN_SUCCESS);

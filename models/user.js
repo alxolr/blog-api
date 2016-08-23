@@ -3,8 +3,10 @@
     const mongoose = require('mongoose'),
         Schema = mongoose.Schema,
         crypto = require('crypto'),
-        utils = require('../helpers/utils');
-
+        utils = require('../helpers/utils'),
+        config = require('../config'),
+        security = require('../modules/security')(config);
+        
     const USER_RIGHTS = 'USER';
     const ADMIN_RIGHTS = 'ADMIN';
     const PREMIUM_USER_RIGHTS = 'ADMIN';
@@ -52,12 +54,8 @@
 
 
     UserSchema.pre('save', function(next) {
-        let password = this.password,
-            hash = crypto.createHash('sha256');
-
-        hash.update(password);
-
-        this.password = hash.digest('hex');
+        //hash the password 
+        this.password = security.hashify(this.password);
 
         if (!this.created_at) {
             this.created_at = new Date();
@@ -69,7 +67,6 @@
 
 
     UserSchema.pre('update', function(next) {
-
         this.update({}, {
             $set: {
                 updated_at: new Date()
