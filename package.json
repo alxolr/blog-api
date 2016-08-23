@@ -22,5 +22,9 @@
   },
   "author": "Alexandru Olaru",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/alxolr/blog#readme"
+  "homepage": "https://bitbucket.org/alxolr/blog#readme",
+  "devDependencies": {
+    "mongodb": "^2.2.7",
+    "request": "^2.74.0"
+  }
 }
