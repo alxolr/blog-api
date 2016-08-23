@@ -3,7 +3,9 @@
     const config = require('../config'),
         mongodb = require('mongodb').MongoClient,
         assert = require('assert'),
-        request = require('request');
+        request = require('request'),
+        utils = require('../helpers/utils'),
+        resource = `http://localhost:${config.port}/api/v1/users`;
 
     describe('User Routes', () => {
         beforeEach(() => {
@@ -17,11 +19,59 @@
                 function handleErrors(err) {
                     assert.equal(err, null);
                 }
-            });     
+            });
         });
 
-        it('Should create a user', (done) => {
-            done();
+        it('Should create a user if email and password provided', (done) => {
+            request.post(resource, {
+                form: {
+                    email: 'alxolr@gmail.com',
+                    password: 'test'
+                }
+            }, (err, res, body) => {
+                assert.equal(err, null);
+                let objectBody = JSON.parse(body);
+                assert.equal(objectBody.success, true);
+                assert.equal(objectBody.message, utils.messages.USER_CREATED_SUCCESS);
+                done();
+            });
+        });
+
+        it(`Should return "${utils.messages.EMAIL_NO_MATCH}" for invalid email login.`, (done) => {
+            request.post(resource + '/login', {
+                form: {
+                    email: 'johny@bravo.com',
+                    password: '1'
+                }
+            }, (err, res, body) => {
+                assert.equal(err, null);
+                let result = JSON.parse(body);
+                assert.equal(result.sucess, false);
+                assert.equal(result.message, utils.messages.EMAIL_NO_MATCH);
+                done();
+            });
+        });
+
+        it(`Should return ${utils.messages.PASSWORD_NO_MATCH} given an invalid password for login`, (done) => {
+            request.post(resource, {
+                form: {
+                    email: 'johny@bravo.com',
+                    password: '1'
+                }
+            }, (err, res, body) => {
+                request.post(`${resource}/login`, {
+                    form: {
+                        email: 'johny@bravo.com',
+                        password: '1'
+                    }
+                }, (err, res, body) => {
+                    let result = JSON.parse(body);
+
+                    assert.equal(err, null);
+                    assert.equal(result.message, utils.messages.USER_LOGGEDIN_SUCCESS);
+                    done();
+                });
+            });
         });
     });
 })();
