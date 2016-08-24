@@ -22,6 +22,15 @@
             });
         });
 
+        function assertOk(err, body, isSuccess, message, next) {
+            assert.equal(err, null);
+
+            let json = JSON.parse(body);
+            assert.equal(json.success, isSuccess);
+            assert.equal(json.message, message);
+            next();
+        }
+
         // Create user tests
         describe('Create user', () => {
             it('Should create a user if email and password provided', (done) => {
@@ -31,11 +40,7 @@
                         password: 'test'
                     }
                 }, (err, res, body) => {
-                    assert.equal(err, null);
-                    let objectBody = JSON.parse(body);
-                    assert.equal(objectBody.success, true);
-                    assert.equal(objectBody.message, utils.messages.USER_CREATED_SUCCESS);
-                    done();
+                    assertOk(err, body, true, utils.messages.USER_CREATED_SUCCESS, done);
                 });
             });
         });
@@ -49,11 +54,7 @@
                         password: '1'
                     }
                 }, (err, res, body) => {
-                    assert.equal(err, null);
-                    let result = JSON.parse(body);
-                    assert.equal(result.success, false);
-                    assert.equal(result.message, utils.messages.EMAIL_NO_MATCH);
-                    done();
+                    assertOk(err, body, false, utils.messages.EMAIL_NO_MATCH, done);
                 });
             });
 
@@ -64,17 +65,14 @@
                         password: '1'
                     }
                 }, (err, res, body) => {
+                    assert.equal(err, null);
                     request.post(`${resource}/login`, {
                         form: {
                             email: 'johny@bravo.com',
                             password: 'test'
                         }
                     }, (err, res, body) => {
-                        let result = JSON.parse(body);
-
-                        assert.equal(err, null);
-                        assert.equal(result.message, utils.messages.PASSWORD_NO_MATCH);
-                        done();
+                        assertOk(err, body, false, utils.messages.PASSWORD_NO_MATCH, done);
                     });
                 });
             });
@@ -120,10 +118,7 @@
                             email: 'jack@bravo.com'
                         }
                     }, (err, res, body) => {
-                        assert.equal(err, null);
-                        let result = JSON.parse(body);
-                        assert.equal(result.message, utils.messages.INVALID_TOKEN);
-                        done();
+                        assertOk(err, body, false, utils.messages.INVALID_TOKEN, done);
                     });
                 });
             });
@@ -145,10 +140,7 @@
                             token: token
                         }
                     }, (err, res, body) => {
-                        assert.equal(err, null);
-                        let result = JSON.parse(body);
-                        assert.equal(result.message, utils.messages.USER_UPDATED_SUCCESS);
-                        done();
+                        assertOk(err, body, true, utils.messages.USER_UPDATED_SUCCESS, done);
                     });
                 });
             });
