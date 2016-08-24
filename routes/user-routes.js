@@ -7,7 +7,8 @@
         config = require('../config'),
         utils = require('../helpers/utils'),
         security = require('../modules/security')(config),
-        jwt = require('jsonwebtoken');
+        jwt = require('jsonwebtoken'),
+        middlewares = require('../middlewares/middlewares');
 
     router.post('/', (req, res) => {
         let user = new User(req.body);
@@ -30,7 +31,7 @@
         });
     });
 
-    router.put('/:id', (req, res) => {
+    router.put('/:id', middlewares.isAuthenticated, (req, res) => {
 
         if (req.body.password !== undefined) {
             req.body.password = security.hashify(req.body.password);
