@@ -5,6 +5,7 @@
         User = require('../models/user'),
         assert = require('assert'),
         config = require('../config'),
+        ObjectId = require('mongoose').Types.ObjectId,
         utils = require('../helpers/utils'),
         security = require('../modules/security')(config),
         jwt = require('jsonwebtoken'),
@@ -31,7 +32,7 @@
         });
     });
 
-    router.put('/:id', middlewares.isAuthenticated, (req, res) => {
+    router.put('/:id', middlewares.paramsValidation, middlewares.isAuthenticated, (req, res) => {
 
         if (req.body.password !== undefined) {
             req.body.password = security.hashify(req.body.password);
@@ -68,9 +69,10 @@
         }
     });
 
-    router.get('/:id', middlewares.isAuthenticated, (req, res) => {
+    router.get('/:id', middlewares.paramsValidation, middlewares.isAuthenticated, (req, res) => {
+        let id = req.params.id;
         User.findOne({
-            _id: req.params.id
+            _id: id
         }).then(handleSuccess, handleErrors);
 
         function handleSuccess(user) {

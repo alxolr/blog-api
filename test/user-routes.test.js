@@ -134,6 +134,7 @@
                     let result = JSON.parse(body),
                         token = result.token,
                         userId = '' + result.user._id;
+
                     request.put(`${resource}/${userId}`, {
                         form: {
                             email: 'jack@bravo.com',
@@ -147,7 +148,7 @@
         });
 
         describe('Get User', () => {
-            it(`Should return ${utils.messages.INVALID_TOKEN} when token not provided`, done => {
+            it(`Should return "${utils.messages.INVALID_TOKEN}" when token not provided`, done => {
                 //create a user
                 request.post(resource, {
                     form: {
@@ -162,6 +163,52 @@
                     //get the created user without token
                     request.get(`${resource}/${userId}`, (err, res, body) => {
                         assertOk(err, body, false, utils.messages.INVALID_TOKEN, done);
+                    });
+                });
+            });
+
+            it(`Should return the requested user given the valid token and userId`, done => {
+                //create a user
+                request.post(resource, {
+                    form: {
+                        email: "domy@jigly.com",
+                        password: 'domy1'
+                    }
+                }, (err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body),
+                        userId = json.user._id,
+                        token = json.token;
+
+                    //get the created user without token
+                    request.get(`${resource}/${userId}`, {
+                        form: {
+                            token: token
+                        }
+                    }, (err, res, body) => {
+                        let json = JSON.parse(body);
+                        assert.equal(json.user._id, userId);
+                        assertOk(err, body, true, undefined, done);
+                    });
+                });
+            });
+
+            it(`Should return "${utils.messages.INVALID_MONGO_ID}" given an invalid User id`, done => {
+                request.post(resource, {
+                    form: {
+                        email: 'andron2@gmail.com',
+                        password: 'sarugon'
+                    }
+                }, (err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body);
+
+                    request(`${resource}/1`, {
+                        form: {
+                            token: json.token
+                        }
+                    }, (err, res, body) => {
+                        assertOk(err, body, false, utils.messages.INVALID_MONGO_ID, done);
                     });
                 });
             });

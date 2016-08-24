@@ -29,6 +29,25 @@
                     message: utils.messages.INVALID_TOKEN
                 });
             }
+        },
+        paramsValidation: (req, res, next) => {
+            if (Object.prototype.hasOwnProperty.call(req, 'params')) {
+                for (let param in req.params) {
+                    switch (param) {
+                        case 'id':
+                            if (!/^[0-9a-f]{24}$/img.test(req.params[param])) {
+                                res.json({
+                                    success: false,
+                                    message: utils.messages.INVALID_MONGO_ID
+                                });
+                            }
+                            break;
+                    }
+
+                }
+            }
+
+            next();
         }
     };
 })();
