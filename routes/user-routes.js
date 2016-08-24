@@ -32,71 +32,6 @@
         });
     });
 
-    router.put('/:id', middlewares.paramsValidation, middlewares.isAuthenticated, (req, res) => {
-
-        if (req.body.password !== undefined) {
-            req.body.password = security.hashify(req.body.password);
-        }
-
-        User.update({
-            _id: req.params.id
-        }, {
-            '$set': req.body
-        }).then(handleSuccess, handleErrors);
-
-        function handleSuccess(result) {
-            User.findOne({
-                _id: req.params.id
-            }).then(generateToken, throwErrors);
-
-            function generateToken(user) {
-                generateTokenForUser(user, res, utils.messages.USER_UPDATED_SUCCESS);
-            }
-
-            function throwErrors(err) {
-                res.json({
-                    success: false,
-                    message: utils.listifyErrors(err)
-                });
-            }
-        }
-
-        function handleErrors(err) {
-            res.json({
-                success: false,
-                message: utils.listifyErrors(err)
-            });
-        }
-    });
-
-    router.get('/:id', middlewares.paramsValidation, middlewares.isAuthenticated, (req, res) => {
-        let id = req.params.id;
-        User.findOne({
-            _id: id
-        }).then(handleSuccess, handleErrors);
-
-        function handleSuccess(user) {
-            if (user) {
-                res.json({
-                    success: true,
-                    user: user
-                });
-            } else {
-                res.status(404).json({
-                    success: false,
-                    message: utils.messages.USER_NOT_FOUND
-                });
-            }
-        }
-
-        function handleErrors(err) {
-            res.json({
-                success: false,
-                message: utils.listifyErrors(err)
-            });
-        }
-    });
-
     router.post('/login', (req, res) => {
         let email = req.body.email,
             password = req.body.password;
@@ -134,6 +69,79 @@
 
         }
     });
+
+
+    router.route('/:id')
+        .all(middlewares.validateParameters, middlewares.isAuthenticated)
+        .put((req, res) => {
+
+            if (req.body.password !== undefined) {
+                req.body.password = security.hashify(req.body.password);
+            }
+
+            User.update({
+                _id: req.params.id
+            }, {
+                '$set': req.body
+            }).then(handleSuccess, handleErrors);
+
+            function handleSuccess(result) {
+                User.findOne({
+                    _id: req.params.id
+                }).then(generateToken, throwErrors);
+
+                function generateToken(user) {
+                    generateTokenForUser(user, res, utils.messages.USER_UPDATED_SUCCESS);
+                }
+
+                function throwErrors(err) {
+                    res.json({
+                        success: false,
+                        message: utils.listifyErrors(err)
+                    });
+                }
+            }
+
+            function handleErrors(err) {
+                res.json({
+                    success: false,
+                    message: utils.listifyErrors(err)
+                });
+            }
+        })
+        .get((req, res) => {
+            let id = req.params.id;
+            User.findOne({
+                _id: id
+            }).then(handleSuccess, handleErrors);
+
+            function handleSuccess(user) {
+                if (user) {
+                    res.json({
+                        success: true,
+                        user: user
+                    });
+                } else {
+                    res.status(404).json({
+                        success: false,
+                        message: utils.messages.USER_NOT_FOUND
+                    });
+                }
+            }
+
+            function handleErrors(err) {
+                res.json({
+                    success: false,
+                    message: utils.listifyErrors(err)
+                });
+            }
+        })
+        .delete((req, res) => {
+            res.json({
+                success: false,
+                message: "False"
+            });
+        });
 
     function generateTokenForUser(user, res, message) {
         let token = jwt.sign(user, config.secretKey, {

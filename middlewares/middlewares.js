@@ -30,7 +30,7 @@
                 });
             }
         },
-        paramsValidation: (req, res, next) => {
+        validateParameters: (req, res, next) => {
             if (Object.prototype.hasOwnProperty.call(req, 'params')) {
                 for (let param in req.params) {
                     switch (param) {
