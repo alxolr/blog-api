@@ -103,7 +103,7 @@
         });
 
         describe('Update User', () => {
-            it('Should return access denied if no token provided', (done) => {
+            it(`Should return "${utils.messages.INVALID_TOKEN}" when updating user without token`, (done) => {
                 //create a user
                 request.post(resource, {
                     form: {
@@ -125,9 +125,32 @@
                         assert.equal(result.message, utils.messages.INVALID_TOKEN);
                         done();
                     });
-
                 });
+            });
 
+            it(`Should return "${utils.messages.USER_UPDATED_SUCCESS}" for valid data`, (done) => {
+                request.post(resource, {
+                    form: {
+                        email: 'johny@bravo.com',
+                        password: '1'
+                    }
+                }, (err, res, body) => {
+                    assert.equal(err, null);
+                    let result = JSON.parse(body),
+                        token = result.token,
+                        userId = '' + result.user._id;
+                    request.put(`${resource}/${userId}`, {
+                        form: {
+                            email: 'jack@bravo.com',
+                            token: token
+                        }
+                    }, (err, res, body) => {
+                        assert.equal(err, null);
+                        let result = JSON.parse(body);
+                        assert.equal(result.message, utils.messages.USER_UPDATED_SUCCESS);
+                        done();
+                    });
+                });
             });
         });
     });
