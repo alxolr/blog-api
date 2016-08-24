@@ -68,6 +68,33 @@
         }
     });
 
+    router.get('/:id', middlewares.isAuthenticated, (req, res) => {
+        User.findOne({
+            _id: req.params.id
+        }).then(handleSuccess, handleErrors);
+
+        function handleSuccess(user) {
+            if (user) {
+                res.json({
+                    success: true,
+                    user: user
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: utils.messages.USER_NOT_FOUND
+                });
+            }
+        }
+
+        function handleErrors(err) {
+            res.json({
+                success: false,
+                message: utils.listifyErrors(err)
+            });
+        }
+    });
+
     router.post('/login', (req, res) => {
         let email = req.body.email,
             password = req.body.password;

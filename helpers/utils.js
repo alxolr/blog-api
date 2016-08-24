@@ -26,6 +26,7 @@
             USER_CREATED_SUCCESS: "User was succesfully created.",
             USER_UPDATED_SUCCESS: "The user was successfully updated",
             USER_LOGGEDIN_SUCCESS: "The user was successfully logged in.",
+            USER_NOT_FOUND: "Requested user not found.",
             INVALID_TOKEN: "Access denied. Please provide a token.",
             EXPIRED_TOKEN: "Access denied. Provided token invalid or expired"
         }

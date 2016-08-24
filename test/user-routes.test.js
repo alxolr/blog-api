@@ -145,5 +145,26 @@
                 });
             });
         });
+
+        describe('Get User', () => {
+            it(`Should return ${utils.messages.INVALID_TOKEN} when token not provided`, done => {
+                //create a user
+                request.post(resource, {
+                    form: {
+                        email: "domy@jigly.com",
+                        password: 'domy1'
+                    }
+                }, (err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body),
+                        userId = json.user._id;
+
+                    //get the created user without token
+                    request.get(`${resource}/${userId}`, (err, res, body) => {
+                        assertOk(err, body, false, utils.messages.INVALID_TOKEN, done);
+                    });
+                });
+            });
+        });
     });
 })();
