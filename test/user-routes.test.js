@@ -123,7 +123,7 @@
                 });
             });
 
-            it(`Should return "${utils.messages.USER_UPDATED_SUCCESS}" for valid data`, (done) => {
+            it(`Should return "${utils.messages.USER_UPDATED_SUCCESS}" for valid data and token provided`, (done) => {
                 request.post(resource, {
                     form: {
                         email: 'johny@bravo.com',
