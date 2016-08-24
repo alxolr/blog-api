@@ -8,7 +8,7 @@
         resource = `http://localhost:${config.port}/api/v1/users`;
 
     describe('User Routes', () => {
-        afterEach(() => {
+        const cleanupDb = () => {
             mongodb.connect(config.database, (err, db) => {
                 db.collection('users').remove({}).then(handleSuccess, handleErrors);
 
@@ -20,6 +20,14 @@
                     assert.equal(err, null);
                 }
             });
+        };
+
+        beforeEach(() => {
+            cleanupDb();
+        });
+
+        after(() => {
+            cleanupDb();
         });
 
         const user = {
