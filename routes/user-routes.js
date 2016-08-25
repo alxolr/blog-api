@@ -3,7 +3,6 @@
 
     const router = require('express').Router(),
         User = require('../models/user'),
-        assert = require('assert'),
         config = require('../config'),
         ObjectId = require('mongoose').Types.ObjectId,
         utils = require('../helpers/utils'),
@@ -88,17 +87,10 @@
             function handleSuccess(result) {
                 User.findOne({
                     _id: req.params.userId
-                }).then(generateToken, throwErrors);
+                }).then(generateToken, handleErrors);
 
                 function generateToken(user) {
                     generateTokenForUser(user, res, utils.messages.USER_UPDATED_SUCCESS);
-                }
-
-                function throwErrors(err) {
-                    res.json({
-                        success: false,
-                        message: utils.listifyErrors(err)
-                    });
                 }
             }
         })
@@ -148,6 +140,7 @@
     }
 
     function handleErrors(err) {
+        //res will be taken from local scope
         res.json({
             success: false,
             message: utils.listifyErrors(err)
