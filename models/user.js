@@ -9,7 +9,6 @@
         
     const USER_RIGHTS = 'USER';
     const ADMIN_RIGHTS = 'ADMIN';
-    const PREMIUM_USER_RIGHTS = 'ADMIN';
 
     const UserSchema = new Schema({
         'name': {

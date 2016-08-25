@@ -186,5 +186,46 @@
                 });
             });
         });
+
+        describe("DELETE User", () => {
+            it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when trying to delete a user without token`, done => {
+                generateUser((err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body);
+                    request.delete(`${resource}/${json.user._id}`, (err, res, body) => {
+                        assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
+                    });
+                });
+            });
+
+            it(`Should allow user deletion by the user itself and return "${utils.messages.TOKEN_HIGHJACKED}"`, done => {
+                generateUser((err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body),
+                        token1 = json.token;
+
+                    //generate second user
+                    request.post(resource, {
+                        form: {
+                            email: "johny@comrada.com",
+                            password: "tuition2"
+                        }
+                    }, (err, res, body) => {
+                        assert.equal(err, null);
+                        let json = JSON.parse(body),
+                            token2 = json.token;
+
+                        //delete the second user with the first token
+                        request.delete(`${resource}/${json.user._id}`, {
+                            form: {
+                                token: token1
+                            }
+                        }, (err, res, body) => {
+                            assertOk(err, body, false, utils.messages.TOKEN_HIGHJACKED, done);
+                        });
+                    });
+                });
+            });
+        });
     });
 })();

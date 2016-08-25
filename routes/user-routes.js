@@ -71,8 +71,8 @@
     });
 
 
-    router.route('/:id')
-        .all(middlewares.validateParameters, middlewares.isAuthenticated)
+    router.route('/:userId')
+        .all(middlewares.isValidParameters, middlewares.isAuthenticated)
         .put((req, res) => {
 
             if (req.body.password !== undefined) {
@@ -80,14 +80,14 @@
             }
 
             User.update({
-                _id: req.params.id
+                _id: req.params.userId
             }, {
                 '$set': req.body
             }).then(handleSuccess, handleErrors);
 
             function handleSuccess(result) {
                 User.findOne({
-                    _id: req.params.id
+                    _id: req.params.userId
                 }).then(generateToken, throwErrors);
 
                 function generateToken(user) {
@@ -110,9 +110,8 @@
             }
         })
         .get((req, res) => {
-            let id = req.params.id;
             User.findOne({
-                _id: id
+                _id: req.params.userId
             }).then(handleSuccess, handleErrors);
 
             function handleSuccess(user) {
@@ -136,7 +135,7 @@
                 });
             }
         })
-        .delete((req, res) => {
+        .delete(middlewares.isAllowedOperation, (req, res) => {
             res.json({
                 success: false,
                 message: "False"

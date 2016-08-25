@@ -32,6 +32,7 @@
             USER_NOT_FOUND: "Requested user not found.",
             TOKEN_NOT_PROVIDED: "Access denied. Please provide a token.",
             TOKEN_EXPIRED: "Access denied. Provided token or invalid or expired",
+            TOKEN_HIGHJACKED: "Access denied. Provided token is not valid",
             MONGOID_INVALID: "Provided ID is not a valid one."
         }
     };
