@@ -14,7 +14,7 @@
                     if (err) {
                         return res.json({
                             success: false,
-                            message: utils.messages.EXPIRED_TOKEN
+                            message: utils.messages.TOKEN_EXPIRED
                         });
                     } else {
                         // if everything is good, save to request for use in other routes
@@ -26,7 +26,7 @@
             } else {
                 res.status(403).json({
                     success: false,
-                    message: utils.messages.INVALID_TOKEN
+                    message: utils.messages.TOKEN_NOT_PROVIDED
                 });
             }
         },
@@ -38,7 +38,7 @@
                             if (!/^[0-9a-f]{24}$/img.test(req.params[param])) {
                                 res.json({
                                     success: false,
-                                    message: utils.messages.INVALID_MONGO_ID
+                                    message: utils.messages.MONGOID_INVALID
                                 });
                             }
                             break;

@@ -100,7 +100,7 @@
         });
 
         describe('Update User', () => {
-            it(`Should return "${utils.messages.INVALID_TOKEN}" when updating user without token`, (done) => {
+            it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when updating user without token`, (done) => {
                 generateUser((err, res, body) => {
                     assert.equal(err, null);
                     let result = JSON.parse(body),
@@ -111,7 +111,7 @@
                             email: 'jack@bravo.com'
                         }
                     }, (err, res, body) => {
-                        assertOk(err, body, false, utils.messages.INVALID_TOKEN, done);
+                        assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
                     });
                 });
             });
@@ -136,7 +136,7 @@
         });
 
         describe('Get User', () => {
-            it(`Should return "${utils.messages.INVALID_TOKEN}" when token not provided`, done => {
+            it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when token not provided`, done => {
                 //create a user
                 generateUser((err, res, body) => {
                     assert.equal(err, null);
@@ -145,7 +145,7 @@
 
                     //get the created user without token
                     request.get(`${resource}/${userId}`, (err, res, body) => {
-                        assertOk(err, body, false, utils.messages.INVALID_TOKEN, done);
+                        assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
                     });
                 });
             });
@@ -171,7 +171,7 @@
                 });
             });
 
-            it(`Should return "${utils.messages.INVALID_MONGO_ID}" given an invalid User id`, done => {
+            it(`Should return "${utils.messages.MONGOID_INVALID}" given an invalid User id`, done => {
                 generateUser((err, res, body) => {
                     assert.equal(err, null);
 
@@ -181,7 +181,7 @@
                             token: json.token
                         }
                     }, (err, res, body) => {
-                        assertOk(err, body, false, utils.messages.INVALID_MONGO_ID, done);
+                        assertOk(err, body, false, utils.messages.MONGOID_INVALID, done);
                     });
                 });
             });

@@ -30,9 +30,9 @@
             USER_UPDATED_SUCCESS: "The user was successfully updated",
             USER_LOGGEDIN_SUCCESS: "The user was successfully logged in.",
             USER_NOT_FOUND: "Requested user not found.",
-            INVALID_TOKEN: "Access denied. Please provide a token.",
-            EXPIRED_TOKEN: "Access denied. Provided token invalid or expired",
-            INVALID_MONGO_ID: "Provided ID is not a valid one."
+            TOKEN_NOT_PROVIDED: "Access denied. Please provide a token.",
+            TOKEN_EXPIRED: "Access denied. Provided token or invalid or expired",
+            MONGOID_INVALID: "Provided ID is not a valid one."
         }
     };
 })();
