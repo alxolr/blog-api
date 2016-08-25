@@ -53,7 +53,7 @@
                 token = req.query.token || req.body.token || req.headers['x-access-token'];
 
             jwt.verify(token, config.secretKey, function(err, decoded) {
-                if (userId === decoded._doc._id || decoded._doc.rights === 'ADMIN') {
+                if ((userId === decoded._doc._id) || (decoded._doc.rights.indexOf('ADMIN') !== -1)) {
                     next();
                 } else {
                     res.status(403).json({
@@ -61,6 +61,7 @@
                         message: utils.messages.TOKEN_HIGHJACKED
                     });
                 }
+
             });
 
         }

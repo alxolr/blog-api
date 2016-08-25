@@ -187,7 +187,7 @@
             });
         });
 
-        describe("DELETE User", () => {
+        describe("Delete User", () => {
             it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when trying to delete a user without token`, done => {
                 generateUser((err, res, body) => {
                     assert.equal(err, null);
@@ -198,7 +198,7 @@
                 });
             });
 
-            it(`Should allow user deletion by the user itself and return "${utils.messages.TOKEN_HIGHJACKED}"`, done => {
+            it(`Should allow user deletion by the user itself or "admin" and return "${utils.messages.TOKEN_HIGHJACKED}"`, done => {
                 generateUser((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body),
@@ -212,8 +212,7 @@
                         }
                     }, (err, res, body) => {
                         assert.equal(err, null);
-                        let json = JSON.parse(body),
-                            token2 = json.token;
+                        let json = JSON.parse(body);
 
                         //delete the second user with the first token
                         request.delete(`${resource}/${json.user._id}`, {
@@ -223,6 +222,20 @@
                         }, (err, res, body) => {
                             assertOk(err, body, false, utils.messages.TOKEN_HIGHJACKED, done);
                         });
+                    });
+                });
+            });
+
+            it(`Should return "${utils.messages.USER_DELETED_SUCCESS}" for the valid user deletion`, done => {
+                generateUser((err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body);
+                    request.delete(`${resource}/${json.user._id}`, {
+                        form: {
+                            token: json.token
+                        }
+                    }, (err, res, body) => {
+                        assertOk(err, body, true, utils.messages.USER_DELETED_SUCCESS, done);
                     });
                 });
             });

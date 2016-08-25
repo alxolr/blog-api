@@ -28,11 +28,12 @@
             USER_DUPLICATE: "User already registered in the system.",
             USER_CREATED_SUCCESS: "User was succesfully created.",
             USER_UPDATED_SUCCESS: "The user was successfully updated",
+            USER_DELETED_SUCCESS: "The user was successfully deleted",
             USER_LOGGEDIN_SUCCESS: "The user was successfully logged in.",
             USER_NOT_FOUND: "Requested user not found.",
             TOKEN_NOT_PROVIDED: "Access denied. Please provide a token.",
             TOKEN_EXPIRED: "Access denied. Provided token or invalid or expired",
-            TOKEN_HIGHJACKED: "Access denied. Provided token is not valid",
+            TOKEN_HIGHJACKED: "Access denied. Provided token was highjacked",
             MONGOID_INVALID: "Provided ID is not a valid one."
         }
     };

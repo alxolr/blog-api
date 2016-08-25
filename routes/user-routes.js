@@ -101,13 +101,6 @@
                     });
                 }
             }
-
-            function handleErrors(err) {
-                res.json({
-                    success: false,
-                    message: utils.listifyErrors(err)
-                });
-            }
         })
         .get((req, res) => {
             User.findOne({
@@ -127,19 +120,18 @@
                     });
                 }
             }
-
-            function handleErrors(err) {
-                res.json({
-                    success: false,
-                    message: utils.listifyErrors(err)
-                });
-            }
         })
         .delete(middlewares.isAllowedOperation, (req, res) => {
-            res.json({
-                success: false,
-                message: "False"
-            });
+            User.remove({
+                _id: req.params.userId
+            }).then(handleSuccess, handleErrors);
+
+            function handleSuccess(result) {
+                res.json({
+                    success: true,
+                    message: utils.messages.USER_DELETED_SUCCESS
+                });
+            }
         });
 
     function generateTokenForUser(user, res, message) {
@@ -152,6 +144,13 @@
             user: user,
             token: token,
             message: message
+        });
+    }
+
+    function handleErrors(err) {
+        res.json({
+            success: false,
+            message: utils.listifyErrors(err)
         });
     }
 

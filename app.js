@@ -8,6 +8,7 @@
         assert = require('assert'),
         userRoutes = require('./routes/user-routes');
 
+    mongoose.Promise = global.Promise;
     mongoose.connect(config.database, (err) => {
         assert.equal(err, null);
         console.log(`Successfuly connected to ${config.database}`);
