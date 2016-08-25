@@ -23,7 +23,7 @@
                 });
 
             } else {
-                res.status(403).json({
+               return res.status(403).json({
                     success: false,
                     message: utils.messages.TOKEN_NOT_PROVIDED
                 });
@@ -34,8 +34,8 @@
                 for (let param in req.params) {
                     switch (param) {
                         case 'userId':
-                            if (!/^[0-9a-f]{24}$/img.test(req.params[param])) {
-                                res.json({
+                            if (!/^[0-9a-f]{24}$/gmi.test(req.params[param])) {
+                                return res.json({
                                     success: false,
                                     message: utils.messages.MONGOID_INVALID
                                 });
@@ -56,7 +56,7 @@
                 if ((userId === decoded._doc._id) || (decoded._doc.rights.indexOf('ADMIN') !== -1)) {
                     next();
                 } else {
-                    res.status(403).json({
+                    return res.json({
                         success: false,
                         message: utils.messages.TOKEN_HIGHJACKED
                     });

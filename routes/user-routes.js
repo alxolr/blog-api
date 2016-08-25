@@ -71,7 +71,7 @@
 
 
     router.route('/:userId')
-        .all(middlewares.isValidParameters, middlewares.isAuthenticated)
+        .all(middlewares.isValidParameters, middlewares.isAuthenticated, middlewares.isAllowedOperation)
         .put((req, res) => {
 
             if (req.body.password !== undefined) {
@@ -101,25 +101,25 @@
 
             function handleSuccess(user) {
                 if (user) {
-                    res.json({
+                    return res.json({
                         success: true,
                         user: user
                     });
                 } else {
-                    res.status(404).json({
+                    return res.status(404).json({
                         success: false,
                         message: utils.messages.USER_NOT_FOUND
                     });
                 }
             }
         })
-        .delete(middlewares.isAllowedOperation, (req, res) => {
+        .delete(/* middlewares.isAllowedOperation, */ (req, res) => {
             User.remove({
                 _id: req.params.userId
             }).then(handleSuccess, handleErrors);
 
             function handleSuccess(result) {
-                res.json({
+                return res.json({
                     success: true,
                     message: utils.messages.USER_DELETED_SUCCESS
                 });
@@ -131,7 +131,7 @@
             expiresIn: 60
         });
 
-        res.json({
+        return res.json({
             success: true,
             user: user,
             token: token,
