@@ -6,7 +6,8 @@
         bodyParser = require('body-parser'),
         mongoose = require('mongoose'),
         assert = require('assert'),
-        userRoutes = require('./routes/user-routes');
+        userRoutes = require('./routes/user-routes'),
+        articleRoutes = require('./routes/article-routes');
 
     mongoose.Promise = global.Promise;
     mongoose.connect(config.database, (err) => {
@@ -23,6 +24,7 @@
     app.use(bodyParser.json());
 
     app.use('/api/v1/users', userRoutes);
+    app.use('/api/v1/articles', articleRoutes);
 
     app.listen(config.port, () => {
         console.log(`Server is running at http://localhost:${config.port}/`);
