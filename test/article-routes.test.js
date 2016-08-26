@@ -9,20 +9,6 @@
 
     describe('Article Routes', () => {
         const resource = `http://localhost:${config.port}/api/v1/articles`;
-        const cleanupCollection = (collection) => {
-            mongodb.connect(config.database, (err, db) => {
-                db.collection(collection).remove({}).then(handleSuccess, handleErrors);
-
-                function handleSuccess(res) {
-                    assert.notEqual(err, null);
-                }
-
-                function handleErrors(err) {
-                    assert.equal(err, null);
-                }
-            });
-        };
-
         const article = {
             title: "This article",
         };
