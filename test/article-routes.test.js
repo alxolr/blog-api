@@ -4,13 +4,14 @@
         assert = require('assert'),
         mongodb = require('mongodb'),
         utils = require('../helpers/utils'),
-        request = require('request');
+        request = require('request'),
+        shared = require('./shared');
 
     describe('Article Routes', () => {
         const resource = `http://localhost:${config.port}/api/v1/articles`;
-        const cleanupDb = () => {
+        const cleanupCollection = (collection) => {
             mongodb.connect(config.database, (err, db) => {
-                db.collection('articles').remove({}).then(handleSuccess, handleErrors);
+                db.collection(collection).remove({}).then(handleSuccess, handleErrors);
 
                 function handleSuccess(res) {
                     assert.notEqual(err, null);
@@ -27,11 +28,13 @@
         };
 
         beforeEach(() => {
-            cleanupDb();
+            shared.cleanupCollection('articles');
+            shared.cleanupCollection('users');
         });
 
         after(() => {
-            cleanupDb();
+            shared.cleanupCollection('articles');
+            shared.cleanupCollection('users');
         });
 
 
@@ -40,10 +43,7 @@
                 request.post(resource, {
                     form: article
                 }, (err, res, body) => {
-                    assert.equal(err, null);
-                    let json = JSON.parse(body);
-                    assert.equal(json.message, utils.messages.TOKEN_NOT_PROVIDED);
-                    done();
+                    shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
                 });
             });
         });

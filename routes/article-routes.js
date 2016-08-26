@@ -3,14 +3,12 @@
     const router = require('express').Router(),
         middlewares = require('../middlewares/middlewares');
 
-    router.route('/')
-        .all(middlewares.isAuthenticated)
-        .post((req, res) => {
-            res.json({
-                success: false,
-                message: "BUllshit"
-            });
+    router.post('/', middlewares.isAuthenticated, (req, res) => {
+        return res.json({
+            success: false,
+            message: "Fail goda"
         });
+    });
 
     module.exports = router;
 })();
