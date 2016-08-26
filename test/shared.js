@@ -5,6 +5,11 @@
         assert = require('assert'),
         request = require('request');
 
+    let user = {
+        email: "dummyuser@mail.com",
+        password: "dummypassword"
+    };
+
     /**
      * Remove all documents from the specified collection
      */
@@ -40,11 +45,10 @@
     exports.generateUser = (callback) => {
         let url = `http://localhost:${config.port}/api/v1/users`;
         request.post(url, {
-            form: {
-                email: "dummyuser1@mail.com",
-                password: "dummypassword"
-            }
+            form: user
         }, callback);
     };
+
+    exports.user = user;
 
 })();
