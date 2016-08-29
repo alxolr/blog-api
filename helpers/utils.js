@@ -17,6 +17,11 @@
 
             return errorMessages;
         },
+        slugify: text => {
+            return text.toLowerCase()
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, '');
+        },
         mongo: {
             UNIQUE_KEY_VIOLATION: 11000
         },

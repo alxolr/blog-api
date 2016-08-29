@@ -11,7 +11,7 @@
     describe('Article Routes', () => {
         const resource = `http://localhost:${config.port}/api/v1/articles`;
         const articleEtalon = {
-            title: "This article",
+            title: "Angular 2 or the biggest fail ever.",
             body: "This body"
         };
 
@@ -52,6 +52,7 @@
                         MongoClient.connect(config.database, (err, db) => {
                             assert.equal(err, null);
                             db.collection('articles').findOne((err, article) => {
+                                console.log(article);
                                 assert.equal(err, null);
                                 assert.equal(article.title, articleEtalon.title);
                                 assert.equal(article.body, articleEtalon.body);

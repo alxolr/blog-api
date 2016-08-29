@@ -8,7 +8,7 @@
     router.post('/', middlewares.isAuthenticated, (req, res) => {
         let article = new Article(req.body);
         article.author = req.decoded._doc._id,
-        article.slug = 'some bullshit';
+            article.slug = utils.slugify(article.title);
 
         article.save((err) => {
             if (!err) {
