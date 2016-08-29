@@ -52,7 +52,6 @@
                         MongoClient.connect(config.database, (err, db) => {
                             assert.equal(err, null);
                             db.collection('articles').findOne((err, article) => {
-                                console.log(article);
                                 assert.equal(err, null);
                                 assert.equal(article.title, articleEtalon.title);
                                 assert.equal(article.body, articleEtalon.body);
