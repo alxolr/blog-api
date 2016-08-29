@@ -11,7 +11,11 @@
         'category': [],
         'slug': {
             type: String,
-            required: true
+            required: true,
+            index: {
+                unique: true,
+                dropDups: true,
+            }
         },
         'body': {
             type: String,
@@ -21,8 +25,28 @@
             type: String,
             required: true
         },
+        tags: String,
         'created_at': Date,
-        'udated_at': Date,
+        'updated_at': Date,
+    });
+
+    ArticleSchema.pre('save', function(next) {
+        if (!this.created_at) {
+            this.created_at = new Date();
+        }
+
+        this.updated_at = new Date();
+
+        next();
+    });
+
+    ArticleSchema.pre('update', function(next) {
+        this.update({}, {
+            $set: {
+                updated_at: new Date()
+            }
+        });
+        next();
     });
 
     module.exports = mongoose.model('Article', ArticleSchema);

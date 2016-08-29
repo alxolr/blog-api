@@ -34,7 +34,8 @@
             TOKEN_NOT_PROVIDED: "Access denied. Please provide a token.",
             TOKEN_EXPIRED: "Access denied. Provided token or invalid or expired",
             TOKEN_HIGHJACKED: "Access denied. Provided token was highjacked",
-            MONGOID_INVALID: "Provided ID is not a valid one."
+            MONGOID_INVALID: "Provided ID is not a valid one.",
+            ARTICLE_CREATE_SUCCESS: "Article was successfully created."
         }
     };
 })();

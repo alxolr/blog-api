@@ -18,6 +18,8 @@
                             message: utils.messages.TOKEN_EXPIRED
                         });
                     } else {
+                        req.decoded = decoded;
+                        console.log(decoded);
                         next();
                     }
                 });
