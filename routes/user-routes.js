@@ -8,7 +8,8 @@
         utils = require('../helpers/utils'),
         security = require('../modules/security')(config),
         jwt = require('jsonwebtoken'),
-        middlewares = require('../middlewares/middlewares');
+        middlewares = require('../middlewares/middlewares'),
+        articleRoutes = require('./article-routes');
 
     router.post('/', (req, res) => {
         let user = new User(req.body);

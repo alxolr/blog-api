@@ -24,7 +24,7 @@
     app.use(bodyParser.json());
 
     app.use('/api/v1/users', userRoutes);
-    app.use('/api/v1/articles', articleRoutes);
+    app.use('/api/v1/users/:userId/articles', articleRoutes);
 
     app.listen(config.port, () => {
         console.log(`Server is running at http://localhost:${config.port}/`);

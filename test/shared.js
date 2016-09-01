@@ -10,6 +10,14 @@
         password: "dummypassword"
     };
 
+    let article = {
+        title: "Angular 2, be part of the future.",
+        body: `
+            This article seems very interesting, from the perspective of a new user,
+            here you will find how to start codding an angular 2 application.
+        `
+    };
+
     /**
      * Remove all documents from the specified collection
      */
@@ -49,6 +57,26 @@
         }, callback);
     };
 
+    /**
+     * Create a new article in the database
+     */
+    exports.generateArticle = (callback) => {
+        this.generateUser((err, result, body) => {
+            assert.equal(err, null);
+            let json = JSON.parse(body),
+            token = json.token,
+            url = `http://localhost:${config.port}/api/v1/users/${json.user._id}/articles`;
+            request.post(url, {
+                form: {
+                    token: token,
+                    title: article.title,
+                    body: article.body
+                }
+            }, callback);
+        });
+    };
+
     exports.user = user;
+    exports.article = article;
 
 })();

@@ -25,7 +25,7 @@
                 });
 
             } else {
-               return res.status(403).json({
+                return res.status(403).json({
                     success: false,
                     message: utils.messages.TOKEN_NOT_PROVIDED
                 });
