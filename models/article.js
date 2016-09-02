@@ -22,7 +22,11 @@
             required: true
         },
         'author': {
-            type: String,
+            type: {
+                _id: String,
+                name: String,
+                surname: String
+            },
             required: true
         },
         tags: String,

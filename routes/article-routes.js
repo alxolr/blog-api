@@ -7,8 +7,12 @@
 
     router.post('/', middlewares.isAuthenticated, (req, res) => {
         let article = new Article(req.body);
-        article.author = req.decoded._doc._id,
-            article.slug = utils.slugify(article.title);
+        article.author = {
+            _id: req.decoded._doc._id,
+            name: req.decoded._doc.name,
+            surname: req.decoded._doc.surname
+        };
+        article.slug = utils.slugify(article.title);
 
         article.save((err) => {
             if (!err) {
@@ -28,11 +32,11 @@
 
     router.route('/:articleId')
         .put((req, res) => {
-            
+
             if (req.body.title !== undefined) {
                 req.body.slug = utils.slugify(req.body.title);
             }
-            console.log(req.body);
+
             Article.update({
                 _id: req.params.articleId
             }, {
