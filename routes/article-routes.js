@@ -14,7 +14,8 @@
             if (!err) {
                 res.json({
                     success: true,
-                    message: utils.messages.ARTICLE_CREATE_SUCCESS
+                    message: utils.messages.ARTICLE_CREATE_SUCCESS,
+                    article: article
                 });
             } else {
                 res.json({
