@@ -69,7 +69,7 @@
                         })[0].replace('token=', ''),
                         json = JSON.parse(body),
                         url = `${resource}/${user}/articles/${json.article._id}`,
-                        title = "the article is successfully updated";
+                        title = 'the article is successfully updated';
                     request.put(url, {
                         form: {
                             token: token,
