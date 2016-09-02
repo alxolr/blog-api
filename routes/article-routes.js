@@ -26,5 +26,44 @@
         });
     });
 
+    router.route('/:articleId')
+        .put((req, res) => {
+            
+            if (req.body.title !== undefined) {
+                req.body.slug = utils.slugify(req.body.title);
+            }
+            console.log(req.body);
+            Article.update({
+                _id: req.params.articleId
+            }, {
+                '$set': req.body
+            }).then(handleSuccess, handleErrors);
+
+            function handleSuccess(result) {
+                console.log();
+
+                Article.findOne({
+                    _id: req.params.articleId
+                }).then(sendArticle, handleErrors);
+
+                function sendArticle(article) {
+                    res.json({
+                        success: true,
+                        message: utils.messages.ARTICLE_UPDATE_SUCCESS,
+                        article: article
+                    });
+                }
+            }
+        });
+
+    function handleErrors(err) {
+        console.log(err);
+        //res will be taken from local scope
+        res.json({
+            success: false,
+            message: utils.listifyErrors(err)
+        });
+    }
+
     module.exports = router;
 })();

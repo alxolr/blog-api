@@ -61,17 +61,26 @@
 
 
         describe('Update article', () => {
-            it(`Should be able to update the article and receive "${utils.messages.ARTICLE_UPDATE_SUCESS}"`, done => {
+            it(`Should be able to update the article and receive "${utils.messages.ARTICLE_UPDATE_SUCCESS}"`, done => {
                 shared.generateArticle((err, res, body) => {
                     let user = /([0-9a-f]{24})/img.exec(res.request.path)[1],
                         token = res.request.body.split('&').filter((item) => {
                             return item.indexOf('token') !== -1;
                         })[0].replace('token=', ''),
                         json = JSON.parse(body),
-                        url = `${resource}/${user}/articles/${json.article._id}`;
-
-                    assert.equal(false, true);
-                    done();
+                        url = `${resource}/${user}/articles/${json.article._id}`,
+                        title = "the article is successfully updated";
+                    request.put(url, {
+                        form: {
+                            token: token,
+                            title: title
+                        }
+                    }, (err, res, body) => {
+                        assert.equal(err, null);
+                        let json = JSON.parse(body);
+                        assert.equal(json.article.title, title);
+                        shared.assertOk(err, body, true, utils.messages.ARTICLE_UPDATE_SUCCESS, done);
+                    });
                 });
             });
         });
