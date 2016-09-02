@@ -21,7 +21,6 @@
             shared.cleanupCollection('users');
         });
 
-
         describe('Create article', () => {
             it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when creating article without token`, done => {
                 shared.generateUser((err, res, body) => {
@@ -84,8 +83,5 @@
                 });
             });
         });
-
-
     });
-
 })();
