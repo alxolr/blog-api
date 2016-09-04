@@ -9,7 +9,7 @@
         MongoClient = mongodb.MongoClient;
 
     describe('Article Routes', () => {
-        const resource = `http://localhost:${config.port}/api/v1/users`;
+        const resource = `http://localhost:${config.port}/api/v1/articles`;
 
         beforeEach(() => {
             shared.cleanupCollection('articles');
@@ -23,13 +23,10 @@
 
         describe('Create article', () => {
             it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when creating article without token`, done => {
-                shared.generateUser((err, res, body) => {
-                    let json = JSON.parse(body);
-                    request.post(`${resource}/${json.user._id}/articles`, {
-                        form: shared.article
-                    }, (err, res, body) => {
-                        shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
-                    });
+                request.post(`${resource}`, {
+                    form: shared.article
+                }, (err, res, body) => {
+                    shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
                 });
             });
 
@@ -62,12 +59,11 @@
         describe('Update article', () => {
             it(`Should be able to update the article and receive "${utils.messages.ARTICLE_UPDATE_SUCCESS}"`, done => {
                 shared.generateArticle((err, res, body) => {
-                    let user = /([0-9a-f]{24})/img.exec(res.request.path)[1],
-                        token = res.request.body.split('&').filter((item) => {
+                    let token = res.request.body.split('&').filter((item) => {
                             return item.indexOf('token') !== -1;
                         })[0].replace('token=', ''),
                         json = JSON.parse(body),
-                        url = `${resource}/${user}/articles/${json.article._id}`,
+                        url = `${resource}/${json.article._id}`,
                         title = 'the article is successfully updated';
                     request.put(url, {
                         form: {
@@ -80,6 +76,43 @@
                         assert.equal(json.article.title, title);
                         shared.assertOk(err, body, true, utils.messages.ARTICLE_UPDATE_SUCCESS, done);
                     });
+                });
+            });
+        });
+
+        describe('Get article', () => {
+            it(`Should return the required article by Id`, done => {
+                shared.generateArticle((err, res, body) => {
+                    let json = JSON.parse(body),
+                        url = `${resource}/${json.article._id}`;
+
+                    request.get(url, (err, res, body) => {
+                        assert.equal(err, null);
+                        let json = JSON.parse(body);
+                        assert.equal(Object.prototype.hasOwnProperty.call(json, 'article'), true);
+                        done();
+                    });
+                });
+            });
+        });
+
+        describe('Delete Article', () => {
+            it(`Should remove the article and return "${utils.messages.ARTICLE_DELETE_SUCCESS}"`, done => {
+                shared.generateArticle((err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body);
+                    let token = res.request.body.split('&').filter((item) => {
+                        return item.indexOf('token') !== -1;
+                    })[0].replace('token=', '');
+
+                    request.delete(`${resource}/${json.article._id}`, {
+                        form: {
+                            token: token
+                        }
+                    }, (err, res, body) => {
+                        shared.assertOk(err, body, true, utils.messages.ARTICLE_DELETE_SUCCESS, done);
+                    });
+
                 });
             });
         });

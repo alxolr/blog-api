@@ -31,8 +31,7 @@
     });
 
     router.route('/:articleId')
-        .put((req, res) => {
-
+        .put(middlewares.isAuthenticated, (req, res) => {
             if (req.body.title !== undefined) {
                 req.body.slug = utils.slugify(req.body.title);
             }
@@ -44,8 +43,6 @@
             }).then(handleSuccess, handleErrors);
 
             function handleSuccess(result) {
-                console.log();
-
                 Article.findOne({
                     _id: req.params.articleId
                 }).then(sendArticle, handleErrors);
@@ -58,10 +55,33 @@
                     });
                 }
             }
+        })
+        .get((req, res) => {
+            Article.findOne({
+                _id: req.params.articleId
+            }).then(returnArticle, handleErrors);
+
+            function returnArticle(article) {
+                res.json({
+                    success: true,
+                    article: article
+                });
+            }
+        })
+        .delete((req, res) => {
+            Article.remove({
+                _id: req.params.articleId
+            }).then(returnSuccess).catch(handleErrors);
+
+            function returnSuccess(result) {
+                res.json({
+                    success: true,
+                    message: utils.messages.ARTICLE_DELETE_SUCCESS
+                });
+            }
         });
 
     function handleErrors(err) {
-        console.log(err);
         //res will be taken from local scope
         res.json({
             success: false,

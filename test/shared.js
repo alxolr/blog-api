@@ -65,7 +65,7 @@
             assert.equal(err, null);
             let json = JSON.parse(body),
             token = json.token,
-            url = `http://localhost:${config.port}/api/v1/users/${json.user._id}/articles`;
+            url = `http://localhost:${config.port}/api/v1/articles`;
             request.post(url, {
                 form: {
                     token: token,

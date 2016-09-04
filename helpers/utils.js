@@ -41,7 +41,8 @@
             TOKEN_HIGHJACKED: "Access denied. Provided token was highjacked",
             MONGOID_INVALID: "Provided ID is not a valid one.",
             ARTICLE_CREATE_SUCCESS: "Article was successfully created.",
-            ARTICLE_UPDATE_SUCCESS: "Article was successfully updated."
+            ARTICLE_UPDATE_SUCCESS: "Article was successfully updated.",
+            ARTICLE_DELETE_SUCCESS: "Article was successfully deleted."
         }
     };
 })();
