@@ -22,6 +22,7 @@
 
     // parse application/json
     app.use(bodyParser.json());
+    app.use('/api/doc', express.static('doc'));
 
     app.use('/api/v1/users', userRoutes);
     app.use('/api/v1/articles', articleRoutes);

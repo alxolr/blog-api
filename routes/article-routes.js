@@ -5,6 +5,17 @@
         Article = require('../models/article'),
         utils = require('../helpers/utils');
 
+    /**
+     * @api {post} /api/v1/articles/
+     * @apiName Creat an article
+     * @apiGroup Article
+     * 
+     * @apiParam {String} Token An authentification Token.
+     * @apiParam {String} Title The article title.
+     * @apiParam {String} Body The article body.
+     * 
+     * @apiSuccess {String} Title The article title  
+     */
     router.post('/', middlewares.isAuthenticated, (req, res) => {
         let article = new Article(req.body);
         article.author = {

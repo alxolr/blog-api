@@ -24,6 +24,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/alxolr/blog#readme",
   "devDependencies": {
+    "gulp-apidoc": "^0.2.4",
     "mongodb": "^2.2.7",
     "request": "^2.74.0"
   }
