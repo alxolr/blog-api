@@ -7,7 +7,8 @@
         mongoose = require('mongoose'),
         assert = require('assert'),
         userRoutes = require('./routes/user-routes'),
-        articleRoutes = require('./routes/article-routes');
+        articleRoutes = require('./routes/article-routes'),
+        commentRoutes = require('./routes/comment-routes');
 
     mongoose.Promise = global.Promise;
     mongoose.connect(config.database, (err) => {
@@ -26,6 +27,7 @@
 
     app.use('/api/v1/users', userRoutes);
     app.use('/api/v1/articles', articleRoutes);
+    app.use('/api/v1/articles/:articleId/comments', commentRoutes);
 
     app.listen(config.port, () => {
         console.log(`Server is running at http://localhost:${config.port}/`);

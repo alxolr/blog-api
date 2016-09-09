@@ -9,8 +9,6 @@
         MongoClient = mongodb.MongoClient;
 
     describe('Article Routes', () => {
-        const resource = `http://localhost:${config.port}/api/v1/articles`;
-
         beforeEach(() => {
             shared.cleanupCollection('articles');
             shared.cleanupCollection('users');
@@ -23,7 +21,7 @@
 
         describe('Create article', () => {
             it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when creating article without token`, done => {
-                request.post(`${resource}`, {
+                request.post(`${shared.articleResource}`, {
                     form: shared.article
                 }, (err, res, body) => {
                     shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
@@ -59,11 +57,9 @@
         describe('Update article', () => {
             it(`Should be able to update the article and receive "${utils.messages.ARTICLE_UPDATE_SUCCESS}"`, done => {
                 shared.generateArticle((err, res, body) => {
-                    let token = res.request.body.split('&').filter((item) => {
-                            return item.indexOf('token') !== -1;
-                        })[0].replace('token=', ''),
+                    let token = shared.extractTokenFrom(res),
                         json = JSON.parse(body),
-                        url = `${resource}/${json.article._id}`,
+                        url = `${shared.articleResource}/${json.article._id}`,
                         title = 'the article is successfully updated';
                     request.put(url, {
                         form: {
@@ -84,7 +80,7 @@
             it(`Should return the required article by Id`, done => {
                 shared.generateArticle((err, res, body) => {
                     let json = JSON.parse(body),
-                        url = `${resource}/${json.article._id}`;
+                        url = `${shared.articleResource}/${json.article._id}`;
 
                     request.get(url, (err, res, body) => {
                         assert.equal(err, null);
@@ -105,7 +101,7 @@
                         return item.indexOf('token') !== -1;
                     })[0].replace('token=', '');
 
-                    request.delete(`${resource}/${json.article._id}`, {
+                    request.delete(`${shared.articleResource}/${json.article._id}`, {
                         form: {
                             token: token
                         }

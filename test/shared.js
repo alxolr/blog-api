@@ -18,6 +18,10 @@
         `
     };
 
+    let comment = {
+        "message": "This article is not that good as the people say"
+    };
+
     /**
      * Remove all documents from the specified collection
      */
@@ -51,8 +55,7 @@
      * Create a user and then use the results in cb function
      */
     exports.generateUser = (callback) => {
-        let url = `http://localhost:${config.port}/api/v1/users`;
-        request.post(url, {
+        request.post(this.userResource, {
             form: user
         }, callback);
     };
@@ -64,9 +67,9 @@
         this.generateUser((err, result, body) => {
             assert.equal(err, null);
             let json = JSON.parse(body),
-            token = json.token,
-            url = `http://localhost:${config.port}/api/v1/articles`;
-            request.post(url, {
+                token = json.token;
+
+            request.post(this.articleResource, {
                 form: {
                     token: token,
                     title: article.title,
@@ -76,7 +79,19 @@
         });
     };
 
+    /**
+     * Extract the token from the request
+     */
+    exports.extractTokenFrom = (response) => {
+        return response.request.body.split('&').filter((item) => {
+            return item.indexOf('token') !== -1;
+        })[0].replace('token=', '');
+    };
+
     exports.user = user;
     exports.article = article;
+    exports.comment = comment;
+    exports.articleResource = `http://localhost:${config.port}/api/v1/articles`;
+    exports.userResource = `http://localhost:${config.port}/api/v1/users`;
 
 })();
