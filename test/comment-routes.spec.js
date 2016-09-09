@@ -10,9 +10,11 @@
     describe('Comment Routes', () => {
         before(() => {
             shared.cleanupCollection('articles');
+            shared.cleanupCollection('users');
         });
 
         afterEach(() => {
+            shared.cleanupCollection('users');
             shared.cleanupCollection('articles');
         });
 
@@ -21,8 +23,7 @@
                 shared.generateArticle((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body),
-                        url = `${shared.articleResource}/${json.article._id}/comments`,
-                        token = shared.extractTokenFrom(res);
+                        url = `${shared.articleResource}/${json.article._id}/comments`;
 
                     request.post(url, {
                         form: {
@@ -30,6 +31,35 @@
                         }
                     }, (err, res, body) => {
                         shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
+                    });
+                });
+            });
+
+            it(`Should return '${utils.messages.COMMENT_CREATE_SUCCESS}' when adding a comment to an article`, done => {
+                shared.generateArticle((err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body),
+                        articleId = json.article._id,
+                        url = `${shared.articleResource}/${articleId}/comments`,
+                        token = shared.extractTokenFrom(res);
+
+                    request.post(url, {
+                        form: {
+                            token: token,
+                            message: shared.comment.message
+                        }
+                    }, (err, res, body) => {
+                        assert.equal(err, null);
+                        MongoClient.connect(config.database, (err, db) => {
+                            db.collection('articles').findOne((err, article) => {
+                                assert.equal(err, null);
+                                assert.equal(article.comments.length, 1);
+                                assert.equal(article.comments[0].message, shared.comment.message);
+                                assert.equal(article.comments[0].author.name, shared.user.name);
+                                assert.equal(article.comments[0].author.surname, shared.user.surname);
+                                done();
+                            });
+                        });
                     });
                 });
             });

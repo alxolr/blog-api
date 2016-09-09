@@ -32,6 +32,24 @@
         tags: String,
         'created_at': Date,
         'updated_at': Date,
+        'comments': {
+            type: [{
+                author: {
+                    type: {
+                        _id: String,
+                        name: String,
+                        surname: String
+                    },
+                    required: true
+                },
+                created_at: {
+                    type: Date,
+                    default: new Date(),
+                },
+                message: String
+            }],
+            required: false
+        }
     });
 
     ArticleSchema.pre('save', function(next) {

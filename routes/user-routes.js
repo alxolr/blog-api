@@ -129,7 +129,7 @@
 
     function generateTokenForUser(user, res, message) {
         let token = jwt.sign(user, config.secretKey, {
-            expiresIn: 3600
+            expiresIn: 36000
         });
 
         return res.json({

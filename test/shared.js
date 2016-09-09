@@ -7,7 +7,9 @@
 
     let user = {
         email: "dummyuser@mail.com",
-        password: "dummypassword"
+        password: "dummypassword",
+        name: "Jonh",
+        surname: "Bravo"
     };
 
     let article = {
@@ -19,7 +21,7 @@
     };
 
     let comment = {
-        "message": "This article is not that good as the people say"
+        message: "This article is not that good as the people say"
     };
 
     /**
