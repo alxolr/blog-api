@@ -2,10 +2,10 @@
     "use strict";
 
     const Router = require('express').Router(),
-    utils = require('../helpers/utils'),
-    middlewares = require('../middlewares/middlewares');
+        utils = require('../helpers/utils'),
+        middlewares = require('../middlewares/middlewares');
 
-    Router.post('/', (err, res) => {
+    Router.post('/', middlewares.isAuthenticated, (err, res) => {
         res.json({
             success: false,
             message: utils.messages.COMMENT_CREATE_FAIL

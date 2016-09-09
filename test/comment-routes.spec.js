@@ -26,21 +26,11 @@
 
                     request.post(url, {
                         form: {
-                            token: token,
                             comment: shared.comment
                         }
                     }, (err, res, body) => {
-                        assert.equal(err, null);
-                        MongoClient.connect(config.database, (err, db) => {
-                            assert.equal(err, null);
-                            db.collection('articles').findOne((err, article) => {
-                                assert.equal(err, null);
-                                assert.equal(article.comments.length, 1);
-                                shared.assertOk(err, body, true, utils.messages.COMMENT_CREATE_SUCCESS, done);
-                            });
-                        });
+                        shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
                     });
-
                 });
             });
         });
