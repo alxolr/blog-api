@@ -10,13 +10,16 @@
             dest: '/tmp/'
         });
 
-    router.post('/', upload.single('img'), middlewares.isAuthenticated,  (req, res) => {
+
+    router.post('/', upload.single('img'), middlewares.isAuthenticated, (req, res) => {
         let article = new Article(req.body);
+
         article.author = {
             _id: req.decoded._doc._id,
             name: req.decoded._doc.name,
             surname: req.decoded._doc.surname
         };
+
         article.slug = utils.slugify(article.title);
 
         if (req.file !== undefined) {
@@ -24,41 +27,12 @@
                 let path = "uploads/";
                 fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
                     article.img = `/images/${req.file.originalname}`;
-                    article.save((err) => {
-                        if (!err) {
-                            res.json({
-                                success: true,
-                                message: utils.messages.ARTICLE_CREATE_SUCCESS,
-                                article: article
-                            });
-                        } else {
-                            res.json({
-                                success: false,
-                                message: utils.listifyErrors(err)
-                            });
-                        }
-                    });
+                    saveArticle();
                 });
             });
         } else {
-
-            article.save((err) => {
-                if (!err) {
-                    res.json({
-                        success: true,
-                        message: utils.messages.ARTICLE_CREATE_SUCCESS,
-                        article: article
-                    });
-                } else {
-                    res.json({
-                        success: false,
-                        message: utils.listifyErrors(err)
-                    });
-                }
-            });
+            saveArticle();
         }
-
-
     });
 
     router.route('/:articleId')
@@ -113,12 +87,30 @@
         });
 
     function handleErrors(err) {
-        //res will be taken from local scope
         res.json({
             success: false,
             message: utils.listifyErrors(err)
         });
     }
+
+
+    function saveArticle() {
+        article.save((err) => {
+            if (!err) {
+                res.json({
+                    success: true,
+                    message: utils.messages.ARTICLE_CREATE_SUCCESS,
+                    article: article
+                });
+            } else {
+                res.json({
+                    success: false,
+                    message: utils.listifyErrors(err)
+                });
+            }
+        });
+    }
+
 
     module.exports = router;
 })();
