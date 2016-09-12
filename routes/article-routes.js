@@ -10,7 +10,7 @@
 
     router.post('/', upload.single('img'), middlewares.isAuthenticated, (req, res) => {
 
-        console.log(req.body);
+        console.log(req.file);
         
         let article = new Article(req.body);
         article.author = {
@@ -20,7 +20,7 @@
         };
         article.slug = utils.slugify(article.title);
 
-        fs.readFile(req.files.img.path, function(err, data) {
+        fs.readFile(req.file.path, function(err, data) {
             let newPath = __dirname + "/uploads/photos/";
             fs.writeFile(newPath, data, function(err) {
                 article.save((err) => {
