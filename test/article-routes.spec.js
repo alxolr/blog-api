@@ -54,28 +54,12 @@
             });
 
             it(`Should be possible to upload the article main photo and add it in the upload folder`, done => {
-                let formData = {
-                    title: shared.article.title,
-                    body: shared.article.body,
-                    img: {
-                        value: fs.createReadStream(__dirname + '/big-boobs-photo-450x299.png'),
-                        options: {
-                            filename: 'topsecret.jpg',
-                            contentType: 'image/jpg'
-                        }
-                    }
-                };
 
                 shared.generateUser((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body);
-                    formData.token = json.token;
 
-                    request.post(shared.articleResource, {
-                        form: formData
-                    }, (err, res, body) => {
-                        console.log('result');
-
+                    let req = request.post(shared.articleResource, (err, res, body) => {
                         MongoClient.connect(config.database, (err, db) => {
                             db.collection('articles').findOne((err, article) => {
                                 console.log(article);
@@ -84,6 +68,12 @@
                             });
                         });
                     });
+
+                    let form = req.form();
+                    form.append('title', "this is a title");
+                    form.append('body', "this is a body");
+                    form.append('token', json.token);
+                    form.append('img', fs.createReadStream(__dirname + '/big-boobs-photo-450x299.png'));
                 });
             });
         });

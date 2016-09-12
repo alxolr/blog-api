@@ -6,12 +6,14 @@
         utils = require('../helpers/utils'),
         fs = require('fs'),
         multer = require('multer'),
-        upload = multer({dest: 'uploads/'});
+        upload = multer({
+            dest: 'uploads/'
+        });
 
-    router.post('/', upload.single('img'), middlewares.isAuthenticated, (req, res) => {
+    router.post('/', middlewares.isAuthenticated, upload.single('img'), (req, res) => {
 
         console.log(req.file);
-        
+
         let article = new Article(req.body);
         article.author = {
             _id: req.decoded._doc._id,
@@ -20,25 +22,31 @@
         };
         article.slug = utils.slugify(article.title);
 
-        fs.readFile(req.file.path, function(err, data) {
-            let newPath = __dirname + "/uploads/photos/";
-            fs.writeFile(newPath, data, function(err) {
-                article.save((err) => {
-                    if (!err) {
-                        res.json({
-                            success: true,
-                            message: utils.messages.ARTICLE_CREATE_SUCCESS,
-                            article: article
-                        });
-                    } else {
-                        res.json({
-                            success: false,
-                            message: utils.listifyErrors(err)
-                        });
-                    }
+        if (req.file !== undefined) {
+
+            fs.readFile(req.file.path, function(err, data) {
+                let newPath = __dirname + "/uploads/photos/";
+                fs.writeFile(newPath, data, function(err) {
+
                 });
             });
-        }); 
+        }
+
+        article.save((err) => {
+            if (!err) {
+                res.json({
+                    success: true,
+                    message: utils.messages.ARTICLE_CREATE_SUCCESS,
+                    article: article
+                });
+            } else {
+                res.json({
+                    success: false,
+                    message: utils.listifyErrors(err)
+                });
+            }
+        });
+
     });
 
     router.route('/:articleId')
