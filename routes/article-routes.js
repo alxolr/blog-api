@@ -7,13 +7,10 @@
         fs = require('fs'),
         multer = require('multer'),
         upload = multer({
-            dest: 'uploads/'
+            dest: '/tmp/'
         });
 
-    router.post('/', middlewares.isAuthenticated, upload.single('img'), (req, res) => {
-
-        console.log(req.file);
-
+    router.post('/', upload.single('img'), middlewares.isAuthenticated,  (req, res) => {
         let article = new Article(req.body);
         article.author = {
             _id: req.decoded._doc._id,
@@ -23,29 +20,44 @@
         article.slug = utils.slugify(article.title);
 
         if (req.file !== undefined) {
-
             fs.readFile(req.file.path, function(err, data) {
-                let newPath = __dirname + "/uploads/photos/";
-                fs.writeFile(newPath, data, function(err) {
-
+                let path = "uploads/";
+                fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
+                    article.img = `/images/${req.file.originalname}`;
+                    article.save((err) => {
+                        if (!err) {
+                            res.json({
+                                success: true,
+                                message: utils.messages.ARTICLE_CREATE_SUCCESS,
+                                article: article
+                            });
+                        } else {
+                            res.json({
+                                success: false,
+                                message: utils.listifyErrors(err)
+                            });
+                        }
+                    });
                 });
+            });
+        } else {
+
+            article.save((err) => {
+                if (!err) {
+                    res.json({
+                        success: true,
+                        message: utils.messages.ARTICLE_CREATE_SUCCESS,
+                        article: article
+                    });
+                } else {
+                    res.json({
+                        success: false,
+                        message: utils.listifyErrors(err)
+                    });
+                }
             });
         }
 
-        article.save((err) => {
-            if (!err) {
-                res.json({
-                    success: true,
-                    message: utils.messages.ARTICLE_CREATE_SUCCESS,
-                    article: article
-                });
-            } else {
-                res.json({
-                    success: false,
-                    message: utils.listifyErrors(err)
-                });
-            }
-        });
 
     });
 

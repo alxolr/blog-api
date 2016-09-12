@@ -62,9 +62,8 @@
                     let req = request.post(shared.articleResource, (err, res, body) => {
                         MongoClient.connect(config.database, (err, db) => {
                             db.collection('articles').findOne((err, article) => {
-                                console.log(article);
+                                assert.equal(article.img, `/images/big-boobs-photo-450x299.png`);
                                 done();
-
                             });
                         });
                     });

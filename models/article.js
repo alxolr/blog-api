@@ -50,10 +50,7 @@
             }],
             required: false
         },
-        img: {
-            type: Buffer,
-            contentType: String
-        }
+        img: String
     });
 
     ArticleSchema.pre('save', function(next) {
