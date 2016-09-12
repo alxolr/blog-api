@@ -58,7 +58,6 @@
                     message: utils.messages.EMAIL_NO_MATCH
                 });
             }
-
         }
 
         function handleErrors(err) {
@@ -66,7 +65,6 @@
                 success: false,
                 error: utils.listifyErrors(err)
             });
-
         }
     });
 
@@ -95,6 +93,7 @@
                 }
             }
         })
+
         .get((req, res) => {
             User.findOne({
                 _id: req.params.userId
@@ -141,7 +140,6 @@
     }
 
     function handleErrors(err) {
-        //res will be taken from local scope
         res.json({
             success: false,
             message: utils.listifyErrors(err)

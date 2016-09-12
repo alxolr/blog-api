@@ -5,10 +5,9 @@
         assert = require('assert'),
         request = require('request'),
         utils = require('../helpers/utils'),
-        shared = require('./shared'),
-        resource = `http://localhost:${config.port}/api/v1/users`;
+        shared = require('./shared');
 
-    describe('User Routes', () => {
+    describe(`User resource ${shared.userResource}/:userId`, () => {
 
         afterEach(() => {
             shared.cleanupCollection('users');
@@ -18,7 +17,6 @@
             shared.cleanupCollection('users');
         });
 
-        // Create user tests
         describe('Create user', () => {
             it('Should create a user if email and password provided', (done) => {
                 shared.generateUser((err, res, body) => {
@@ -27,9 +25,8 @@
             });
         });
 
-        // Login User Tests
         describe('Login user', () => {
-            let url = `${resource}/login`;
+            let url = `${shared.userResource}/login`;
             it(`Should return "${utils.messages.EMAIL_NO_MATCH}" for invalid email login.`, (done) => {
                 request.post(url, {
                     form: shared.user
@@ -73,7 +70,7 @@
                     let result = JSON.parse(body),
                         token = result.token,
                         userId = result.user._id;
-                    request.put(`${resource}/${userId}`, {
+                    request.put(`${shared.userResource}/${userId}`, {
                         form: {
                             email: 'jack@bravo.com'
                         }
@@ -89,8 +86,7 @@
                     let result = JSON.parse(body),
                         token = result.token,
                         userId = '' + result.user._id;
-
-                    request.put(`${resource}/${userId}`, {
+                    request.put(`${shared.userResource}/${userId}`, {
                         form: {
                             email: 'jack@bravo.com',
                             token: token
@@ -109,24 +105,19 @@
                     assert.equal(err, null);
                     let json = JSON.parse(body),
                         userId = json.user._id;
-
-                    //get the created user without token
-                    request.get(`${resource}/${userId}`, (err, res, body) => {
+                    request.get(`${shared.userResource}/${userId}`, (err, res, body) => {
                         shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
                     });
                 });
             });
 
             it(`Should return the requested user given the valid token and userId`, done => {
-                //create a user
                 shared.generateUser((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body),
                         userId = json.user._id,
                         token = json.token;
-
-                    //get the created user without token
-                    request.get(`${resource}/${userId}`, {
+                    request.get(`${shared.userResource}/${userId}`, {
                         form: {
                             token: token
                         }
@@ -141,9 +132,8 @@
             it(`Should return "${utils.messages.MONGOID_INVALID}" given an invalid User id`, done => {
                 shared.generateUser((err, res, body) => {
                     assert.equal(err, null);
-
                     let json = JSON.parse(body);
-                    request(`${resource}/1`, {
+                    request(`${shared.userResource}/1`, {
                         form: {
                             token: json.token
                         }
@@ -159,7 +149,7 @@
                 shared.generateUser((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body);
-                    request.delete(`${resource}/${json.user._id}`, (err, res, body) => {
+                    request.delete(`${shared.userResource}/${json.user._id}`, (err, res, body) => {
                         shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
                     });
                 });
@@ -170,9 +160,7 @@
                     assert.equal(err, null);
                     let json = JSON.parse(body),
                         token1 = json.token;
-
-                    //generate second user
-                    request.post(resource, {
+                    request.post(shared.userResource, {
                         form: {
                             email: "johny@comrada.com",
                             password: "tuition2"
@@ -180,9 +168,7 @@
                     }, (err, res, body) => {
                         assert.equal(err, null);
                         let json = JSON.parse(body);
-
-                        //delete the second user with the first token
-                        request.delete(`${resource}/${json.user._id}`, {
+                        request.delete(`${shared.userResource}/${json.user._id}`, {
                             form: {
                                 token: token1
                             }
@@ -197,7 +183,7 @@
                 shared.generateUser((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body);
-                    request.delete(`${resource}/${json.user._id}`, {
+                    request.delete(`${shared.userResource}/${json.user._id}`, {
                         form: {
                             token: json.token
                         }

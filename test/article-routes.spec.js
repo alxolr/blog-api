@@ -9,7 +9,7 @@
         MongoClient = mongodb.MongoClient,
         fs = require('fs');
 
-    describe('Article Routes', () => {
+    describe(`Article Resource ${shared.articleResource}/:articleId`, () => {
         beforeEach(() => {
             shared.cleanupCollection('articles');
             shared.cleanupCollection('users');
@@ -54,11 +54,9 @@
             });
 
             it(`Should be possible to upload the article main photo and add it in the upload folder`, done => {
-
                 shared.generateUser((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body);
-
                     let req = request.post(shared.articleResource, (err, res, body) => {
                         MongoClient.connect(config.database, (err, db) => {
                             db.collection('articles').findOne((err, article) => {
@@ -67,7 +65,6 @@
                             });
                         });
                     });
-
                     let form = req.form();
                     form.append('title', "this is a title");
                     form.append('body', "this is a body");
@@ -105,7 +102,6 @@
                 shared.generateArticle((err, res, body) => {
                     let json = JSON.parse(body),
                         url = `${shared.articleResource}/${json.article._id}`;
-
                     request.get(url, (err, res, body) => {
                         assert.equal(err, null);
                         let json = JSON.parse(body);
@@ -122,7 +118,6 @@
                     assert.equal(err, null);
                     let json = JSON.parse(body);
                     let token = shared.extractTokenFrom(res);
-
                     request.delete(`${shared.articleResource}/${json.article._id}`, {
                         form: {
                             token: token
@@ -130,7 +125,6 @@
                     }, (err, res, body) => {
                         shared.assertOk(err, body, true, utils.messages.ARTICLE_DELETE_SUCCESS, done);
                     });
-
                 });
             });
         });

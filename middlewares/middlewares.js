@@ -43,7 +43,6 @@
                             }
                             break;
                     }
-
                 }
             }
 
@@ -62,9 +61,7 @@
                         message: utils.messages.TOKEN_HIGHJACKED
                     });
                 }
-
             });
-
         }
     };
 })();

@@ -7,7 +7,6 @@
         Article = require('../models/article');
 
     Router.post('/:articleId/comments', middlewares.isAuthenticated, (req, res) => {
-            console.log(req.body.message);
         let comment = {
             message: req.body.message,
             author: {
@@ -48,9 +47,7 @@
                 message: utils.messages.COMMENT_CREATE_FAIL
             });
         }
-
     });
 
     module.exports = Router;
-
 })();
