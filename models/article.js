@@ -49,6 +49,10 @@
                 message: String
             }],
             required: false
+        },
+        img: {
+            type: Buffer,
+            contentType: String
         }
     });
 

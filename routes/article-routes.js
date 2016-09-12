@@ -3,20 +3,15 @@
     const router = require('express').Router(),
         middlewares = require('../middlewares/middlewares'),
         Article = require('../models/article'),
-        utils = require('../helpers/utils');
+        utils = require('../helpers/utils'),
+        fs = require('fs'),
+        multer = require('multer'),
+        upload = multer({dest: 'uploads/'});
 
-    /**
-     * @api {post} /api/v1/articles/
-     * @apiName Creat an article
-     * @apiGroup Article
-     * 
-     * @apiParam {String} Token An authentification Token.
-     * @apiParam {String} Title The article title.
-     * @apiParam {String} Body The article body.
-     * 
-     * @apiSuccess {String} Title The article title  
-     */
-    router.post('/', middlewares.isAuthenticated, (req, res) => {
+    router.post('/', upload.single('img'), middlewares.isAuthenticated, (req, res) => {
+
+        console.log(req.body);
+        
         let article = new Article(req.body);
         article.author = {
             _id: req.decoded._doc._id,
@@ -25,20 +20,25 @@
         };
         article.slug = utils.slugify(article.title);
 
-        article.save((err) => {
-            if (!err) {
-                res.json({
-                    success: true,
-                    message: utils.messages.ARTICLE_CREATE_SUCCESS,
-                    article: article
+        fs.readFile(req.files.img.path, function(err, data) {
+            let newPath = __dirname + "/uploads/photos/";
+            fs.writeFile(newPath, data, function(err) {
+                article.save((err) => {
+                    if (!err) {
+                        res.json({
+                            success: true,
+                            message: utils.messages.ARTICLE_CREATE_SUCCESS,
+                            article: article
+                        });
+                    } else {
+                        res.json({
+                            success: false,
+                            message: utils.listifyErrors(err)
+                        });
+                    }
                 });
-            } else {
-                res.json({
-                    success: false,
-                    message: utils.listifyErrors(err)
-                });
-            }
-        });
+            });
+        }); 
     });
 
     router.route('/:articleId')

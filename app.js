@@ -23,6 +23,7 @@
 
     // parse application/json
     app.use(bodyParser.json());
+    app.use('/uploads', express.static('uploads'));
     app.use('/api/doc', express.static('doc'));
 
     app.use('/api/v1/users', userRoutes);

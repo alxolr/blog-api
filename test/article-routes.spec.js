@@ -6,7 +6,8 @@
         utils = require('../helpers/utils'),
         request = require('request'),
         shared = require('./shared'),
-        MongoClient = mongodb.MongoClient;
+        MongoClient = mongodb.MongoClient,
+        fs = require('fs');
 
     describe('Article Routes', () => {
         beforeEach(() => {
@@ -49,6 +50,40 @@
                     assert.equal(Object.prototype.hasOwnProperty.call(json, 'article'), true);
                     assert.equal(Object.prototype.hasOwnProperty.call(json.article, '_id'), true);
                     shared.assertOk(err, body, true, utils.messages.ARTICLE_CREATE_SUCCESS, done);
+                });
+            });
+
+            it(`Should be possible to upload the article main photo and add it in the upload folder`, done => {
+                let formData = {
+                    title: shared.article.title,
+                    body: shared.article.body,
+                    img: {
+                        value: fs.createReadStream(__dirname + '/big-boobs-photo-450x299.png'),
+                        options: {
+                            filename: 'topsecret.jpg',
+                            contentType: 'image/jpg'
+                        }
+                    }
+                };
+
+                shared.generateUser((err, res, body) => {
+                    assert.equal(err, null);
+                    let json = JSON.parse(body);
+                    formData.token = json.token;
+
+                    request.post(shared.articleResource, {
+                        form: formData
+                    }, (err, res, body) => {
+                        console.log('result');
+
+                        MongoClient.connect(config.database, (err, db) => {
+                            db.collection('articles').findOne((err, article) => {
+                                console.log(article);
+                                done();
+
+                            });
+                        });
+                    });
                 });
             });
         });
