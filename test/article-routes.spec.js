@@ -121,9 +121,7 @@
                 shared.generateArticle((err, res, body) => {
                     assert.equal(err, null);
                     let json = JSON.parse(body);
-                    let token = res.request.body.split('&').filter((item) => {
-                        return item.indexOf('token') !== -1;
-                    })[0].replace('token=', '');
+                    let token = shared.extractTokenFrom(res);
 
                     request.delete(`${shared.articleResource}/${json.article._id}`, {
                         form: {

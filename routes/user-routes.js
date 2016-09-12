@@ -114,7 +114,7 @@
                 }
             }
         })
-        .delete(/* middlewares.isAllowedOperation, */ (req, res) => {
+        .delete((req, res) => {
             User.remove({
                 _id: req.params.userId
             }).then(handleSuccess, handleErrors);

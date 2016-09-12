@@ -27,11 +27,11 @@
                 let path = "uploads/";
                 fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
                     article.img = `/images/${req.file.originalname}`;
-                    saveArticle();
+                    saveArticle(article, res);
                 });
             });
         } else {
-            saveArticle();
+            saveArticle(article, res);
         }
     });
 
@@ -94,7 +94,7 @@
     }
 
 
-    function saveArticle() {
+    function saveArticle(article, res) {
         article.save((err) => {
             if (!err) {
                 res.json({
