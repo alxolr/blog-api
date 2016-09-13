@@ -1,8 +1,10 @@
 (() => {
     "use strict";
+    process.env.ENV = process.env.ENV || 'prod';
+
     const express = require('express'),
         app = express(),
-        config = require('./config'),
+        config = require('./configs/' + process.env.ENV),
         bodyParser = require('body-parser'),
         mongoose = require('mongoose'),
         assert = require('assert'),
