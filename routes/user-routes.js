@@ -3,7 +3,7 @@
 
     const router = require('express').Router(),
         User = require('../models/user'),
-        config = require('../configs/' + process.env.ENV),
+        config = require('../config').get(process.env.NODE_ENV),
         ObjectId = require('mongoose').Types.ObjectId,
         utils = require('../helpers/utils'),
         security = require('../modules/security')(config),
@@ -94,7 +94,7 @@
             }
         })
 
-        .get((req, res) => {
+    .get((req, res) => {
             User.findOne({
                 _id: req.params.userId
             }).then(handleSuccess, handleErrors);

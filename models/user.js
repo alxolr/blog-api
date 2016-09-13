@@ -4,7 +4,7 @@
         Schema = mongoose.Schema,
         crypto = require('crypto'),
         utils = require('../helpers/utils'),
-        config = require('../configs/' + process.env.ENV),
+        config = require('../config').get(process.env.NODE_ENV),
         security = require('../modules/security')(config);
         
     const USER_RIGHTS = 'USER';
