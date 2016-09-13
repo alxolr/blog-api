@@ -3,7 +3,7 @@
 
     const router = require('express').Router(),
         User = require('../models/user'),
-        config = require('../config'),
+        config = require('../configs/' + process.env.ENV),
         ObjectId = require('mongoose').Types.ObjectId,
         utils = require('../helpers/utils'),
         security = require('../modules/security')(config),

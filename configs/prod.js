@@ -7,5 +7,4 @@
         secretKey: 'MegaSuperSecretKeyImpossibleToCrack',
         salt: "oyoutamago"
     });
-
 })();

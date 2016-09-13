@@ -4,7 +4,7 @@
         shared = require('./shared'),
         utils = require('../helpers/utils'),
         MongoClient = require('mongodb').MongoClient,
-        config = require('../config'),
+        config = require('../configs/test'),
         request = require('request');
 
     describe(`Comment Routes ${shared.articleResource}/:articleId/comments/:commentId`, () => {

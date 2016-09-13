@@ -1,6 +1,6 @@
 (() => {
     "use strict";
-    const config = require('../config'),
+    const config = require('../configs/test'),
         mongodb = require('mongodb').MongoClient,
         assert = require('assert'),
         request = require('request'),

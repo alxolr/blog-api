@@ -2,3 +2,6 @@ node_modules/
 doc/
 images/
 coverage/
+uploads/
+.vscode/
+images/
