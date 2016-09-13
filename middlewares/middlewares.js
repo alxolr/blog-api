@@ -2,7 +2,7 @@
     "use strict";
     const jwt = require('jsonwebtoken'),
         utils = require('../helpers/utils'),
-        config = require('../config'),
+        config = require('../configs/' + process.env.ENV),
         User = require('../models/user');
 
     module.exports = {
