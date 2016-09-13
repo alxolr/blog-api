@@ -10,7 +10,8 @@
         assert = require('assert'),
         userRoutes = require('./routes/user-routes'),
         articleRoutes = require('./routes/article-routes'),
-        commentRoutes = require('./routes/comment-routes');
+        commentRoutes = require('./routes/comment-routes'),
+        morgan = require('morgan');
 
     mongoose.Promise = global.Promise;
     mongoose.connect(config.database, (err) => {
@@ -35,4 +36,6 @@
     app.listen(config.port, () => {
         console.log(`Server is running at http://localhost:${config.port}/`);
     });
+
+    module.exports = app;
 })();
