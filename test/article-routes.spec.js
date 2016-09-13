@@ -61,7 +61,10 @@
                         MongoClient.connect(config.database, (err, db) => {
                             db.collection('articles').findOne((err, article) => {
                                 assert.equal(article.img, `/images/big-boobs-photo-450x299.png`);
-                                done();
+                                request(`http://localhost:${config.port}/images/big-boobs-photo-450x299.png`, (err, res, body) => {
+                                    assert.equal(res.statusCode, 200, "The uploaded photo was not found!");
+                                    done();
+                                });
                             });
                         });
                     });

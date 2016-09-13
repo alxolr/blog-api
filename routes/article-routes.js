@@ -23,13 +23,21 @@
         article.slug = utils.slugify(article.title);
 
         if (req.file !== undefined) {
-            fs.readFile(req.file.path, function(err, data) {
-                let path = "uploads/";
-                fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
-                    article.img = `/images/${req.file.originalname}`;
-                    saveArticle(article, res);
+            let path = "images/";
+            fs.access(path, fs.constants.F_OK, (err) => {
+                
+                if (err) {
+                    fs.mkdirSync(path);
+                }
+
+                fs.readFile(req.file.path, function(err, data) {
+                    fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
+                        article.img = `/images/${req.file.originalname}`;
+                        saveArticle(article, res);
+                    });
                 });
             });
+
         } else {
             saveArticle(article, res);
         }
