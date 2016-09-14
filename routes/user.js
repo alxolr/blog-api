@@ -48,13 +48,13 @@
                 } else {
                     res.json({
                         success: false,
-                        message: utils.messages.PASSWORD_NO_MATCH
+                        message: utils.messages.INVALID_CREDENTIALS
                     });
                 }
             } else {
                 res.json({
                     success: false,
-                    message: utils.messages.EMAIL_NO_MATCH
+                    message: utils.messages.INVALID_CREDENTIALS
                 });
             }
         }

@@ -88,7 +88,22 @@
             });
 
             it('should return invalid credentials error when email or password is not ok', (done) => {
-                done();
+                let credentials = {
+                    email: "dummy1@test.com",
+                    password: "qwerty"
+                };
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send(credentials)
+                        .end((err, res) => {
+                            res.status.should.be.eql(200);
+                            res.body.success.should.be.eql(false);
+                            res.body.message.should.be.eql(utils.messages.INVALID_CREDENTIALS);
+                            done();
+                        });
+                });
             });
         });
     });

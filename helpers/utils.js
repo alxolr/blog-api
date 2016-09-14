@@ -27,9 +27,8 @@
         },
         messages: {
             PASSWORD_REQUIRED: "User should provide a password.",
-            PASSWORD_NO_MATCH: "The provided password does not match.",
             EMAIL_REQUIRED: "User should provide a valid email address.",
-            EMAIL_NO_MATCH: "The provided email was not found in the system.",
+            INVALID_CREDENTIALS: "The provided email and password does not match.",
             USER_DUPLICATE: "User already registered in the system.",
             USER_CREATED_SUCCESS: "User was succesfully created.",
             USER_UPDATED_SUCCESS: "The user was successfully updated",
