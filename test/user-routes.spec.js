@@ -9,6 +9,7 @@
     let server = require('../server');
     let shared = require('./shared');
     let should = chai.should();
+    let utils = require('../helpers/utils');
 
     chai.use(chaiHttp);
 
@@ -19,7 +20,7 @@
             });
         });
 
-        describe('/POST', () => {
+        describe('Create User', () => {
             it('it should create a user if email and password provided', (done) => {
                 chai.request(server)
                     .post('/api/v1/users')
@@ -33,7 +34,39 @@
                     });
             });
 
-            it('it should retun password required if password was not', (done) => {});
+            it('it should retun password required if not set', (done) => {
+                let user = Object.assign({}, shared.user);
+                delete user.password;
+                chai.request(server)
+                    .post('/api/v1/users')
+                    .send(user)
+                    .end((err, res) => {
+                        res.body.success.should.be.eql(false);
+                        res.body.message.should.be.a('array');
+                        res.body.message[0].property.should.be.eql('password');
+                        res.body.message[0].message.should.be.eql(utils.messages.PASSWORD_REQUIRED);
+                        res.should.have.status(200);
+
+                        done();
+                    });
+            });
+
+            it('it should return email required if not set', (done) => {
+                let user = Object.assign({}, shared.user);
+                delete user.email;
+                chai.request(server)
+                    .post('/api/v1/users')
+                    .send(user)
+                    .end((err, res) => {
+                        res.body.success.should.be.eql(false);
+                        res.body.message.should.be.a('array');
+                        res.body.message[0].property.should.be.eql('email');
+                        res.body.message[0].message.should.be.eql(utils.messages.EMAIL_REQUIRED);
+                        res.should.have.status(200);
+
+                        done();
+                    });
+            });
         });
     });
 })();

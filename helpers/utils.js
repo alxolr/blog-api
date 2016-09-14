@@ -26,7 +26,7 @@
             UNIQUE_KEY_VIOLATION: 11000
         },
         messages: {
-            PASSWORD_REQUIRED: "User should provided a password.",
+            PASSWORD_REQUIRED: "User should provide a password.",
             PASSWORD_NO_MATCH: "The provided password does not match.",
             EMAIL_REQUIRED: "User should provide a valid email address.",
             EMAIL_NO_MATCH: "The provided email was not found in the system.",
