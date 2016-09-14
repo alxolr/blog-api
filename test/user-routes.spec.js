@@ -86,7 +86,6 @@
                         });
                 });
             });
-
             it('should return invalid credentials error when email or password is not ok', (done) => {
                 let credentials = {
                     email: "dummy1@test.com",
@@ -125,7 +124,6 @@
                         });
                 });
             });
-
             it('should update the user when token is provided', (done) => {
                 let user = new User(shared.user);
                 user.save((err, user) => {
@@ -151,6 +149,21 @@
                                         done();
                                     });
                                 });
+                        });
+                });
+            });
+        });
+
+        describe('[GET] /api/v1/users/:userId', () => {
+            it('should return access denied if token not provided', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .get('/api/v1/users/' + user._id)
+                        .end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            done();
                         });
                 });
             });
