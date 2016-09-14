@@ -1,17 +1,16 @@
 (() => {
     "use strict";
-    process.env.ENV = process.env.ENV || 'prod';
 
-    const express = require('express'),
+    let express = require('express'),
         app = express(),
-        config = require('./configs/' + process.env.ENV),
         bodyParser = require('body-parser'),
         mongoose = require('mongoose'),
         assert = require('assert'),
-        userRoutes = require('./routes/user-routes'),
-        articleRoutes = require('./routes/article-routes'),
-        commentRoutes = require('./routes/comment-routes'),
-        morgan = require('morgan');
+        userRoutes = require('./routes/user'),
+        articleRoutes = require('./routes/article'),
+        commentRoutes = require('./routes/comment'),
+        morgan = require('morgan'),
+        config = require('config');
 
     mongoose.Promise = global.Promise;
     mongoose.connect(config.database, (err) => {

@@ -1,12 +1,12 @@
 (() => {
     "use strict";
-    const mongoose = require('mongoose'),
+    let mongoose = require('mongoose'),
         Schema = mongoose.Schema,
         crypto = require('crypto'),
         utils = require('../helpers/utils'),
-        config = require('../configs/' + process.env.ENV),
+        config = require('config'),
         security = require('../modules/security')(config);
-        
+
     const USER_RIGHTS = 'USER';
     const ADMIN_RIGHTS = 'ADMIN';
 

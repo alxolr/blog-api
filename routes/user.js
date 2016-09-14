@@ -1,15 +1,14 @@
 (() => {
     "use strict";
 
-    const router = require('express').Router(),
+    let router = require('express').Router(),
         User = require('../models/user'),
-        config = require('../configs/' + process.env.ENV),
+        config = require('config'),
         ObjectId = require('mongoose').Types.ObjectId,
         utils = require('../helpers/utils'),
         security = require('../modules/security')(config),
         jwt = require('jsonwebtoken'),
-        middlewares = require('../middlewares/middlewares'),
-        articleRoutes = require('./article-routes');
+        middlewares = require('../middlewares/middlewares');
 
     router.post('/', (req, res) => {
         let user = new User(req.body);
@@ -94,7 +93,7 @@
             }
         })
 
-        .get((req, res) => {
+    .get((req, res) => {
             User.findOne({
                 _id: req.params.userId
             }).then(handleSuccess, handleErrors);
