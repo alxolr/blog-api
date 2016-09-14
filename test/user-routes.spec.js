@@ -167,6 +167,30 @@
                         });
                 });
             });
+            it('should return the requested user if valid token is provided', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    let _id = user._id;
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            let token = res.body.token;
+                            chai.request(server)
+                                .get('/api/v1/users/' + user._id)
+                                .send({
+                                    token: token
+                                }).end((err, res) => {
+                                    res.status.should.be.eql(200);
+                                    res.body.should.have.property('user');
+                                    res.body.user.should.have.property('_id').eql(user._id.toString());
+                                    done();
+                                });
+                        });
+                });
+            });
         });
     });
 })();
