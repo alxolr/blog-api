@@ -20,7 +20,7 @@
             });
         });
 
-        describe('Create User', () => {
+        describe('[POST] /api/v1/users', () => {
             it('it should create a user if email and password provided', (done) => {
                 chai.request(server)
                     .post('/api/v1/users')
@@ -67,7 +67,7 @@
             });
         });
 
-        describe('Login User', () => {
+        describe('[POST] /api/v1/users/login', () => {
             it('it should return a valid token when valid credentials', (done) => {
                 let credentials = Object.assign({}, {
                     email: shared.user.email,
