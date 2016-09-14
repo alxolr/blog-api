@@ -3,3 +3,4 @@ doc/
 uploads/
 .vscode/
 images/
+npm-debug.log
