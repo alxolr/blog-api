@@ -106,5 +106,54 @@
                 });
             });
         });
+
+        describe('[PUT] /api/v1/users/:userId', () => {
+            it('should not update the user without the token', (done) => {
+                let user = new User(shared.user);
+                let update = Object.assign({}, shared.user);
+                update.name = "George";
+                user.save((err, user) => {
+                    let _id = user._id;
+                    chai.request(server)
+                        .put('/api/v1/users/' + _id)
+                        .send(update)
+                        .end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.should.have.property('success').eql(false);
+                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            done();
+                        });
+                });
+            });
+
+            it('should update the user when token is provided', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            let token = res.body.token;
+                            chai.request(server)
+                                .put('/api/v1/users/' + user._id)
+                                .send({
+                                    name: "George",
+                                    surname: "Andreas",
+                                    token: token
+                                }).end((err, res) => {
+                                    User.findOne({
+                                        _id: user._id
+                                    }, (err, user) => {
+                                        user.should.have.property('name').eql('George');
+                                        user.should.have.property('surname').eql('Andreas');
+                                        done();
+                                    });
+                                });
+                        });
+                });
+            });
+        });
     });
 })();

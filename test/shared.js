@@ -10,7 +10,7 @@
     let user = {
         email: "dummyuser@mail.com",
         password: "dummypassword",
-        name: "Jonh",
+        name: "Johny",
         surname: "Bravo"
     };
 
