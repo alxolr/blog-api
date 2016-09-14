@@ -33,7 +33,6 @@
                         done();
                     });
             });
-
             it('it should retun password required if not set', (done) => {
                 let user = Object.assign({}, shared.user);
                 delete user.password;
@@ -50,7 +49,6 @@
                         done();
                     });
             });
-
             it('it should return email required if not set', (done) => {
                 let user = Object.assign({}, shared.user);
                 delete user.email;
@@ -66,6 +64,31 @@
 
                         done();
                     });
+            });
+        });
+
+        describe('Login User', () => {
+            it('it should return a valid token when valid credentials', (done) => {
+                let credentials = Object.assign({}, {
+                    email: shared.user.email,
+                    password: shared.user.password
+                });
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send(credentials)
+                        .end((err, res) => {
+                            res.status.should.be.eql(200);
+                            res.body.should.have.property('token');
+                            res.body.should.have.property('user');
+                            done();
+                        });
+                });
+            });
+
+            it('should return invalid credentials error when email or password is not ok', (done) => {
+                done();
             });
         });
     });
