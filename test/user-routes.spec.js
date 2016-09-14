@@ -1,6 +1,8 @@
 (() => {
     "use strict";
-    const config = require('../configs/test'),
+    // process.env.NODE_ENV = 'test';
+
+    const config = require('config'),
         mongodb = require('mongodb').MongoClient,
         assert = require('assert'),
         request = require('request'),

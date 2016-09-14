@@ -1,10 +1,12 @@
 (() => {
     "use strict";
+    // process.env.NODE_ENV = 'test';
+
     const assert = require('assert'),
         shared = require('./shared'),
         utils = require('../helpers/utils'),
         MongoClient = require('mongodb').MongoClient,
-        config = require('../configs/test'),
+        config = require('config'),
         request = require('request');
 
     describe(`Comment Routes ${shared.articleResource}/:articleId/comments/:commentId`, () => {
