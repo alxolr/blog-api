@@ -1,33 +1,39 @@
-process.env.NODE_ENV = 'test';
+(() => {
+    "use strict";
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let User = require('../models/user');
-let server = require('../server');
-let shared = require('./shared');
-let should = chai.should();
+    process.env.NODE_ENV = 'test';
 
-chai.use(chaiHttp);
+    let chai = require('chai');
+    let chaiHttp = require('chai-http');
+    let User = require('../models/user');
+    let server = require('../server');
+    let shared = require('./shared');
+    let should = chai.should();
 
-describe('Users', () => {
-    beforeEach((done) => {
-        User.remove({}, (err) => {
-            done();
+    chai.use(chaiHttp);
+
+    describe('Users', () => {
+        beforeEach((done) => {
+            User.remove({}, (err) => {
+                done();
+            });
+        });
+
+        describe('/POST', () => {
+            it('it should create a user if email and password provided', (done) => {
+                chai.request(server)
+                    .post('/api/v1/users')
+                    .send(shared.user)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.have.property('user');
+                        res.body.should.have.property('token');
+                        res.body.user.name.should.be.eql(shared.user.name);
+                        done();
+                    });
+            });
+
+            it('it should retun password required if password was not', (done) => {});
         });
     });
-
-    describe('/POST', () => {
-        it('it should create a user', (done) => {
-
-            chai.request(server)
-                .post('/api/v1/users')
-                .send(shared.user)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('user');
-                    res.body.should.have.property('token');
-                    done();
-                });
-        });
-    });
-});
+})();
