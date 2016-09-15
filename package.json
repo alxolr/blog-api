@@ -29,6 +29,7 @@
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "gulp-apidoc": "^0.2.4",
+    "mocha": "^3.0.2",
     "mongodb": "^2.2.7",
     "request": "^2.74.0"
   }
