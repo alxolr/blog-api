@@ -45,7 +45,6 @@
                         res.body.message[0].property.should.be.eql('password');
                         res.body.message[0].message.should.be.eql(utils.messages.PASSWORD_REQUIRED);
                         res.should.have.status(200);
-
                         done();
                     });
             });
@@ -222,7 +221,6 @@
                         });
                 });
             });
-
             it('should softdelete the user if provided valid token', (done) => {
                 let user = new User(shared.user);
                 user.save((err, user) => {
