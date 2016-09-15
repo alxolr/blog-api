@@ -97,9 +97,25 @@
                         .post('/api/v1/users/login')
                         .send(credentials)
                         .end((err, res) => {
-                            res.status.should.be.eql(200);
+                            res.status.should.be.eql(403);
                             res.body.success.should.be.eql(false);
                             res.body.message.should.be.eql(utils.messages.INVALID_CREDENTIALS);
+                            done();
+                        });
+                });
+            });
+            it('should not login a softdeleted user', (done) => {
+                let user = new User(shared.user);
+                user.deleted_at = new Date();
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.should.have.property('message').eql(utils.messages.INVALID_CREDENTIALS);
                             done();
                         });
                 });
