@@ -31,6 +31,7 @@
     "gulp-apidoc": "^0.2.4",
     "mocha": "^3.0.2",
     "mongodb": "^2.2.7",
+    "morgan": "^1.7.0",
     "request": "^2.74.0"
   }
 }
