@@ -206,6 +206,35 @@
                         });
                 });
             });
+
+            it('should softdelete the user if provided valid token', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            let token = res.body.token;
+                            chai.request(server)
+                                .delete('/api/v1/users/' + user._id)
+                                .send({
+                                    token: token
+                                })
+                                .end((err, res) => {
+                                    res.status.should.be.eql(200);
+                                    User.findOne({
+                                        _id: user._id
+                                    }, (err, doc) => {
+                                        doc.should.have.property('_id').eql(user._id);
+                                        doc.should.have.property('deleted_at');
+                                        done();
+                                    });
+                                });
+                        });
+                });
+            });
         });
     });
 })();

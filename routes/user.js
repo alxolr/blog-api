@@ -113,8 +113,12 @@
             }
         })
         .delete((req, res) => {
-            User.remove({
+            User.update({
                 _id: req.params.userId
+            }, {
+                "$set": {
+                    deleted_at: new Date()
+                }
             }).then(handleSuccess, handleErrors);
 
             function handleSuccess(result) {
