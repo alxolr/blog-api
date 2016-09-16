@@ -1,14 +1,18 @@
 (() => {
     "use strict";
-    const config = require('../configs/test'),
-        mongodb = require('mongodb'),
-        assert = require('assert'),
-        request = require('request');
+    process.env.NODE_ENV = 'test';
+    const config = require('config');
+    const server = require('../server');
+    const User = require('../models/user');
+    const chai = require('chai');
+    const chaiHttp = require('chai-http');
+    chai.use(chaiHttp);
+    const should = chai.should();
 
     let user = {
         email: "dummyuser@mail.com",
         password: "dummypassword",
-        name: "Jonh",
+        name: "Johny",
         surname: "Bravo"
     };
 
@@ -24,76 +28,22 @@
         message: "This article is not that good as the people say"
     };
 
-    /**
-     * Remove all documents from the specified collection
-     */
-    exports.cleanupCollection = (collection) => {
-        mongodb.connect(config.database, (err, db) => {
-            db.collection(collection).remove({}).then(handleSuccess, handleErrors);
-
-            function handleSuccess(res) {
-                assert.notEqual(err, null);
-            }
-
-            function handleErrors(err) {
-                assert.equal(err, null);
-            }
+    exports.loginUser = (cb) => {
+        let userObj = new User(this.user);
+        userObj.save((err, doc) => {
+            chai.request(server)
+                .post('/api/v1/users/login')
+                .send({
+                    email: user.email,
+                    password: user.password
+                }).end((err, res) => {
+                    cb(err, res.body.user, res.body.token);
+                });
         });
-    };
-
-    /** 
-     * Assert if the result is ok, and then pass the callback
-     */
-    exports.assertOk = (err, body, isSuccess, message, next) => {
-        assert.equal(err, null);
-
-        let json = JSON.parse(body);
-        assert.equal(json.success, isSuccess);
-        assert.equal(json.message, message);
-        next();
-    };
-
-    /**
-     * Create a user and then use the results in cb function
-     */
-    exports.generateUser = (callback) => {
-        request.post(this.userResource, {
-            form: user
-        }, callback);
-    };
-
-    /**
-     * Create a new article in the database
-     */
-    exports.generateArticle = (callback) => {
-        this.generateUser((err, result, body) => {
-            assert.equal(err, null);
-            let json = JSON.parse(body),
-                token = json.token;
-
-            request.post(this.articleResource, {
-                form: {
-                    token: token,
-                    title: article.title,
-                    body: article.body
-                }
-            }, callback);
-        });
-    };
-
-    /**
-     * Extract the token from the request
-     */
-    exports.extractTokenFrom = (response) => {
-        return response.request.body.split('&').filter((item) => {
-            return item.indexOf('token') !== -1;
-        })[0].replace('token=', '');
     };
 
     exports.user = user;
     exports.article = article;
     exports.comment = comment;
-    exports.articleResource = `http://localhost:${config.port}/api/v1/articles`;
-    exports.userResource = `http://localhost:${config.port}/api/v1/users`;
 
 })();

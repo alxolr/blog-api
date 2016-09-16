@@ -1,12 +1,12 @@
 (() => {
     "use strict";
-    const mongoose = require('mongoose'),
+    let mongoose = require('mongoose'),
         Schema = mongoose.Schema,
         crypto = require('crypto'),
         utils = require('../helpers/utils'),
-        config = require('../config').get(process.env.NODE_ENV),
+        config = require('config'),
         security = require('../modules/security')(config);
-        
+
     const USER_RIGHTS = 'USER';
     const ADMIN_RIGHTS = 'ADMIN';
 
@@ -45,6 +45,7 @@
         },
         'created_at': Date,
         'updated_at': Date,
+        'deleted_at': Date,
         'is_subscribed': {
             type: Boolean,
             default: true

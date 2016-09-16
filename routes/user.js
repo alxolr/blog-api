@@ -1,15 +1,14 @@
 (() => {
     "use strict";
 
-    const router = require('express').Router(),
+    let router = require('express').Router(),
         User = require('../models/user'),
-        config = require('../config').get(process.env.NODE_ENV),
+        config = require('config'),
         ObjectId = require('mongoose').Types.ObjectId,
         utils = require('../helpers/utils'),
         security = require('../modules/security')(config),
         jwt = require('jsonwebtoken'),
-        middlewares = require('../middlewares/middlewares'),
-        articleRoutes = require('./article-routes');
+        middlewares = require('../middlewares/middlewares');
 
     router.post('/', (req, res) => {
         let user = new User(req.body);
@@ -37,8 +36,18 @@
             password = req.body.password;
 
         User.findOne({
-            email: email
-        }).then(handleSuccess, handleErrors);
+            email: email,
+            deleted_at: {
+                "$exists": false
+            }
+        }).then(handleSuccess, handleUserNotFound);
+
+        function handleUserNotFound(err) {
+            res.status(403).json({
+                success: false,
+                message: utils.messages.INVALID_CREDENTIALS
+            });
+        }
 
         function handleSuccess(user) {
             if (user) {
@@ -47,24 +56,17 @@
                 if (user.password === providedEncryptedPassword) {
                     generateTokenForUser(user, res, utils.messages.USER_LOGGEDIN_SUCCESS);
                 } else {
-                    res.json({
+                    res.status(403).json({
                         success: false,
-                        message: utils.messages.PASSWORD_NO_MATCH
+                        message: utils.messages.INVALID_CREDENTIALS
                     });
                 }
             } else {
-                res.json({
+                res.status(403).json({
                     success: false,
-                    message: utils.messages.EMAIL_NO_MATCH
+                    message: utils.messages.INVALID_CREDENTIALS
                 });
             }
-        }
-
-        function handleErrors(err) {
-            res.json({
-                success: false,
-                error: utils.listifyErrors(err)
-            });
         }
     });
 
@@ -114,8 +116,12 @@
             }
         })
         .delete((req, res) => {
-            User.remove({
+            User.update({
                 _id: req.params.userId
+            }, {
+                "$set": {
+                    deleted_at: new Date()
+                }
             }).then(handleSuccess, handleErrors);
 
             function handleSuccess(result) {

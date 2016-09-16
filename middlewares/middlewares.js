@@ -1,8 +1,8 @@
 (() => {
     "use strict";
-    const jwt = require('jsonwebtoken'),
+    let jwt = require('jsonwebtoken'),
         utils = require('../helpers/utils'),
-        config = require('../config').get(process.env.ENV),
+        config = require('config'),
         User = require('../models/user');
 
     module.exports = {

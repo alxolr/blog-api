@@ -1,21 +1,24 @@
 (() => {
     "use strict";
 
-    const express = require('express'),
+    let express = require('express'),
         app = express(),
-        config = require('./config').get(process.env.NODE_ENV),
         bodyParser = require('body-parser'),
         mongoose = require('mongoose'),
         assert = require('assert'),
-        userRoutes = require('./routes/user-routes'),
-        articleRoutes = require('./routes/article-routes'),
-        commentRoutes = require('./routes/comment-routes'),
-        morgan = require('morgan');
+        userRoutes = require('./routes/user'),
+        articleRoutes = require('./routes/article'),
+        commentRoutes = require('./routes/comment'),
+        morgan = require('morgan'),
+        config = require('config');
+
+    if (process.env.NODE_ENV !== 'test') {
+        app.use(morgan('combined'));
+    }
 
     mongoose.Promise = global.Promise;
     mongoose.connect(config.database, (err) => {
         assert.equal(err, null);
-        console.log(`Successfuly connected to ${config.database}`);
     });
 
     // parse application/x-www-form-urlencoded
@@ -26,14 +29,13 @@
     // parse application/json
     app.use(bodyParser.json());
     app.use('/images', express.static('images'));
+    app.use('/coverage', express.static('coverage/lcov-report/'));
 
     app.use('/api/v1/users', userRoutes);
     app.use('/api/v1/articles', articleRoutes);
     app.use('/api/v1/articles/', commentRoutes);
 
-    app.listen(config.port, () => {
-        console.log(`Server is running at http://localhost:${config.port}/`);
-    });
+    app.listen(config.port);
 
     module.exports = app;
 })();

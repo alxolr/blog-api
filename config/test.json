@@ -1,0 +1,6 @@
+{
+    "database": "mongodb://localhost:27017/blogtest",
+    "port": 8080,
+    "secretKey": "MegaSuperSecretKeyImpossibleToCrack",
+    "salt": "oyoutamago"
+}

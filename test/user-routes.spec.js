@@ -1,195 +1,252 @@
 (() => {
     "use strict";
-    const config = require('../configs/test'),
-        mongodb = require('mongodb').MongoClient,
-        assert = require('assert'),
-        request = require('request'),
-        utils = require('../helpers/utils'),
-        shared = require('./shared');
 
-    describe(`User resource ${shared.userResource}/:userId`, () => {
+    process.env.NODE_ENV = 'test';
 
-        afterEach(() => {
-            shared.cleanupCollection('users');
-        });
+    let chai = require('chai');
+    let chaiHttp = require('chai-http');
+    let User = require('../models/user');
+    let server = require('../server');
+    let shared = require('./shared');
+    let should = chai.should();
+    let utils = require('../helpers/utils');
 
-        before(() => {
-            shared.cleanupCollection('users');
-        });
+    chai.use(chaiHttp);
 
-        describe('Create user', () => {
-            it('Should create a user if email and password provided', (done) => {
-                shared.generateUser((err, res, body) => {
-                    shared.assertOk(err, body, true, utils.messages.USER_CREATED_SUCCESS, done);
-                });
+    describe('Users', () => {
+        beforeEach((done) => {
+            User.remove({}, (err) => {
+                done();
             });
         });
 
-        describe('Login user', () => {
-            let url = `${shared.userResource}/login`;
-            it(`Should return "${utils.messages.EMAIL_NO_MATCH}" for invalid email login.`, (done) => {
-                request.post(url, {
-                    form: shared.user
-                }, (err, res, body) => {
-                    shared.assertOk(err, body, false, utils.messages.EMAIL_NO_MATCH, done);
-                });
-            });
-
-            it(`Should return "${utils.messages.PASSWORD_NO_MATCH}" given an invalid password for login`, (done) => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    request.post(url, {
-                        form: {
-                            email: shared.user.email,
-                            password: '1'
-                        }
-                    }, (err, res, body) => {
-                        shared.assertOk(err, body, false, utils.messages.PASSWORD_NO_MATCH, done);
-                    });
-                });
-            });
-
-            it('Should return a "token" when the login is succesful', (done) => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    request.post(url, {
-                        form: shared.user
-                    }, (err, res, body) => {
-                        let result = JSON.parse(body);
-                        assert.equal(typeof result.token, 'string');
+        describe('[POST] /api/v1/users', () => {
+            it('it should create a user if email and password provided', (done) => {
+                chai.request(server)
+                    .post('/api/v1/users')
+                    .send(shared.user)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.have.property('user');
+                        res.body.should.have.property('token');
+                        res.body.user.name.should.be.eql(shared.user.name);
                         done();
                     });
-                });
+            });
+            it('it should retun password required if not set', (done) => {
+                let user = Object.assign({}, shared.user);
+                delete user.password;
+                chai.request(server)
+                    .post('/api/v1/users')
+                    .send(user)
+                    .end((err, res) => {
+                        res.body.success.should.be.eql(false);
+                        res.body.message.should.be.a('array');
+                        res.body.message[0].property.should.be.eql('password');
+                        res.body.message[0].message.should.be.eql(utils.messages.PASSWORD_REQUIRED);
+                        res.should.have.status(200);
+                        done();
+                    });
+            });
+            it('it should return email required if not set', (done) => {
+                let user = Object.assign({}, shared.user);
+                delete user.email;
+                chai.request(server)
+                    .post('/api/v1/users')
+                    .send(user)
+                    .end((err, res) => {
+                        res.body.success.should.be.eql(false);
+                        res.body.message.should.be.a('array');
+                        res.body.message[0].property.should.be.eql('email');
+                        res.body.message[0].message.should.be.eql(utils.messages.EMAIL_REQUIRED);
+                        res.should.have.status(200);
+
+                        done();
+                    });
             });
         });
 
-        describe('Update User', () => {
-            it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when updating user without token`, (done) => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let result = JSON.parse(body),
-                        token = result.token,
-                        userId = result.user._id;
-                    request.put(`${shared.userResource}/${userId}`, {
-                        form: {
-                            email: 'jack@bravo.com'
-                        }
-                    }, (err, res, body) => {
-                        shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
-                    });
+        describe('[POST] /api/v1/users/login', () => {
+            it('it should return a valid token when valid credentials', (done) => {
+                let credentials = Object.assign({}, {
+                    email: shared.user.email,
+                    password: shared.user.password
                 });
-            });
-
-            it(`Should return "${utils.messages.USER_UPDATED_SUCCESS}" for valid data and token provided`, (done) => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let result = JSON.parse(body),
-                        token = result.token,
-                        userId = '' + result.user._id;
-                    request.put(`${shared.userResource}/${userId}`, {
-                        form: {
-                            email: 'jack@bravo.com',
-                            token: token
-                        }
-                    }, (err, res, body) => {
-                        shared.assertOk(err, body, true, utils.messages.USER_UPDATED_SUCCESS, done);
-                    });
-                });
-            });
-        });
-
-        describe('Get User', () => {
-            it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when token not provided`, done => {
-                //create a user
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let json = JSON.parse(body),
-                        userId = json.user._id;
-                    request.get(`${shared.userResource}/${userId}`, (err, res, body) => {
-                        shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
-                    });
-                });
-            });
-
-            it(`Should return the requested user given the valid token and userId`, done => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let json = JSON.parse(body),
-                        userId = json.user._id,
-                        token = json.token;
-                    request.get(`${shared.userResource}/${userId}`, {
-                        form: {
-                            token: token
-                        }
-                    }, (err, res, body) => {
-                        let json = JSON.parse(body);
-                        assert.equal(json.user._id, userId);
-                        shared.assertOk(err, body, true, undefined, done);
-                    });
-                });
-            });
-
-            it(`Should return "${utils.messages.MONGOID_INVALID}" given an invalid User id`, done => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let json = JSON.parse(body);
-                    request(`${shared.userResource}/1`, {
-                        form: {
-                            token: json.token
-                        }
-                    }, (err, res, body) => {
-                        shared.assertOk(err, body, false, utils.messages.MONGOID_INVALID, done);
-                    });
-                });
-            });
-        });
-
-        describe("Delete User", () => {
-            it(`Should return "${utils.messages.TOKEN_NOT_PROVIDED}" when trying to delete a user without token`, done => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let json = JSON.parse(body);
-                    request.delete(`${shared.userResource}/${json.user._id}`, (err, res, body) => {
-                        shared.assertOk(err, body, false, utils.messages.TOKEN_NOT_PROVIDED, done);
-                    });
-                });
-            });
-
-            it(`Should allow user deletion by the user itself or "admin" and return "${utils.messages.TOKEN_HIGHJACKED}"`, done => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let json = JSON.parse(body),
-                        token1 = json.token;
-                    request.post(shared.userResource, {
-                        form: {
-                            email: "johny@comrada.com",
-                            password: "tuition2"
-                        }
-                    }, (err, res, body) => {
-                        assert.equal(err, null);
-                        let json = JSON.parse(body);
-                        request.delete(`${shared.userResource}/${json.user._id}`, {
-                            form: {
-                                token: token1
-                            }
-                        }, (err, res, body) => {
-                            shared.assertOk(err, body, false, utils.messages.TOKEN_HIGHJACKED, done);
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send(credentials)
+                        .end((err, res) => {
+                            res.status.should.be.eql(200);
+                            res.body.should.have.property('token');
+                            res.body.should.have.property('user');
+                            done();
                         });
-                    });
                 });
             });
+            it('should return invalid credentials error when email or password is not ok', (done) => {
+                let credentials = {
+                    email: "dummy1@test.com",
+                    password: "qwerty"
+                };
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send(credentials)
+                        .end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.success.should.be.eql(false);
+                            res.body.message.should.be.eql(utils.messages.INVALID_CREDENTIALS);
+                            done();
+                        });
+                });
+            });
+            it('should not login a softdeleted user', (done) => {
+                let user = new User(shared.user);
+                user.deleted_at = new Date();
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.should.have.property('message').eql(utils.messages.INVALID_CREDENTIALS);
+                            done();
+                        });
+                });
+            });
+        });
 
-            it(`Should return "${utils.messages.USER_DELETED_SUCCESS}" for the valid user deletion`, done => {
-                shared.generateUser((err, res, body) => {
-                    assert.equal(err, null);
-                    let json = JSON.parse(body);
-                    request.delete(`${shared.userResource}/${json.user._id}`, {
-                        form: {
-                            token: json.token
-                        }
-                    }, (err, res, body) => {
-                        shared.assertOk(err, body, true, utils.messages.USER_DELETED_SUCCESS, done);
-                    });
+        describe('[PUT] /api/v1/users/:userId', () => {
+            it('should not update the user without the token', (done) => {
+                let user = new User(shared.user);
+                let update = Object.assign({}, shared.user);
+                update.name = "George";
+                user.save((err, user) => {
+                    let _id = user._id;
+                    chai.request(server)
+                        .put('/api/v1/users/' + _id)
+                        .send(update)
+                        .end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.should.have.property('success').eql(false);
+                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            done();
+                        });
+                });
+            });
+            it('should update the user when token is provided', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            let token = res.body.token;
+                            chai.request(server)
+                                .put('/api/v1/users/' + user._id)
+                                .send({
+                                    name: "George",
+                                    surname: "Andreas",
+                                    token: token
+                                }).end((err, res) => {
+                                    User.findOne({
+                                        _id: user._id
+                                    }, (err, user) => {
+                                        user.should.have.property('name').eql('George');
+                                        user.should.have.property('surname').eql('Andreas');
+                                        done();
+                                    });
+                                });
+                        });
+                });
+            });
+        });
+
+        describe('[GET] /api/v1/users/:userId', () => {
+            it('should return access denied if token not provided', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .get('/api/v1/users/' + user._id)
+                        .end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            done();
+                        });
+                });
+            });
+            it('should return the requested user if valid token is provided', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    let _id = user._id;
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            let token = res.body.token;
+                            chai.request(server)
+                                .get('/api/v1/users/' + user._id)
+                                .send({
+                                    token: token
+                                }).end((err, res) => {
+                                    res.status.should.be.eql(200);
+                                    res.body.should.have.property('user');
+                                    res.body.user.should.have.property('_id').eql(user._id.toString());
+                                    done();
+                                });
+                        });
+                });
+            });
+        });
+
+        describe('[DELETE] /api/v1/users/:userId', () => {
+            it('should return access denied when trying to delete a user without token', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .delete('/api/v1/users/' + user._id)
+                        .end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            done();
+                        });
+                });
+            });
+            it('should softdelete the user if provided valid token', (done) => {
+                let user = new User(shared.user);
+                user.save((err, user) => {
+                    chai.request(server)
+                        .post('/api/v1/users/login')
+                        .send({
+                            email: shared.user.email,
+                            password: shared.user.password
+                        }).end((err, res) => {
+                            let token = res.body.token;
+                            chai.request(server)
+                                .delete('/api/v1/users/' + user._id)
+                                .send({
+                                    token: token
+                                })
+                                .end((err, res) => {
+                                    res.status.should.be.eql(200);
+                                    User.findOne({
+                                        _id: user._id
+                                    }, (err, doc) => {
+                                        doc.should.have.property('_id').eql(user._id);
+                                        doc.should.have.property('deleted_at');
+                                        done();
+                                    });
+                                });
+                        });
                 });
             });
         });
