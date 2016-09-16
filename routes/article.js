@@ -25,7 +25,7 @@
         if (req.file !== undefined) {
             let path = "images/";
             fs.access(path, fs.constants.F_OK, (err) => {
-                
+
                 if (err) {
                     fs.mkdirSync(path);
                 }
