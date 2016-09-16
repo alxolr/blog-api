@@ -12,6 +12,10 @@
         morgan = require('morgan'),
         config = require('config');
 
+    if (process.env.NODE_ENV !== 'test') {
+        app.use(morgan('combined'));
+    }
+
     mongoose.Promise = global.Promise;
     mongoose.connect(config.database, (err) => {
         assert.equal(err, null);
