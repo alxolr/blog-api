@@ -39,7 +39,7 @@
             });
 
             it('should create the article if token provided', (done) => {
-                shared.loginUser((err, user, token) => {
+                shared.createUser(shared.user, (err, user, token) => {
                     chai.request(server)
                         .post('/api/v1/articles')
                         .send({
@@ -58,7 +58,7 @@
 
             it('should be able to upload the article main photo and the photo should be accessible', (done) => {
                 let photo = 'big-boobs-photo-450x299.png';
-                shared.loginUser((err, user, token) => {
+                shared.createUser(shared.user, (err, user, token) => {
                     chai.request(server)
                         .post('/api/v1/articles')
                         .set('Content-Type', 'multipart/form-data')
@@ -97,8 +97,41 @@
                 });
             });
 
-            it('should allow article modifications only for article author and administrator', (done) => {
+            it('should allow article modifications for the article author', (done) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    chai.request(server)
+                        .put('/api/v1/articles/' + article._id)
+                        .send({
+                            token: token,
+                            title: "New title for the article"
+                        }).end((err, res) => {
+                            res.status.should.be.eql(200);
+                            res.body.should.have.property('article');
+                            res.body.article.should.have.property('title').eql("New title for the article");
+                            done();
+                        });
+                });
+            });
 
+            it('should not allow article edit for users others than author', (done) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    shared.createUser({
+                        email: "other@user.com",
+                        password: "interesting"
+                    }, (err, user, token) => {
+                        chai.request(server)
+                            .put('/api/v1/articles/' + article._id)
+                            .send({
+                                token: token,
+                                title: "Should not be possible"
+                            }).end((err, res) => {
+                                res.status.should.be.eql(403);
+                                res.body.message.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
+                                res.body.should.not.have.property('article');
+                                done();
+                            });
+                    });
+                });
             });
         });
 

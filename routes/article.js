@@ -1,7 +1,7 @@
 (() => {
     "use strict";
     const router = require('express').Router(),
-        middlewares = require('../middlewares/middlewares'),
+        mw = require('../middlewares/middlewares'),
         Article = require('../models/article'),
         utils = require('../helpers/utils'),
         fs = require('fs'),
@@ -11,7 +11,7 @@
         });
 
 
-    router.post('/', upload.single('img'), middlewares.isAuthenticated, (req, res) => {
+    router.post('/', upload.single('img'), mw.isAuthenticated, (req, res) => {
         let article = new Article(req.body);
 
         article.author = {
@@ -25,11 +25,9 @@
         if (req.file !== undefined) {
             let path = "images/";
             fs.access(path, fs.constants.F_OK, (err) => {
-
                 if (err) {
                     fs.mkdirSync(path);
                 }
-
                 fs.readFile(req.file.path, function(err, data) {
                     fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
                         article.img = `/images/${req.file.originalname}`;
@@ -44,7 +42,7 @@
     });
 
     router.route('/:articleId')
-        .put(middlewares.isAuthenticated, (req, res) => {
+        .put(mw.isAuthenticated, mw.isAdminOrArticleAuthor, (req, res) => {
             if (req.body.title !== undefined) {
                 req.body.slug = utils.slugify(req.body.title);
             }

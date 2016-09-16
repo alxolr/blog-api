@@ -16,6 +16,14 @@
         surname: "Bravo"
     };
 
+    let admin = {
+        email: "admin@mail.com",
+        password: "goodadmin",
+        name: "Admin",
+        surname: "Adminovich",
+        rights: ["ADMIN"]
+    }
+
     let article = {
         title: "Angular 2, be part of the future.",
         body: `
@@ -28,8 +36,8 @@
         message: "This article is not that good as the people say"
     };
 
-    exports.loginUser = (cb) => {
-        let userObj = new User(this.user);
+    exports.createUser = (user, cb) => {
+        let userObj = new User(user);
         userObj.save((err, doc) => {
             chai.request(server)
                 .post('/api/v1/users/login')
@@ -40,10 +48,24 @@
                     cb(err, res.body.user, res.body.token);
                 });
         });
-    };
+    }
+
+    exports.createArticle = (author, article, cb) => {
+        this.createUser(author, (err, user, token) => {
+            chai.request(server)
+                .post('/api/v1/articles')
+                .send({
+                    title: article.title,
+                    body: article.body,
+                    token: token
+                }).end((err, res) => {
+                    cb(err, res.body.article, token);
+                });
+        });
+    }
 
     exports.user = user;
+    exports.admin = admin;
     exports.article = article;
     exports.comment = comment;
-
 })();
