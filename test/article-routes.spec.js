@@ -79,6 +79,27 @@
                         });
                 });
             });
+
+        });
+
+        describe('[PUT] /api/v1/articles/:articleId', () => {
+            it('should not allow article modification without token', (done) => {
+                let article = new Article(shared.article);
+                article.save((err, article) => {
+                    chai.request(server)
+                        .put('/api/v1/articles/1')
+                        .send({})
+                        .end((err, res) => {
+                            res.status.should.be.eql(403);
+                            res.body.message.should.be.eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            done();
+                        });
+                });
+            });
+
+            it('should allow article modifications only for article author and administrator', (done) => {
+
+            });
         });
 
     });
