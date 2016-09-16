@@ -17,14 +17,26 @@
     describe('Articles', () => {
         beforeEach((done) => {
             Article.remove({}, (err) => {
-                done();
+                User.remove({}, (err) => {
+                    done();
+                });
             });
         });
 
         describe('[POST] /api/v1/articles', () => {
-            it('', (done) => {
-                done();
+            it('should not be able to create article without token', (done) => {
+                chai.request(server)
+                    .post('/api/v1/articles')
+                    .send({
+                        title: shared.article.title,
+                        body: shared.article.body,
+                    }).end((err, res) => {
+                        res.status.should.be.eql(403);
+                        res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                        done();
+                    });
             });
         });
+
     });
 })();
