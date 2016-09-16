@@ -36,6 +36,24 @@
                         done();
                     });
             });
+
+            it('should create the article if token provided', (done) => {
+                shared.loginUser((err, user, token) => {
+                    chai.request(server)
+                        .post('/api/v1/articles')
+                        .send({
+                            title: shared.article.title,
+                            body: shared.article.body,
+                            token: token
+                        }).end((err, res) => {
+                            res.status.should.be.eql(200);
+                            res.body.should.have.property('article');
+                            res.body.article.should.have.property('author');
+                            res.body.should.have.property('message').eql(utils.messages.ARTICLE_CREATE_SUCCESS);
+                            done();
+                        });
+                });
+            });
         });
 
     });
