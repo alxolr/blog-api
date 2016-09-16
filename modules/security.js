@@ -1,7 +1,6 @@
 (() => {
     "use strict";
     const crypto = require('crypto'),
-        jwt = require('jsonwebtoken'),
         utils = require('../helpers/utils');
 
     module.exports = (config) => {
