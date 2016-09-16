@@ -98,18 +98,20 @@
     const isAdminOrArticleAuthor = (req, res, next) => {
         let user = req.decoded._doc;
         let articleId = req.params.articleId;
+        
         if (isAdmin(user)) {
             next();
-        }
-        isArticleAuthor(user, articleId).then((isAuthor) => {
-            if (isAuthor) {
-                next();
-            } else {
+        } else {
+            isArticleAuthor(user, articleId).then((isAuthor) => {
+                if (isAuthor) {
+                    next();
+                } else {
+                    return tokenHighjacked(res);
+                }
+            }).catch((err) => {
                 return tokenHighjacked(res);
-            }
-        }).catch((err) => {
-            return tokenHighjacked(res);
-        });
+            });
+        }
     }
 
     exports.isAuthenticated = isAuthenticated;

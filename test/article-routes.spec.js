@@ -133,6 +133,23 @@
                     });
                 });
             });
+
+            it('should allow article modification for the ADMIN user rights', (done) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    shared.createUser(shared.admin, (err, admin, token) => {
+                        chai.request(server)
+                            .put('/api/v1/articles/' + article._id)
+                            .send({
+                                token: token,
+                                title: "Modified by admin",
+                            }).end((err, res) => {
+                                res.status.should.be.eql(200);
+                                res.body.article.title.should.be.eql('Modified by admin');
+                                done();
+                            });
+                    });
+                });
+            });
         });
 
     });
