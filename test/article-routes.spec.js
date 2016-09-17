@@ -10,7 +10,7 @@
     let server = require('../server');
     let shared = require('./shared');
     let should = chai.should();
-    let utils = require('../helpers/utils');
+    let utils = require('../services/utils');
     let fs = require('fs');
     let photo = 'big-boobs-photo-450x299.png';
 

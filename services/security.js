@@ -1,7 +1,7 @@
 (() => {
     "use strict";
     const crypto = require('crypto'),
-        utils = require('../helpers/utils');
+        utils = require('../services/utils');
 
     module.exports = (config) => {
         config = {

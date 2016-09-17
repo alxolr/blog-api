@@ -3,9 +3,9 @@
     let mongoose = require('mongoose'),
         Schema = mongoose.Schema,
         crypto = require('crypto'),
-        utils = require('../helpers/utils'),
+        utils = require('../services/utils'),
         config = require('config'),
-        security = require('../modules/security')(config);
+        security = require('../services/security')(config);
 
     const USER_RIGHTS = 'USER';
     const ADMIN_RIGHTS = 'ADMIN';

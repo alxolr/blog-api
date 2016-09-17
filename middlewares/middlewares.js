@@ -1,7 +1,7 @@
 (() => {
     "use strict";
     let jwt = require('jsonwebtoken'),
-        utils = require('../helpers/utils'),
+        utils = require('../services/utils'),
         config = require('config'),
         User = require('../models/user'),
         Article = require('../models/article');
@@ -112,7 +112,7 @@
                 return tokenHighjacked(res);
             });
         }
-    }
+    };
 
     exports.isAuthenticated = isAuthenticated;
     exports.isValidParameters = isValidParameters;

@@ -9,7 +9,7 @@
     let server = require('../server');
     let shared = require('./shared');
     let should = chai.should();
-    let utils = require('../helpers/utils');
+    let utils = require('../services/utils');
 
     chai.use(chaiHttp);
 

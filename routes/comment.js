@@ -2,7 +2,7 @@
     "use strict";
 
     const Router = require('express').Router(),
-        utils = require('../helpers/utils'),
+        utils = require('../services/utils'),
         middlewares = require('../middlewares/middlewares'),
         Article = require('../models/article');
 

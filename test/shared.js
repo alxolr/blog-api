@@ -22,7 +22,7 @@
         name: "Admin",
         surname: "Adminovich",
         rights: ["ADMIN"]
-    }
+    };
 
     let article = {
         title: "Angular 2, be part of the future.",

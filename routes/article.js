@@ -3,13 +3,15 @@
     const router = require('express').Router(),
         mw = require('../middlewares/middlewares'),
         Article = require('../models/article'),
-        utils = require('../helpers/utils'),
+        utils = require('../services/utils'),
         fs = require('fs'),
         multer = require('multer'),
+        uploadFile = require('../services/upload-file'),
         upload = multer({
             dest: '/tmp/'
         });
 
+    let imgDirectory = __dirname + '/../images';
 
     router.post('/', upload.single('img'), mw.isAuthenticated, (req, res) => {
         let article = new Article(req.body);
@@ -23,19 +25,15 @@
         article.slug = utils.slugify(article.title);
 
         if (req.file !== undefined) {
-            let path = "images/";
-            fs.access(path, fs.constants.F_OK, (err) => {
-                if (err) {
-                    fs.mkdirSync(path);
-                }
-                fs.readFile(req.file.path, function(err, data) {
-                    fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
-                        article.img = `/images/${req.file.originalname}`;
-                        saveArticle(article, res);
-                    });
+            uploadFile(req.file, imgDirectory).then(() => {
+                article.img = `/images/${req.file.originalname}`;
+                saveArticle(article, res);
+            }).catch((err) => {
+                res.status(400).json({
+                    success: false,
+                    message: "Something went wrong!"
                 });
             });
-
         } else {
             saveArticle(article, res);
         }
@@ -49,22 +47,21 @@
             }
 
             if (req.file !== undefined) {
-                let path = "images/";
-                fs.access(path, fs.constants.F_OK, (err) => {
-                    if (err) {
-                        fs.mkdirSync(path);
-                    }
-                    fs.readFile(req.file.path, function(err, data) {
-                        fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
-                            req.body.img = `/images/${req.file.originalname}`;
-                            Article.update({
-                                _id: req.params.articleId
-                            }, {
-                                '$set': req.body
-                            }).then(handleSuccess, handleErrors);
+                uploadFile(req.file, imgDirectory)
+                    .then(() => {
+                        req.body.img = `/images/${req.file.originalname}`;
+                        Article.update({
+                            _id: req.params.articleId
+                        }, {
+                            '$set': req.body
+                        }).then(handleSuccess, handleErrors);
+                    })
+                    .catch((err) => {
+                        res.status(400).json({
+                            success: false,
+                            message: err
                         });
                     });
-                });
             } else {
                 Article.update({
                     _id: req.params.articleId
@@ -129,7 +126,7 @@
                     article: article
                 });
             } else {
-                res.json({
+                res.status(400).json({
                     success: false,
                     message: utils.listifyErrors(err)
                 });

@@ -5,8 +5,8 @@
         User = require('../models/user'),
         config = require('config'),
         ObjectId = require('mongoose').Types.ObjectId,
-        utils = require('../helpers/utils'),
-        security = require('../modules/security')(config),
+        utils = require('../services/utils'),
+        security = require('../services/security')(config),
         jwt = require('jsonwebtoken'),
         middlewares = require('../middlewares/middlewares');
 
