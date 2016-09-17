@@ -13,7 +13,7 @@
 
     let imgDirectory = __dirname + '/../images';
 
-    router.post('/', upload.single('img'), mw.isAuthenticated, (req, res) => {
+    router.post('/', upload.single('image'), mw.isAuthenticated, (req, res) => {
         let article = new Article(req.body);
 
         article.author = {
@@ -26,7 +26,7 @@
 
         if (req.file !== undefined) {
             uploadFile(req.file, imgDirectory).then(() => {
-                article.img = `/images/${req.file.originalname}`;
+                article.image = `/images/${req.file.originalname}`;
                 saveArticle(article, res);
             }).catch((err) => {
                 res.status(400).json({
@@ -40,16 +40,14 @@
     });
 
     router.route('/:articleId')
-        .put(upload.single('img'), mw.isAuthenticated, mw.isAdminOrArticleAuthor, (req, res) => {
-
+        .put(upload.single('image'), mw.isAuthenticated, mw.isAdminOrArticleAuthor, (req, res) => {
             if (req.body.title !== undefined) {
                 req.body.slug = utils.slugify(req.body.title);
             }
-
             if (req.file !== undefined) {
                 uploadFile(req.file, imgDirectory)
                     .then(() => {
-                        req.body.img = `/images/${req.file.originalname}`;
+                        req.body.image = `/images/${req.file.originalname}`;
                         Article.update({
                             _id: req.params.articleId
                         }, {

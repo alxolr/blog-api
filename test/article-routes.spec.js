@@ -66,11 +66,11 @@
                         .field('title', shared.article.title)
                         .field('body', shared.article.body)
                         .field('token', token)
-                        .attach('img', fs.createReadStream(__dirname + `/${photo}`), photo)
+                        .attach('image', fs.createReadStream(__dirname + `/${photo}`), photo)
                         .end((err, res) => {
                             res.status.should.be.eql(200);
                             res.body.should.have.property('article');
-                            res.body.article.should.have.property('img').eql(`/images/${photo}`);
+                            res.body.article.should.have.property('image').eql(`/images/${photo}`);
                             chai.request(server)
                                 .get(`/images/${photo}`)
                                 .end((err, res) => {
@@ -158,16 +158,21 @@
                         .put('/api/v1/articles/' + article._id)
                         .set('Content-Type', 'multipart/form-data')
                         .field('token', token)
-                        .attach('img', fs.createReadStream(__dirname + `/${photo}`), photo)
+                        .attach('image', fs.createReadStream(__dirname + `/${photo}`), photo)
                         .end((err, res) => {
                             res.status.should.be.eql(200);
                             res.body.should.have.property('article');
-                            res.body.article.img.should.be.eql('/images/' + photo);
+                            res.body.article.image.should.be.eql('/images/' + photo);
                             done();
                         });
                 });
             });
         });
 
+        describe("[GET] /api/v1/article/:articleId", () => {
+            it('should return all the details of the article', (done) => {
+                done();
+            });
+        });
     });
 })();

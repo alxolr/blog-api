@@ -50,7 +50,7 @@
             }],
             required: false
         },
-        img: String
+        image: String
     });
 
     ArticleSchema.pre('save', function(next) {
