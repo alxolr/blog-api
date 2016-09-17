@@ -21,9 +21,7 @@
             name: req.decoded._doc.name,
             surname: req.decoded._doc.surname
         };
-
-        article.slug = utils.slugify(article.title);
-
+        
         if (req.file !== undefined) {
             uploadFile(req.file, imgDirectory).then(() => {
                 article.image = `/images/${req.file.originalname}`;

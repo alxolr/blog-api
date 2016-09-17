@@ -1,7 +1,8 @@
 (() => {
     'use strict';
     const mongoose = require('mongoose'),
-        Schema = mongoose.Schema;
+        Schema = mongoose.Schema,
+        utils = require('../services/utils');
 
     const ArticleSchema = new Schema({
         'title': {
@@ -11,7 +12,6 @@
         'category': [],
         'slug': {
             type: String,
-            required: true,
             index: {
                 unique: true,
                 dropDups: true,
@@ -59,8 +59,8 @@
             this.created_at = new Date();
         }
 
+        this.slug = utils.slugify(this.title);
         this.updated_at = new Date();
-
         next();
     });
 

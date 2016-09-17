@@ -52,6 +52,7 @@
                             res.status.should.be.eql(200);
                             res.body.should.have.property('article');
                             res.body.article.should.have.property('author');
+                            res.body.article.should.have.property('slug').eql(utils.slugify(shared.article.title));
                             res.body.should.have.property('message').eql(utils.messages.ARTICLE_CREATE_SUCCESS);
                             done();
                         });
@@ -185,6 +186,20 @@
             });
 
             it('should should not return the details of a softdeleted article', (done) => {
+                let article = Object.assign({}, shared.article);
+                article.deleted_at = new Date();
+                shared.createArticle(shared.user, article, (err, article, token) => {
+                    chai.request(server)
+                        .get('/api/v1/articles/' + article._id)
+                        .end((err, res) => {
+                            res.status.should.be.eql(404);
+                            res.body.should.have.property('message').eql(utils.messages.ARTICLE_NOT_FOUND);
+                            done();
+                        });
+                });
+            });
+
+            it('should be possible to get the article details by slug', (done) => {
                 let article = Object.assign({}, shared.article);
                 article.deleted_at = new Date();
                 shared.createArticle(shared.user, article, (err, article, token) => {
