@@ -42,6 +42,7 @@
             ARTICLE_CREATE_SUCCESS: "Article was successfully created.",
             ARTICLE_UPDATE_SUCCESS: "Article was successfully updated.",
             ARTICLE_DELETE_SUCCESS: "Article was successfully deleted.",
+            ARTICLE_NOT_FOUND: "Requested article was not found",
             COMMENT_CREATE_SUCCESS: "The comment has been succesfully added",
             COMMENT_CREATE_FAIL: "The comment was not been succesfull"
         }

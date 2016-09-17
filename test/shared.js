@@ -48,21 +48,19 @@
                     cb(err, res.body.user, res.body.token);
                 });
         });
-    }
+    };
 
     exports.createArticle = (author, article, cb) => {
         this.createUser(author, (err, user, token) => {
             chai.request(server)
                 .post('/api/v1/articles')
-                .send({
-                    title: article.title,
-                    body: article.body,
-                    token: token
-                }).end((err, res) => {
+                .set('x-access-token', token)
+                .send(article)
+                .end((err, res) => {
                     cb(err, res.body.article, token);
                 });
         });
-    }
+    };
 
     exports.user = user;
     exports.admin = admin;

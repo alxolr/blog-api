@@ -57,7 +57,7 @@
                     .catch((err) => {
                         res.status(400).json({
                             success: false,
-                            message: err
+                            message: utils.listifyErrors(err)
                         });
                     });
             } else {
@@ -83,16 +83,27 @@
             }
         })
         .get((req, res) => {
-            Article.findOne({
-                _id: req.params.articleId
-            }).then(returnArticle, handleErrors);
-
-            function returnArticle(article) {
-                res.json({
-                    success: true,
-                    article: article
-                });
-            }
+            Article
+                .findOne({
+                    _id: req.params.articleId,
+                    deleted_at: {
+                        '$exists': false
+                    }
+                })
+                .then((article) => {
+                    if (article) {
+                        res.json({
+                            success: true,
+                            article: article
+                        });
+                    } else {
+                        res.status(404).json({
+                            success: false,
+                            message: utils.messages.ARTICLE_NOT_FOUND
+                        });
+                    }
+                })
+                .catch(handleErrors);
         })
         .delete((req, res) => {
             Article.remove({
@@ -108,7 +119,7 @@
         });
 
     function handleErrors(err) {
-        res.json({
+        res.status(400).json({
             success: false,
             message: utils.listifyErrors(err)
         });
