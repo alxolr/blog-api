@@ -11,7 +11,7 @@
             success: false,
             message: utils.messages.TOKEN_HIGHJACKED
         });
-    }
+    };
 
     const isAuthenticated = (req, res, next) => {
         let token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -70,11 +70,11 @@
                 });
             }
         });
-    }
+    };
 
     const isAdmin = (user) => {
         return user.rights.indexOf('ADMIN') !== -1;
-    }
+    };
 
     const isArticleAuthor = (user, articleId) => {
         return new Promise((resolve, reject) => {
@@ -93,12 +93,12 @@
                 }
             });
         });
-    }
+    };
 
     const isAdminOrArticleAuthor = (req, res, next) => {
         let user = req.decoded._doc;
         let articleId = req.params.articleId;
-        
+
         if (isAdmin(user)) {
             next();
         } else {

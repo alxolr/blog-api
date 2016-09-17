@@ -12,6 +12,8 @@
     let should = chai.should();
     let utils = require('../helpers/utils');
     let fs = require('fs');
+    let photo = 'big-boobs-photo-450x299.png';
+
 
     chai.use(chaiHttp);
 
@@ -57,7 +59,6 @@
             });
 
             it('should be able to upload the article main photo and the photo should be accessible', (done) => {
-                let photo = 'big-boobs-photo-450x299.png';
                 shared.createUser(shared.user, (err, user, token) => {
                     chai.request(server)
                         .post('/api/v1/articles')
@@ -148,6 +149,22 @@
                                 done();
                             });
                     });
+                });
+            });
+
+            it('should allow the image modification and upload of a new photo', (done) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    chai.request(server)
+                        .put('/api/v1/articles/' + article._id)
+                        .set('Content-Type', 'multipart/form-data')
+                        .field('token', token)
+                        .attach('img', fs.createReadStream(__dirname + `/${photo}`), photo)
+                        .end((err, res) => {
+                            res.status.should.be.eql(200);
+                            res.body.should.have.property('article');
+                            res.body.article.img.should.be.eql('/images/' + photo);
+                            done();
+                        });
                 });
             });
         });

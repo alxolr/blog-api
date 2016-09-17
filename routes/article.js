@@ -42,16 +42,36 @@
     });
 
     router.route('/:articleId')
-        .put(mw.isAuthenticated, mw.isAdminOrArticleAuthor, (req, res) => {
+        .put(upload.single('img'), mw.isAuthenticated, mw.isAdminOrArticleAuthor, (req, res) => {
+
             if (req.body.title !== undefined) {
                 req.body.slug = utils.slugify(req.body.title);
             }
 
-            Article.update({
-                _id: req.params.articleId
-            }, {
-                '$set': req.body
-            }).then(handleSuccess, handleErrors);
+            if (req.file !== undefined) {
+                let path = "images/";
+                fs.access(path, fs.constants.F_OK, (err) => {
+                    if (err) {
+                        fs.mkdirSync(path);
+                    }
+                    fs.readFile(req.file.path, function(err, data) {
+                        fs.writeFile(`${path}/${req.file.originalname}`, data, function(err) {
+                            req.body.img = `/images/${req.file.originalname}`;
+                            Article.update({
+                                _id: req.params.articleId
+                            }, {
+                                '$set': req.body
+                            }).then(handleSuccess, handleErrors);
+                        });
+                    });
+                });
+            } else {
+                Article.update({
+                    _id: req.params.articleId
+                }, {
+                    '$set': req.body
+                }).then(handleSuccess, handleErrors);
+            }
 
             function handleSuccess(result) {
                 Article.findOne({
