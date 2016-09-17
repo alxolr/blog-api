@@ -89,7 +89,7 @@
                 let article = new Article(shared.article);
                 article.save((err, article) => {
                     chai.request(server)
-                        .put('/api/v1/articles/1')
+                        .put('/api/v1/articles/1234567890abcdef12345678')
                         .send({})
                         .end((err, res) => {
                             res.status.should.be.eql(403);
@@ -200,14 +200,14 @@
             });
 
             it('should be possible to get the article details by slug', (done) => {
-                let article = Object.assign({}, shared.article);
-                article.deleted_at = new Date();
-                shared.createArticle(shared.user, article, (err, article, token) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
                     chai.request(server)
-                        .get('/api/v1/articles/' + article._id)
+                        .get('/api/v1/articles/' + article.slug)
                         .end((err, res) => {
-                            res.status.should.be.eql(404);
-                            res.body.should.have.property('message').eql(utils.messages.ARTICLE_NOT_FOUND);
+                            res.status.should.be.eql(200);
+                            res.body.article.should.have.property('title');
+                            res.body.article.should.have.property('body');
+                            res.body.article.should.have.property('comments');
                             done();
                         });
                 });
