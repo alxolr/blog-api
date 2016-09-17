@@ -199,6 +199,10 @@
                 });
             });
 
+
+        });
+
+        describe('[GET] /api/v1/articles/:slug', () => {
             it('should be possible to get the article details by slug', (done) => {
                 shared.createArticle(shared.user, shared.article, (err, article, token) => {
                     chai.request(server)

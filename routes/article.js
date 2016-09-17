@@ -13,7 +13,7 @@
     let imgDirectory = __dirname + '/../images';
 
 
-    const postArticle = (req, res) => {
+    const createArticle = (req, res) => {
         let article = new Article(req.body);
         article.author = {
             _id: req.decoded._doc._id,
@@ -61,7 +61,7 @@
         };
     };
 
-    const putArticle = (req, res) => {
+    const updateArticle = (req, res) => {
         if (req.body.title !== undefined) {
             req.body.slug = utils.slugify(req.body.title);
         }
@@ -138,10 +138,10 @@
         });
     }
 
-    router.post('/', upload.single('image'), mw.isAuthenticated, postArticle);
+    router.post('/', upload.single('image'), mw.isAuthenticated, createArticle);
 
     router.route('/:articleId([0-9a-f]{24})')
-        .put(upload.single('image'), mw.isAuthenticated, mw.isAdminOrArticleAuthor, putArticle)
+        .put(upload.single('image'), mw.isAuthenticated, mw.isAdminOrArticleAuthor, updateArticle)
         .get(getArticleBy('articleId'))
         .delete(deleteArticle);
 
