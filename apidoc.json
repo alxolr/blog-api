@@ -1,5 +1,5 @@
 {
-    "name": "My little blog",
-    "version": "0.1.0",
-    "description": "Basic apiDoc example"
+    "name": "Blog Api",
+    "version": "1.0.0",
+    "description": "Blog api routes description"
 }

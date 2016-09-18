@@ -30,7 +30,8 @@
     app.use(bodyParser.json());
     app.use('/images', express.static('images'));
     app.use('/coverage', express.static('coverage/lcov-report/'));
-
+    app.use('/api/doc', express.static('doc/'));
+    
     app.use('/api/v1/users', userRoutes);
     app.use('/api/v1/articles', articleRoutes);
     app.use('/api/v1/articles/', commentRoutes);

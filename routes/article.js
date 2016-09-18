@@ -138,9 +138,59 @@
         });
     }
 
+    /**
+     * @apiDefine ArticleSuccess
+     * 
+     * @apiSuccess {Boolean} success Returns if the article was succesfully created.
+     * @apiSuccess {Object} article Returns the newly created article
+     * @apiSuccess {String} message Returns the success message. 
+     */
+
+    /**
+     * @api {post} /api/v1/articles
+     * @apiName Create Article
+     * @apiVersion 1.0.0
+     * @apiGroup Article
+     * @apiPermission USER
+     * 
+     * @apiParam {String} title Article title
+     * @apiParam {String} body Article body
+     * @apiParam {String} [image] Image for the article
+     * @apiParam {String} token Access Token
+     * 
+     * @apiParamExample {json} Request-Example:
+     *     {
+     *       "title": "Interesting awesome title",
+     *       "body": "Here will be the body of the article",
+     *       "token": "anexampleoftoken"
+     *     }
+     * 
+     * @apiUse ArticleSuccess
+     */
     router.post('/', upload.single('image'), mw.isAuthenticated, createArticle);
 
     router.route('/:articleId([0-9a-f]{24})')
+        /**
+         * @api {put} /api/v1/articles/:articleId
+         * @apiName Update Article
+         * @apiVersion 1.0.0
+         * @apiGroup Article
+         * @apiPermission USER
+         * 
+         * @apiParam {String} [title] Article title
+         * @apiParam {String} [body] Article body
+         * @apiParam {String} [image] Image for the article
+         * @apiParam {String} token Access Token
+         * 
+         * @apiParamExample {json} Request-Example:
+         *     {
+         *       "title": "Interesting awesome title",
+         *       "body": "Here will be the body of the article",
+         *       "token": "anexampleoftoken"
+         *     }
+         * 
+         * @apiUse ArticleSuccess
+         */
         .put(upload.single('image'), mw.isAuthenticated, mw.isAdminOrArticleAuthor, updateArticle)
         .get(getArticleBy('articleId'))
         .delete(deleteArticle);
