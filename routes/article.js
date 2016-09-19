@@ -101,7 +101,7 @@
 
     const deleteArticle = (req, res) => {
         Article
-            .remove({
+            .update({
                 _id: req.params.articleId
             })
             .then((result) => {
@@ -148,7 +148,7 @@
 
     /**
      * @api {post} /api/v1/articles
-     * @apiName Create Article
+     * @apiName createArticle
      * @apiVersion 1.0.0
      * @apiGroup Article
      * @apiPermission USER
@@ -171,11 +171,12 @@
 
     router.route('/:articleId([0-9a-f]{24})')
         /**
-         * @api {put} /api/v1/articles/:articleId
-         * @apiName Update Article
+         * @api {put} /api/v1/articles/{articleId}
+         * @apiName updateArticle
          * @apiVersion 1.0.0
          * @apiGroup Article
          * @apiPermission USER
+         * @apiDescription Is updating the requested article which is defined by :articleId mongodb _id equivalent.
          * 
          * @apiParam {String} [title] Article title
          * @apiParam {String} [body] Article body
@@ -192,10 +193,32 @@
          * @apiUse ArticleSuccess
          */
         .put(upload.single('image'), mw.isAuthenticated, mw.isAdminOrArticleAuthor, updateArticle)
+        /**
+         * @api {get} /api/v1/articles/{articleId}
+         * @apiName getArticleByArticleId
+         * @apiVersion 1.0.0
+         * @apiGroup Article
+         * @apiPermission GUEST
+         * @apiDescription Is returning the request article by articleId.
+         * 
+         * @apiSuccess {Object} article The requested article object.
+         * @apiSuccess {Boolean} success The status of the transaction.
+         */
         .get(getArticleBy('articleId'))
         .delete(deleteArticle);
 
     router.route('/:slug')
+        /**
+         * @api {get} /api/v1/articles/{slug}
+         * @apiName getArticleBySlug
+         * @apiVersion 1.0.0
+         * @apiGroup Article
+         * @apiPermission GUEST
+         * @apiDescription Is returning the request article by slug.
+         * 
+         * @apiSuccess {Object} article The requested article object.
+         * @apiSuccess {Boolean} success The status of the transaction.
+         */
         .get(getArticleBy('slug'));
 
     module.exports = router;
