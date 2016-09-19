@@ -219,7 +219,7 @@
          * @apiSuccessExample {json} Success-Response:
          *     HTTP/1.1 204 No Content  
          */
-        .delete(softDeleteArticle);
+        .delete(mw.isAuthenticated, mw.isAdminOrArticleAuthor, softDeleteArticle);
 
     router.route('/:slug')
         /**

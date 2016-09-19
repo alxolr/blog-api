@@ -14,7 +14,6 @@
     let fs = require('fs');
     let photo = 'big-boobs-photo-450x299.png';
 
-
     chai.use(chaiHttp);
 
     describe('Articles', () => {
@@ -198,8 +197,6 @@
                         });
                 });
             });
-
-
         });
 
         describe('[GET] /api/v1/articles/:slug', () => {
@@ -235,6 +232,42 @@
                                 done();
                             });
                         });
+                });
+            });
+
+            it('should be softedeleted by the admin', (done) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    shared.createUser(shared.admin, (err, admin, token) => {
+                        chai.request(server)
+                            .delete('/api/v1/articles/' + article._id)
+                            .send({
+                                token: token
+                            })
+                            .end((err, res) => {
+                                res.status.should.be.eql(204);
+                                done();
+                            });
+                    });
+                });
+            });
+
+            it('should not allow softdelete by other user', (done) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    shared.createUser({
+                        "email": "other@user.com",
+                        "password": "test"
+                    }, (err, user, token) => {
+                        chai.request(server)
+                            .delete('/api/v1/articles/' + article._id)
+                            .send({
+                                token: token
+                            })
+                            .end((err, res) => {
+                                res.status.should.be.eql(403);
+                                res.body.message.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
+                                done();
+                            });
+                    });
                 });
             });
         });
