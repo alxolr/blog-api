@@ -217,5 +217,26 @@
                 });
             });
         });
+
+        describe('[DELETE] /api/v1/articles/:articleId', () => {
+            it('should be softedeleted by the article author', done => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    chai.request(server)
+                        .delete('/api/v1/articles/' + article._id)
+                        .send({
+                            token: token
+                        })
+                        .end((err, res) => {
+                            res.status.should.be.eql(200);
+                            Article.findOne({
+                                _id: article._id
+                            }, (err, doc) => {
+                                doc.should.have.property('deleted_at').not.null;
+                                done();
+                            });
+                        });
+                });
+            });
+        });
     });
 })();

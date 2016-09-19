@@ -103,6 +103,10 @@
         Article
             .update({
                 _id: req.params.articleId
+            }, {
+                $set: {
+                    deleted_at: new Date()
+                }
             })
             .then((result) => {
                 res.json({
