@@ -38,6 +38,8 @@
             deleted_at: {
                 "$exists": false
             }
+        }, {
+            passoword: 0
         }).then(handleSuccess, handleUserNotFound);
 
         function handleUserNotFound(err) {
@@ -94,6 +96,8 @@
     .get((req, res) => {
             User.findOne({
                 _id: req.params.userId
+            }, {
+                password: 0
             }).then(handleSuccess, handleErrors);
 
             function handleSuccess(user) {
@@ -117,6 +121,7 @@
         });
 
     function generateTokenForUser(user, res) {
+        delete user.password;
         let token = jwt.sign(user, config.secretKey, {
             expiresIn: 36000
         });

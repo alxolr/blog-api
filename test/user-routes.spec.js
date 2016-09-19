@@ -196,6 +196,7 @@
                                 }).end((err, res) => {
                                     res.status.should.be.eql(200);
                                     res.body.should.have.property('email');
+                                    res.body.should.not.have.property('password');
                                     res.body.should.have.property('_id').eql(user._id.toString());
                                     done();
                                 });
