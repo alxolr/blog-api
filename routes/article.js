@@ -99,7 +99,7 @@
         }
     };
 
-    const deleteArticle = (req, res) => {
+    const softDeleteArticle = (req, res) => {
         Article
             .update({
                 _id: req.params.articleId
@@ -109,10 +109,8 @@
                 }
             })
             .then((result) => {
-                res.json({
-                    success: true,
-                    message: utils.messages.ARTICLE_DELETE_SUCCESS
-                });
+                //return OK but no content
+                res.status(204).end();
             })
             .catch(handleErrors);
     };
@@ -209,7 +207,19 @@
          * @apiSuccess {Boolean} success The status of the transaction.
          */
         .get(getArticleBy('articleId'))
-        .delete(deleteArticle);
+        /**
+         * @api {delete} /api/v1/articles/{articleId}
+         * @apiName softDeleteArticle
+         * @apiVersion 1.0.0
+         * @apiGroup Article
+         * @apiPermission ARTICLE_AUTHOR
+         * 
+         * @apiDescription It will softdelete the article. Article will not be seen anywhere in the system till the deleted_at field removed.
+         * 
+         * @apiSuccessExample {json} Success-Response:
+         *     HTTP/1.1 204 No Content  
+         */
+        .delete(softDeleteArticle);
 
     router.route('/:slug')
         /**

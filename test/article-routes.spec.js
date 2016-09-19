@@ -227,7 +227,7 @@
                             token: token
                         })
                         .end((err, res) => {
-                            res.status.should.be.eql(200);
+                            res.status.should.be.eql(204);
                             Article.findOne({
                                 _id: article._id
                             }, (err, doc) => {
