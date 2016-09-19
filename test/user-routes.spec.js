@@ -40,11 +40,10 @@
                     .post('/api/v1/users')
                     .send(user)
                     .end((err, res) => {
-                        res.body.success.should.be.eql(false);
-                        res.body.message.should.be.a('array');
-                        res.body.message[0].property.should.be.eql('password');
-                        res.body.message[0].message.should.be.eql(utils.messages.PASSWORD_REQUIRED);
-                        res.should.have.status(200);
+                        res.body.error.should.be.a('array');
+                        res.body.error[0].property.should.be.eql('password');
+                        res.body.error[0].message.should.be.eql(utils.messages.PASSWORD_REQUIRED);
+                        res.should.have.status(400);
                         done();
                     });
             });
@@ -55,11 +54,10 @@
                     .post('/api/v1/users')
                     .send(user)
                     .end((err, res) => {
-                        res.body.success.should.be.eql(false);
-                        res.body.message.should.be.a('array');
-                        res.body.message[0].property.should.be.eql('email');
-                        res.body.message[0].message.should.be.eql(utils.messages.EMAIL_REQUIRED);
-                        res.should.have.status(200);
+                        res.body.error.should.be.a('array');
+                        res.body.error[0].property.should.be.eql('email');
+                        res.body.error[0].message.should.be.eql(utils.messages.EMAIL_REQUIRED);
+                        res.should.have.status(400);
 
                         done();
                     });
@@ -97,8 +95,7 @@
                         .send(credentials)
                         .end((err, res) => {
                             res.status.should.be.eql(403);
-                            res.body.success.should.be.eql(false);
-                            res.body.message.should.be.eql(utils.messages.INVALID_CREDENTIALS);
+                            res.body.error.should.be.eql(utils.messages.INVALID_CREDENTIALS);
                             done();
                         });
                 });
@@ -114,7 +111,7 @@
                             password: shared.user.password
                         }).end((err, res) => {
                             res.status.should.be.eql(403);
-                            res.body.should.have.property('message').eql(utils.messages.INVALID_CREDENTIALS);
+                            res.body.should.have.property('error').eql(utils.messages.INVALID_CREDENTIALS);
                             done();
                         });
                 });
@@ -133,8 +130,7 @@
                         .send(update)
                         .end((err, res) => {
                             res.status.should.be.eql(403);
-                            res.body.should.have.property('success').eql(false);
-                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });
                 });
@@ -177,7 +173,7 @@
                         .get('/api/v1/users/' + user._id)
                         .end((err, res) => {
                             res.status.should.be.eql(403);
-                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });
                 });
@@ -199,8 +195,8 @@
                                     token: token
                                 }).end((err, res) => {
                                     res.status.should.be.eql(200);
-                                    res.body.should.have.property('user');
-                                    res.body.user.should.have.property('_id').eql(user._id.toString());
+                                    res.body.should.have.property('email');
+                                    res.body.should.have.property('_id').eql(user._id.toString());
                                     done();
                                 });
                         });
@@ -216,7 +212,7 @@
                         .delete('/api/v1/users/' + user._id)
                         .end((err, res) => {
                             res.status.should.be.eql(403);
-                            res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });
                 });
@@ -237,7 +233,7 @@
                                     token: token
                                 })
                                 .end((err, res) => {
-                                    res.status.should.be.eql(200);
+                                    res.status.should.be.eql(204);
                                     User.findOne({
                                         _id: user._id
                                     }, (err, doc) => {

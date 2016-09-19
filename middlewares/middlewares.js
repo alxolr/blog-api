@@ -8,8 +8,7 @@
 
     const tokenHighjacked = (res) => {
         return res.status(403).json({
-            success: false,
-            message: utils.messages.TOKEN_HIGHJACKED
+            error: utils.messages.TOKEN_HIGHJACKED
         });
     };
 
@@ -30,8 +29,7 @@
 
         } else {
             return res.status(403).json({
-                success: false,
-                message: utils.messages.TOKEN_NOT_PROVIDED
+                error: utils.messages.TOKEN_NOT_PROVIDED
             });
         }
     };
@@ -43,9 +41,8 @@
                     case 'userId':
                     case 'articleId':
                         if (!/^[0-9a-f]{24}$/gmi.test(req.params[param])) {
-                            return res.json({
-                                success: false,
-                                message: utils.messages.MONGOID_INVALID
+                            return res.status(400).json({
+                                error: utils.messages.MONGOID_INVALID
                             });
                         }
                         break;
@@ -65,8 +62,7 @@
                 next();
             } else {
                 return res.status(403).json({
-                    success: false,
-                    message: utils.messages.TOKEN_HIGHJACKED
+                    error: utils.messages.TOKEN_HIGHJACKED
                 });
             }
         });

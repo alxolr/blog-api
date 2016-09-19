@@ -57,7 +57,7 @@
                 .set('x-access-token', token)
                 .send(article)
                 .end((err, res) => {
-                    cb(err, res.body.article, token);
+                    cb(err, res.body, token);
                 });
         });
     };

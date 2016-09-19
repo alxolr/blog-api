@@ -46,14 +46,10 @@
                 .findOne(query)
                 .then((article) => {
                     if (article) {
-                        res.json({
-                            success: true,
-                            article: article
-                        });
+                        res.json(article);
                     } else {
                         res.status(404).json({
-                            success: false,
-                            message: utils.messages.ARTICLE_NOT_FOUND
+                            error: utils.messages.ARTICLE_NOT_FOUND
                         });
                     }
                 })
@@ -87,15 +83,7 @@
         function handleSuccess(result) {
             Article.findOne({
                 _id: req.params.articleId
-            }).then(sendArticle, handleErrors);
-
-            function sendArticle(article) {
-                res.json({
-                    success: true,
-                    message: utils.messages.ARTICLE_UPDATE_SUCCESS,
-                    article: article
-                });
-            }
+            }).then(article => res.json(article), handleErrors);
         }
     };
 
@@ -109,7 +97,7 @@
                 }
             })
             .then((result) => {
-                //return OK but no content
+                //204 No Content
                 res.status(204).end();
             })
             .catch(handleErrors);
@@ -118,23 +106,17 @@
 
     function handleErrors(err) {
         res.status(400).json({
-            success: false,
-            message: utils.listifyErrors(err)
+            error: utils.listifyErrors(err)
         });
     }
 
     function saveArticle(article, res) {
         article.save((err) => {
             if (!err) {
-                res.json({
-                    success: true,
-                    message: utils.messages.ARTICLE_CREATE_SUCCESS,
-                    article: article
-                });
+                res.json(article);
             } else {
                 res.status(400).json({
-                    success: false,
-                    message: utils.listifyErrors(err)
+                    error: utils.listifyErrors(err)
                 });
             }
         });

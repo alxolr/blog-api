@@ -34,7 +34,7 @@
                         body: shared.article.body,
                     }).end((err, res) => {
                         res.status.should.be.eql(403);
-                        res.body.should.have.property('message').eql(utils.messages.TOKEN_NOT_PROVIDED);
+                        res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                         done();
                     });
             });
@@ -49,10 +49,8 @@
                             token: token
                         }).end((err, res) => {
                             res.status.should.be.eql(200);
-                            res.body.should.have.property('article');
-                            res.body.article.should.have.property('author');
-                            res.body.article.should.have.property('slug').eql(utils.slugify(shared.article.title));
-                            res.body.should.have.property('message').eql(utils.messages.ARTICLE_CREATE_SUCCESS);
+                            res.body.should.have.property('author');
+                            res.body.should.have.property('slug').eql(utils.slugify(shared.article.title));
                             done();
                         });
                 });
@@ -69,8 +67,7 @@
                         .attach('image', fs.createReadStream(__dirname + `/${photo}`), photo)
                         .end((err, res) => {
                             res.status.should.be.eql(200);
-                            res.body.should.have.property('article');
-                            res.body.article.should.have.property('image').eql(`/images/${photo}`);
+                            res.body.should.have.property('image').eql(`/images/${photo}`);
                             chai.request(server)
                                 .get(`/images/${photo}`)
                                 .end((err, res) => {
@@ -92,7 +89,7 @@
                         .send({})
                         .end((err, res) => {
                             res.status.should.be.eql(403);
-                            res.body.message.should.be.eql(utils.messages.TOKEN_NOT_PROVIDED);
+                            res.body.error.should.be.eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });
                 });
@@ -107,8 +104,7 @@
                             title: "New title for the article"
                         }).end((err, res) => {
                             res.status.should.be.eql(200);
-                            res.body.should.have.property('article');
-                            res.body.article.should.have.property('title').eql("New title for the article");
+                            res.body.should.have.property('title').eql("New title for the article");
                             done();
                         });
                 });
@@ -127,8 +123,7 @@
                                 title: "Should not be possible"
                             }).end((err, res) => {
                                 res.status.should.be.eql(403);
-                                res.body.message.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
-                                res.body.should.not.have.property('article');
+                                res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
                                 done();
                             });
                     });
@@ -145,7 +140,7 @@
                                 title: "Modified by admin",
                             }).end((err, res) => {
                                 res.status.should.be.eql(200);
-                                res.body.article.title.should.be.eql('Modified by admin');
+                                res.body.title.should.be.eql('Modified by admin');
                                 done();
                             });
                     });
@@ -161,8 +156,7 @@
                         .attach('image', fs.createReadStream(__dirname + `/${photo}`), photo)
                         .end((err, res) => {
                             res.status.should.be.eql(200);
-                            res.body.should.have.property('article');
-                            res.body.article.image.should.be.eql('/images/' + photo);
+                            res.body.image.should.be.eql('/images/' + photo);
                             done();
                         });
                 });
@@ -176,9 +170,9 @@
                         .get('/api/v1/articles/' + article._id)
                         .end((err, res) => {
                             res.status.should.be.eql(200);
-                            res.body.article.should.have.property('title');
-                            res.body.article.should.have.property('body');
-                            res.body.article.should.have.property('comments');
+                            res.body.should.have.property('title');
+                            res.body.should.have.property('body');
+                            res.body.should.have.property('comments');
                             done();
                         });
                 });
@@ -192,7 +186,7 @@
                         .get('/api/v1/articles/' + article._id)
                         .end((err, res) => {
                             res.status.should.be.eql(404);
-                            res.body.should.have.property('message').eql(utils.messages.ARTICLE_NOT_FOUND);
+                            res.body.should.have.property('error').eql(utils.messages.ARTICLE_NOT_FOUND);
                             done();
                         });
                 });
@@ -206,9 +200,9 @@
                         .get('/api/v1/articles/' + article.slug)
                         .end((err, res) => {
                             res.status.should.be.eql(200);
-                            res.body.article.should.have.property('title');
-                            res.body.article.should.have.property('body');
-                            res.body.article.should.have.property('comments');
+                            res.body.should.have.property('title');
+                            res.body.should.have.property('body');
+                            res.body.should.have.property('comments');
                             done();
                         });
                 });
@@ -264,7 +258,7 @@
                             })
                             .end((err, res) => {
                                 res.status.should.be.eql(403);
-                                res.body.message.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
+                                res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
                                 done();
                             });
                     });

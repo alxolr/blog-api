@@ -15,18 +15,16 @@
         user.save((err) => {
             if (err) {
                 if (err.hasOwnProperty('code') && err.code === utils.mongo.UNIQUE_KEY_VIOLATION) {
-                    res.json({
-                        success: false,
-                        message: utils.messages.USER_DUPLICATE
+                    res.status(400).json({
+                        error: utils.messages.USER_DUPLICATE
                     });
                 } else {
-                    res.json({
-                        success: false,
-                        message: utils.listifyErrors(err)
+                    res.status(400).json({
+                        error: utils.listifyErrors(err)
                     });
                 }
             } else {
-                generateTokenForUser(user, res, utils.messages.USER_CREATED_SUCCESS);
+                generateTokenForUser(user, res);
             }
         });
     });
@@ -44,8 +42,7 @@
 
         function handleUserNotFound(err) {
             res.status(403).json({
-                success: false,
-                message: utils.messages.INVALID_CREDENTIALS
+                error: utils.messages.INVALID_CREDENTIALS
             });
         }
 
@@ -57,14 +54,12 @@
                     generateTokenForUser(user, res, utils.messages.USER_LOGGEDIN_SUCCESS);
                 } else {
                     res.status(403).json({
-                        success: false,
-                        message: utils.messages.INVALID_CREDENTIALS
+                        error: utils.messages.INVALID_CREDENTIALS
                     });
                 }
             } else {
                 res.status(403).json({
-                    success: false,
-                    message: utils.messages.INVALID_CREDENTIALS
+                    error: utils.messages.INVALID_CREDENTIALS
                 });
             }
         }
@@ -103,14 +98,10 @@
 
             function handleSuccess(user) {
                 if (user) {
-                    return res.json({
-                        success: true,
-                        user: user
-                    });
+                    return res.json(user);
                 } else {
                     return res.status(404).json({
-                        success: false,
-                        message: utils.messages.USER_NOT_FOUND
+                        error: utils.messages.USER_NOT_FOUND
                     });
                 }
             }
@@ -122,33 +113,23 @@
                 "$set": {
                     deleted_at: new Date()
                 }
-            }).then(handleSuccess, handleErrors);
-
-            function handleSuccess(result) {
-                return res.json({
-                    success: true,
-                    message: utils.messages.USER_DELETED_SUCCESS
-                });
-            }
+            }).then(result => res.status(204).end(), handleErrors);
         });
 
-    function generateTokenForUser(user, res, message) {
+    function generateTokenForUser(user, res) {
         let token = jwt.sign(user, config.secretKey, {
             expiresIn: 36000
         });
 
         return res.json({
-            success: true,
             user: user,
             token: token,
-            message: message
         });
     }
 
     function handleErrors(err) {
         res.json({
-            success: false,
-            message: utils.listifyErrors(err)
+            error: utils.listifyErrors(err)
         });
     }
 
