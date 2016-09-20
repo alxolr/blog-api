@@ -33,7 +33,7 @@
                         title: shared.article.title,
                         body: shared.article.body,
                     }).end((err, res) => {
-                        res.status.should.be.eql(403);
+                        res.status.should.be.eql(401);
                         res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                         done();
                     });
@@ -88,7 +88,7 @@
                         .put('/api/v1/articles/1234567890abcdef12345678')
                         .send({})
                         .end((err, res) => {
-                            res.status.should.be.eql(403);
+                            res.status.should.be.eql(401);
                             res.body.error.should.be.eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });
@@ -122,7 +122,7 @@
                                 token: token,
                                 title: "Should not be possible"
                             }).end((err, res) => {
-                                res.status.should.be.eql(403);
+                                res.status.should.be.eql(401);
                                 res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
                                 done();
                             });
@@ -274,7 +274,7 @@
                                 token: token
                             })
                             .end((err, res) => {
-                                res.status.should.be.eql(403);
+                                res.status.should.be.eql(401);
                                 res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED);
                                 done();
                             });

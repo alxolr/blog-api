@@ -94,7 +94,7 @@
                         .post('/api/v1/users/login')
                         .send(credentials)
                         .end((err, res) => {
-                            res.status.should.be.eql(403);
+                            res.status.should.be.eql(401);
                             res.body.error.should.be.eql(utils.messages.INVALID_CREDENTIALS);
                             done();
                         });
@@ -110,7 +110,7 @@
                             email: shared.user.email,
                             password: shared.user.password
                         }).end((err, res) => {
-                            res.status.should.be.eql(403);
+                            res.status.should.be.eql(401);
                             res.body.should.have.property('error').eql(utils.messages.INVALID_CREDENTIALS);
                             done();
                         });
@@ -129,7 +129,7 @@
                         .put('/api/v1/users/' + _id)
                         .send(update)
                         .end((err, res) => {
-                            res.status.should.be.eql(403);
+                            res.status.should.be.eql(401);
                             res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });
@@ -172,7 +172,7 @@
                     chai.request(server)
                         .get('/api/v1/users/' + user._id)
                         .end((err, res) => {
-                            res.status.should.be.eql(403);
+                            res.status.should.be.eql(401);
                             res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });
@@ -212,7 +212,7 @@
                     chai.request(server)
                         .delete('/api/v1/users/' + user._id)
                         .end((err, res) => {
-                            res.status.should.be.eql(403);
+                            res.status.should.be.eql(401);
                             res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED);
                             done();
                         });

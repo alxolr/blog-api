@@ -43,7 +43,7 @@
         }).then(handleSuccess, handleUserNotFound);
 
         function handleUserNotFound(err) {
-            res.status(403).json({
+            res.status(401).json({
                 error: utils.messages.INVALID_CREDENTIALS
             });
         }
@@ -55,12 +55,12 @@
                 if (user.password === providedEncryptedPassword) {
                     generateTokenForUser(user, res, utils.messages.USER_LOGGEDIN_SUCCESS);
                 } else {
-                    res.status(403).json({
+                    res.status(401).json({
                         error: utils.messages.INVALID_CREDENTIALS
                     });
                 }
             } else {
-                res.status(403).json({
+                res.status(401).json({
                     error: utils.messages.INVALID_CREDENTIALS
                 });
             }

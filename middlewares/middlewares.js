@@ -7,7 +7,7 @@
         Article = require('../models/article');
 
     const tokenHighjacked = (res) => {
-        return res.status(403).json({
+        return res.status(401).json({
             error: utils.messages.TOKEN_HIGHJACKED
         });
     };
@@ -28,7 +28,7 @@
             });
 
         } else {
-            return res.status(403).json({
+            return res.status(401).json({
                 error: utils.messages.TOKEN_NOT_PROVIDED
             });
         }
@@ -61,7 +61,7 @@
             if ((userId === decoded._doc._id) || (decoded._doc.rights.indexOf('ADMIN') !== -1)) {
                 next();
             } else {
-                return res.status(403).json({
+                return res.status(401).json({
                     error: utils.messages.TOKEN_HIGHJACKED
                 });
             }
