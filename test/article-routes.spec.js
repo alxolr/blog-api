@@ -161,6 +161,23 @@
                         });
                 });
             });
+
+            it('should ignore the _id field if it is sent in the parameters', (done) => {
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    article.title = "Some new title";
+                    chai.request(server)
+                        .put('/api/v1/articles/' + article._id)
+                        .set('x-access-token', token)
+                        .send(article)
+                        .end((err, res) => {
+                            console.log(res);
+                            res.status.should.be.eql(200);
+                            res.body.should.have.property('title').eql('Some new title');
+                            done();
+                        });
+
+                });
+            });
         });
 
         describe("[GET] /api/v1/article/:articleId", () => {

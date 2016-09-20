@@ -76,6 +76,8 @@
                 req.body.password = security.hashify(req.body.password);
             }
 
+            if (req.body._id !== undefined) delete req.body._id;
+
             User.update({
                 _id: req.params.userId
             }, {

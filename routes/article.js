@@ -24,7 +24,7 @@
             uploadFile(req.file, imgDirectory).then(() => {
                 article.image = `/images/${req.file.originalname}`;
                 saveArticle(article, res);
-            }).catch(handleErrors);
+            }).catch(handleErrors(res));
         } else {
             saveArticle(article, res);
         }
@@ -53,7 +53,7 @@
                         });
                     }
                 })
-                .catch(handleErrors);
+                .catch(handleErrors(res));
         };
     };
 
@@ -61,6 +61,9 @@
         if (req.body.title !== undefined) {
             req.body.slug = utils.slugify(req.body.title);
         }
+
+        if (req.body._id !== undefined) delete req.body._id;
+
         if (req.file !== undefined) {
             uploadFile(req.file, imgDirectory)
                 .then(() => {
@@ -69,21 +72,25 @@
                         _id: req.params.articleId
                     }, {
                         '$set': req.body
-                    }).then(handleSuccess, handleErrors);
+                    }).then(handleSuccess, handleErrors(res));
                 })
-                .catch(handleErrors);
+                .catch(handleErrors(res));
         } else {
             Article.update({
-                _id: req.params.articleId
-            }, {
-                '$set': req.body
-            }).then(handleSuccess, handleErrors);
+                    _id: req.params.articleId
+                }, {
+                    '$set': req.body
+                })
+                .then(handleSuccess)
+                .catch(handleErrors(res));
         }
 
         function handleSuccess(result) {
             Article.findOne({
-                _id: req.params.articleId
-            }).then(article => res.json(article), handleErrors);
+                    _id: req.params.articleId
+                })
+                .then(article => res.json(article))
+                .catch(handleErrors(res));
         }
     };
 
@@ -100,14 +107,15 @@
                 //204 No Content
                 res.status(204).end();
             })
-            .catch(handleErrors);
+            .catch(handleErrors(res));
     };
 
-
-    function handleErrors(err) {
-        res.status(400).json({
-            error: utils.listifyErrors(err)
-        });
+    function handleErrors(res) {
+        return (err) => {
+            res.status(400).json({
+                error: err
+            });
+        };
     }
 
     function saveArticle(article, res) {
@@ -115,9 +123,7 @@
             if (!err) {
                 res.json(article);
             } else {
-                res.status(400).json({
-                    error: utils.listifyErrors(err)
-                });
+                handleErrors(res);
             }
         });
     }
