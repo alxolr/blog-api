@@ -170,7 +170,6 @@
                         .set('x-access-token', token)
                         .send(article)
                         .end((err, res) => {
-                            console.log(res);
                             res.status.should.be.eql(200);
                             res.body.should.have.property('title').eql('Some new title');
                             done();
