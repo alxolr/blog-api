@@ -7,6 +7,12 @@ describe('Filter extractor', () => {
         out: {
             title: "test"
         }
+    }, {
+        "in": "title::test|other::test2",
+        "out": {
+            "title": "test",
+            "other": "test2"
+        }
     }];
 
     it('should exist the extract method', () => {

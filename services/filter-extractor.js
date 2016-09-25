@@ -1,26 +1,37 @@
 (() => {
     "use strict";
 
-    const extractFilter = (filters) => {
-        if (!filters) return null;
-        
-        let keyVal = filters.split('::');
-        let result = keyVal.reduce((prev, curr, index) => {
+    const extractKeyValue = (pair) => {
+        let pairs = pair.split('::');
+        let extracted = pairs.reduce((prev, curr, index) => {
             if (index % 2 === 0) {
                 prev.lastkey = curr;
-                prev.result[curr] = "";
+                prev.pair[curr] = "";
             } else {
-                prev.result[prev.lastkey] = curr;
+                prev.pair[prev.lastkey] = curr;
             }
             return prev;
         }, {
             lastkey: "",
-            result: {}
+            pair: {}
         });
 
-        return result.result;
+        return extracted.pair;
+    }
+
+    const extractFilter = (filters) => {
+        if (!filters) return null;
+        let result = filters.split("|")
+            .reduce((prev, curr, index) => {
+                let pair = extractKeyValue(curr);
+                let key = Object.keys(pair)[0];
+                prev[key] = pair[key];
+
+                return prev;
+            }, {});
+
+        return result;
     };
 
     exports.extract = extractFilter;
-
 })();
