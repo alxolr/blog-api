@@ -224,6 +224,12 @@
                 });
             });
         });
+        
+        describe('[GEt] /api/v1/articles', () => {
+            it('should be able to `filter` the article collection', (done) => {
+                
+            });
+        });
 
         describe('[DELETE] /api/v1/articles/:articleId', () => {
             it('should be softedeleted by the article author', done => {
