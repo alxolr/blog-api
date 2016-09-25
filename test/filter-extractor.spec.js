@@ -4,14 +4,21 @@ const fe = require('../services/filter-extractor')
 
 describe('Filter extractor', () => {
     const configs = [{ in: "title::test",
-        out: {
-            title: "test"
+        "out": {
+            "title": "test"
         }
     }, {
         "in": "title::test|other::test2",
         "out": {
             "title": "test",
             "other": "test2"
+        }
+    }, {
+        "in": "title::test|other::test2|test::true",
+        "out": {
+            "title": "test",
+            "other": "test2",
+            "test": true
         }
     }];
 
@@ -24,5 +31,4 @@ describe('Filter extractor', () => {
             expect(fe.extract(config.in)).to.be.eql(config.out);
         });
     });
-
 });

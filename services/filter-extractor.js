@@ -1,6 +1,10 @@
 (() => {
     "use strict";
 
+    const isBoolean = (string) => {
+        return (string === 'false') || (string === 'true');
+    }
+
     const extractKeyValue = (pair) => {
         let pairs = pair.split('::');
         let extracted = pairs.reduce((prev, curr, index) => {
@@ -8,6 +12,11 @@
                 prev.lastkey = curr;
                 prev.pair[curr] = "";
             } else {
+                
+                if (isBoolean(curr)) {
+                    curr = curr === 'true';
+                }
+
                 prev.pair[prev.lastkey] = curr;
             }
             return prev;
