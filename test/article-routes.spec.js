@@ -224,10 +224,19 @@
                 });
             });
         });
-        
+
         describe('[GEt] /api/v1/articles', () => {
             it('should be able to `filter` the article collection', (done) => {
-                
+                let filter = "created_at::>2016-09-15";
+                shared.createArticle(shared.user, shared.article, (err, article, token) => {
+                    chai.request(server)
+                        .get(`/api/v1/articles?filter=${filter}`)
+                        .end((err, res) => {
+                            let response = res.body;
+                            response.should.be.a(array);
+                        });
+                });
+
             });
         });
 
