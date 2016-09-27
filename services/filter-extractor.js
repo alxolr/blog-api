@@ -1,7 +1,6 @@
 (() => {
     "use strict";
 
-
     /**
      * Check if the given string is an boolean
      * 
@@ -12,6 +11,12 @@
         return (string === 'false') || (string === 'true');
     };
 
+    /**
+     * Extract the operator
+     * 
+     * @param {String} value
+     * @returns
+     */
     const getOperator = (value) => {
         let operators = /^(>=|<=|>|<).+$/gmi.exec(value);
         if (operators && operators.length) {
@@ -41,6 +46,12 @@
         return extracted;
     };
 
+    /**
+     * Extract filter values
+     * 
+     * @param {String} filters
+     * @returns {Object}
+     */
     const extractFilter = (filters) => {
         if (!filters) return null;
         let result = filters.split("|")

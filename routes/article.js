@@ -31,7 +31,7 @@
     };
 
     const getArticleBy = (property) => {
-        return function(req, res) {
+        return function (req, res) {
             let query = {
                 deleted_at: {
                     '$exists': false
@@ -127,6 +127,11 @@
             }
         });
     }
+
+    
+    router.get('', (req, res) => {
+        res.json([]);
+    });
 
     /**
      * @apiDefine ArticleSuccess
