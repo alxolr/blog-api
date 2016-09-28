@@ -11,12 +11,16 @@
                 if (err) {
                     fs.mkdirSync(directory);
                 }
-                fs.readFile(file.path, function(err, data) {
+                fs.readFile(file.path, function (err, data) {
                     if (err) reject(err);
-                    
-                    fs.writeFile(`${directory}/${file.originalname}`, data, function(err) {
+
+                    fs.writeFile(`${directory}/${file.originalname}`, data, function (err) {
                         if (err) reject(err);
-                        resolve();
+
+                        fs.unlink(file.path, (err) => {
+                            if (err) reject(err);
+                            resolve();
+                        });
                     });
                 });
             });
