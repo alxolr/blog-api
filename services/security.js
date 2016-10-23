@@ -1,20 +1,19 @@
 (() => {
-    "use strict";
-    const crypto = require('crypto'),
-        utils = require('../services/utils');
+  'use strict'
 
-    module.exports = (config) => {
-        config = {
-            salt: config.salt || ''
-        };
+  const crypto = require('crypto')
 
-        return {
-            hashify: (password) => {
-                return crypto.createHash('sha256')
-                    .update(config.salt + password)
-                    .digest('hex');
-            }
-        };
-    };
+  module.exports = (config) => {
+    config = {
+      salt: config.salt || ''
+    }
 
-})();
+    return {
+      hashify: (password) => {
+        return crypto.createHash('sha256')
+          .update(config.salt + password)
+          .digest('hex')
+      }
+    }
+  }
+})()

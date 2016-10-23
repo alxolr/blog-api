@@ -40,7 +40,9 @@
     }).then(handleSuccess, handleUserNotFound)
 
     function handleUserNotFound (err) {
-      console.error(err)
+      if (err) {
+        console.error(err)
+      }
       res.status(401).json({
         error: utils.messages.INVALID_CREDENTIALS
       })
