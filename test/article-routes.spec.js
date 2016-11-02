@@ -94,7 +94,7 @@
       it('should not allow article modification without token', (done) => {
         let article = new Article(shared.article)
         article.save((err, article) => {
-          // assert.equal(err, null)
+          assert.notEqual(err, null)
           chai.request(server)
             .put('/api/v1/articles/1234567890abcdef12345678')
             .send({})

@@ -1,4 +1,4 @@
-(() => {
+;(() => {
   'use strict'
 
   /**
@@ -25,6 +25,22 @@
 
     return null
   }
+  const getMongoOperator = (operator) => {
+    switch (operator) {
+      case '>':
+        return '$gt'
+      case '>=':
+        return '$gte'
+      case '=':
+        return '$eq'
+      case '<':
+        return '$lt'
+      case '<=':
+        return '$lte'
+      default:
+        return null
+    }
+  }
 
   const extractKeyValue = (pair) => {
     let pairs = pair.split('::')
@@ -32,8 +48,9 @@
       if (index % 2 === 0) {
         prev.property = curr
       } else {
-        prev.operator = getOperator(curr)
-        let value = curr.replace(prev.operator, '')
+        let operator = getOperator(curr)
+        prev.operator = getMongoOperator(operator)
+        let value = curr.replace(operator, '')
         if (isBoolean(value)) {
           prev.value = value === 'true'
         } else {
