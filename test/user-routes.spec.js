@@ -34,7 +34,7 @@
             res.should.have.status(200)
             res.body.should.have.property('user')
             res.body.should.have.property('token')
-            res.body.user.name.should.be.eql(shared.user.name)
+            res.body.user.firstname.should.be.eql(shared.user.firstname)
             done()
           })
       })
@@ -134,7 +134,7 @@
       it('should not update the user without the token', (done) => {
         let user = new User(shared.user)
         let update = Object.assign({}, shared.user)
-        update.name = 'George'
+        update.firstname = 'George'
         user.save((err, user) => {
           assert.equal(err, null)
           let _id = user._id
@@ -164,8 +164,8 @@
               chai.request(server)
                 .put('/api/v1/users/' + user._id)
                 .send({
-                  name: 'George',
-                  surname: 'Andreas',
+                  firstname: 'George',
+                  lastname: 'Andreas',
                   token: token
                 }).end((err, res) => {
                   assert.equal(err, null)
@@ -173,8 +173,8 @@
                     _id: user._id
                   }, (err, user) => {
                     assert.equal(err, null)
-                    user.should.have.property('name').eql('George')
-                    user.should.have.property('surname').eql('Andreas')
+                    user.should.have.property('firstname').eql('George')
+                    user.should.have.property('lastname').eql('Andreas')
                     done()
                   })
                 })

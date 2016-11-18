@@ -10,11 +10,11 @@
   const USER_RIGHTS = 'USER'
 
   const UserSchema = new Schema({
-    'name': {
+    'firstname': {
       type: String,
       required: false
     },
-    'surname': {
+    'lastname': {
       type: String,
       required: false
     },

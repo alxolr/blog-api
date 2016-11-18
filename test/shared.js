@@ -15,15 +15,15 @@
   let user = {
     email: 'dummyuser@mail.com',
     password: 'dummypassword',
-    name: 'Johny',
-    surname: 'Bravo'
+    firstname: 'Johny',
+    lastname: 'Bravo'
   }
 
   let admin = {
     email: 'admin@mail.com',
     password: 'goodadmin',
-    name: 'Admin',
-    surname: 'Adminovich',
+    firstname: 'Admin',
+    lastname: 'Adminovich',
     rights: ['ADMIN']
   }
 
