@@ -1,27 +1,58 @@
-/* global describe it */
-/* global beforeEach it */
+/* global describe it beforeEach afterEach after */
 
-(() => {
-  'use strict'
+'use strict'
 
-  process.env.NODE_ENV = 'test'
+process.env.NODE_ENV = 'test'
 
-  const chai = require('chai')
-  const chaiHttp = require('chai-http')
-  const Article = require('../models/article')
-  const User = require('../models/user')
-  const server = require('../server')
-  const shared = require('./shared')
-  const utils = require('../services/utils')
-  const fs = require('fs')
-  const assert = require('assert')
-  const path = require('path')
-  let photo = 'big-boobs-photo-450x299.png'
+const chai = require('chai')
+const chaiHttp = require('chai-http')
+const Article = require('../models/article')
+const User = require('../models/user')
+const server = require('../server')
+const shared = require('./shared')
+const utils = require('../services/utils')
+const config = require('config')
+const fs = require('fs')
+const assert = require('assert')
+const path = require('path')
+const async = require('async')
+const users = require('./fixtures/users')
+const MongoClient = require('mongodb').MongoClient
+
+let photo = 'big-boobs-photo-450x299.png'
+
+
+MongoClient.connect(config.database, (err, db) => {
+  assert.equal(err, null)
 
   chai.use(chaiHttp)
 
   describe('Articles', () => {
     beforeEach((done) => {
+      function insertUser (user, cb) {
+        db.collection('users').insertOne(user, (err) => {
+          assert.equal(err, null)
+          cb()
+        })
+      }
+
+      function insertArticle (article, cb) {
+        db.collection('articles').insertOne(article, (err) => {
+          assert.equal(err, null)
+          cb()
+        })
+      }
+      async.map(users, insertUser, (err, result) => {
+        assert.equal(err, null)
+        done()
+        // async.map(articles, insertArticle, (err, results) => {
+        //   assert.equal(err, null)
+        //   done()
+        // })
+      })
+    })
+
+    afterEach((done) => {
       Article.remove({}, (err) => {
         assert.equal(err, null)
         User.remove({}, (err) => {
@@ -29,6 +60,10 @@
           done()
         })
       })
+    })
+
+    after(() => {
+      db.close()
     })
 
     describe('[POST] /api/v1/articles', () => {
@@ -338,4 +373,4 @@
       })
     })
   })
-})()
+})
