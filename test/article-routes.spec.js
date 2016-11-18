@@ -6,16 +6,17 @@
 
   process.env.NODE_ENV = 'test'
 
-  let chai = require('chai')
-  let chaiHttp = require('chai-http')
-  let Article = require('../models/article')
-  let User = require('../models/user')
-  let server = require('../server')
-  let shared = require('./shared')
-  let utils = require('../services/utils')
-  let fs = require('fs')
+  const chai = require('chai')
+  const chaiHttp = require('chai-http')
+  const Article = require('../models/article')
+  const User = require('../models/user')
+  const server = require('../server')
+  const shared = require('./shared')
+  const utils = require('../services/utils')
+  const fs = require('fs')
+  const assert = require('assert')
+  const path = require('path')
   let photo = 'big-boobs-photo-450x299.png'
-  let assert = require('assert')
 
   chai.use(chaiHttp)
 
@@ -73,7 +74,7 @@
             .field('title', shared.article.title)
             .field('body', shared.article.body)
             .field('token', token)
-            .attach('image', fs.createReadStream(__dirname + `/${photo}`), photo)
+            .attach('image', fs.createReadStream(path.resolve(`test/${photo}`)), photo)
             .end((err, res) => {
               assert.equal(err, null)
               res.status.should.be.eql(200)
@@ -174,7 +175,7 @@
             .put('/api/v1/articles/' + article._id)
             .set('Content-Type', 'multipart/form-data')
             .field('token', token)
-            .attach('image', fs.createReadStream(__dirname + `/${photo}`), photo)
+            .attach('image', fs.createReadStream(path.resolve(`test/${photo}`)), photo)
             .end((err, res) => {
               assert.equal(err, null)
               res.status.should.be.eql(200)
