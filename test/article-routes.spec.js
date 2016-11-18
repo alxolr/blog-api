@@ -17,10 +17,10 @@ const assert = require('assert')
 const path = require('path')
 const async = require('async')
 const users = require('./fixtures/users')
+const articles = require('./fixtures/articles')
 const MongoClient = require('mongodb').MongoClient
 
 let photo = 'big-boobs-photo-450x299.png'
-
 
 MongoClient.connect(config.database, (err, db) => {
   assert.equal(err, null)
@@ -35,7 +35,6 @@ MongoClient.connect(config.database, (err, db) => {
           cb()
         })
       }
-
       function insertArticle (article, cb) {
         db.collection('articles').insertOne(article, (err) => {
           assert.equal(err, null)
@@ -44,11 +43,10 @@ MongoClient.connect(config.database, (err, db) => {
       }
       async.map(users, insertUser, (err, result) => {
         assert.equal(err, null)
-        done()
-        // async.map(articles, insertArticle, (err, results) => {
-        //   assert.equal(err, null)
-        //   done()
-        // })
+        async.map(articles, insertArticle, (err, results) => {
+          assert.equal(err, null)
+          done()
+        })
       })
     })
 

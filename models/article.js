@@ -24,8 +24,8 @@ const ArticleSchema = new Schema({
   'author': {
     type: {
       _id: String,
-      name: String,
-      surname: String
+      firstname: String,
+      lastname: String
     },
     required: true
   },
@@ -38,8 +38,8 @@ const ArticleSchema = new Schema({
       author: {
         type: {
           _id: String,
-          name: String,
-          surname: String
+          firstname: String,
+          lastname: String
         },
         required: true
       },
