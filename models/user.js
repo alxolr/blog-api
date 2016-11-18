@@ -28,7 +28,7 @@
       validate: {
         validator: (v, cb) => {
           setTimeout(() => {
-            cb(/^(([^<>()\[\]\.,;:\s@"]+(\.[^<>()\[\]\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i.test(v))
+            cb(/^[a-z._0-9]+@[a-z]+\.\w+$/gi.test(v))
           }, 0)
         },
         message: `{VALUE} is not a valid email address`
