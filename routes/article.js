@@ -5,6 +5,8 @@ const Article = require('../models/article')
 const utils = require('../services/utils')
 const multer = require('multer')
 const path = require('path')
+const fe = require('../services/filter-extractor')
+const qb = require('../services/query-builder')
 const uploadFile = require('../services/upload-file')
 const upload = multer({
   dest: '/tmp/'
@@ -126,9 +128,16 @@ function saveArticle (article, res) {
   })
 }
 
-router.get('', (req, res) => {
-  res.json([])
-})
+const findArticles = (req, res) => {
+  let filters = fe.extract(req.query.filter)
+  let query = qb.build(filters)
+
+  Article.find(query)
+    .then(docs => res.json(docs))
+    .catch(err => res.status(404).json({error: err}))
+}
+
+router.get('', findArticles)
 
 /**
  * @apiDefine ArticleSuccess
