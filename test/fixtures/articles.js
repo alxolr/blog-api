@@ -20,6 +20,21 @@ let articles = [
     comments: []
   },
   {
+    _id: new ObjectId('5832098580a5aa524e725cd2'),
+    title: 'Started the job to be a master of nodejs programming',
+    category: ['articles', 'frontend'],
+    slug: utils.slugify('Started the job to be a master of nodejs programming'),
+    body: `This is a quite interesting experience what to say, somewhat very interesting`,
+    author: {
+      _id: '582ed973861cf81df5018309',
+      firstname: 'Alex',
+      lastname: 'Scripca'
+    },
+    created_at: new Date(2013, 10, 23),
+    updated_at: new Date(),
+    comments: []
+  },
+  {
     _id: new ObjectId('582f003a45f3fc4394ac3544'),
     title: 'To be or not to be this is the question',
     category: ['articles', 'philosophy'],

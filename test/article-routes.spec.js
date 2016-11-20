@@ -303,6 +303,17 @@ MongoClient.connect(config.database, (err, db) => {
             })
         })
       })
+      it(`should be able to filter the articles by created_at date`, (done) => {
+        let filter = 'created_at::>2012-09-15'
+        chai.request(server)
+          .get(`/api/v1/articles?filter=${filter}`)
+          .end((err, res) => {
+            assert.equal(err, null)
+            res.status.should.be.eql(200)
+            res.body.should.be.a('array')
+            res.body.length.should.be.eql(5)
+          })
+      })
     })
 
     describe('[DELETE] /api/v1/articles/:articleId', () => {
