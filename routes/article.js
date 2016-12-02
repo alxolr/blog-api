@@ -8,6 +8,7 @@ const path = require('path')
 const fe = require('../services/filter-extractor')
 const qb = require('../services/query-builder')
 const uploadFile = require('../services/upload-file')
+const JSONStream = require('JSONStream')
 const upload = multer({
   dest: '/tmp/'
 })
@@ -130,11 +131,17 @@ function saveArticle (article, res) {
 
 const findArticles = (req, res) => {
   let filters = fe.extract(req.query.filter)
+  let limit = parseInt(req.query.limit) || null
   let query = qb.build(filters)
+  let builder = Article.find(query)
 
-  Article.find(query)
-    .then(docs => res.json(docs))
-    .catch(err => res.status(404).json({error: err}))
+  if (limit) {
+    builder.limit(limit)
+  }
+
+  let stream = builder.cursor()
+  res.set('Content-Type', 'application/json')
+  stream.pipe(JSONStream.stringify()).pipe(res)
 }
 
 router.get('', findArticles)

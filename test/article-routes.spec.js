@@ -72,11 +72,11 @@ MongoClient.connect(config.database, (err, db) => {
             title: shared.article.title,
             body: shared.article.body
           }).end((err, res) => {
-            assert.notEqual(err, null)
-            res.status.should.be.eql(401)
-            res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED)
-            done()
-          })
+          assert.notEqual(err, null)
+          res.status.should.be.eql(401)
+          res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED)
+          done()
+        })
       })
 
       it('should create the article if token provided', (done) => {
@@ -89,12 +89,12 @@ MongoClient.connect(config.database, (err, db) => {
               body: shared.article.body,
               token: token
             }).end((err, res) => {
-              assert.equal(err, null)
-              res.status.should.be.eql(200)
-              res.body.should.have.property('author')
-              res.body.should.have.property('slug').eql(utils.slugify(shared.article.title))
-              done()
-            })
+            assert.equal(err, null)
+            res.status.should.be.eql(200)
+            res.body.should.have.property('author')
+            res.body.should.have.property('slug').eql(utils.slugify(shared.article.title))
+            done()
+          })
         })
       })
 
@@ -150,11 +150,11 @@ MongoClient.connect(config.database, (err, db) => {
               token: token,
               title: 'New title for the article'
             }).end((err, res) => {
-              assert.equal(err, null)
-              res.status.should.be.eql(200)
-              res.body.should.have.property('title').eql('New title for the article')
-              done()
-            })
+            assert.equal(err, null)
+            res.status.should.be.eql(200)
+            res.body.should.have.property('title').eql('New title for the article')
+            done()
+          })
         })
       })
 
@@ -172,11 +172,11 @@ MongoClient.connect(config.database, (err, db) => {
                 token: token,
                 title: 'Should not be possible'
               }).end((err, res) => {
-                assert.notEqual(err, null)
-                res.status.should.be.eql(401)
-                res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED)
-                done()
-              })
+              assert.notEqual(err, null)
+              res.status.should.be.eql(401)
+              res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED)
+              done()
+            })
           })
         })
       })
@@ -192,11 +192,11 @@ MongoClient.connect(config.database, (err, db) => {
                 token: token,
                 title: 'Modified by admin'
               }).end((err, res) => {
-                assert.equal(err, null)
-                res.status.should.be.eql(200)
-                res.body.title.should.be.eql('Modified by admin')
-                done()
-              })
+              assert.equal(err, null)
+              res.status.should.be.eql(200)
+              res.body.title.should.be.eql('Modified by admin')
+              done()
+            })
           })
         })
       })
@@ -312,6 +312,18 @@ MongoClient.connect(config.database, (err, db) => {
             res.status.should.be.eql(200)
             res.body.should.be.a('array')
             res.body.length.should.be.eql(5)
+            done()
+          })
+      })
+      it(`should be able to limit the results`, (done) => {
+        let query = 'filter=created_at::>2012-09-15&limit=2'
+        chai.request(server)
+          .get(`/api/v1/articles?${query}`)
+          .end((err, res) => {
+            assert.equal(err, null)
+            res.status.should.be.eql(200)
+            res.body.should.be.a('array')
+            res.body.length.should.be.eql(2)
             done()
           })
       })
