@@ -6,28 +6,46 @@ const config = require('config')
 const utils = require('../services/utils')
 const security = require('../services/security')(config)
 const jwt = require('jsonwebtoken')
-const middlewares = require('../middlewares/middlewares')
+const mw = require('../middlewares/middlewares')
 
-router.post('/', (req, res) => {
+module.exports = router
+
+router.post('/', createUser)
+router.post('/login', loginUser)
+router.route('/:userId')
+  .all(mw.isValidParameters, mw.isAuthenticated, mw.isAllowedOperation)
+  .get(getUser)
+  .put(updateUser)
+  .delete(deleteUser)
+
+function createUser (req, res) {
   let user = new User(req.body)
   user.save((err) => {
     if (err) {
       if (err.hasOwnProperty('code') && err.code === utils.mongo.UNIQUE_KEY_VIOLATION) {
-        res.status(400).json({
-          error: utils.messages.USER_DUPLICATE
-        })
+        return endError(res, 400, utils.messages.USER_DUPLICATE)
       } else {
-        res.status(400).json({
-          error: utils.listifyErrors(err)
-        })
+        handleErrors(res)(err)
       }
     } else {
       generateTokenForUser(user, res)
     }
   })
-})
+}
 
-router.post('/login', (req, res) => {
+function generateTokenForUser (user, res) {
+  delete user.password
+  let token = jwt.sign(user, config.secretKey, {
+    expiresIn: 36000
+  })
+
+  return res.json({
+    user: user,
+    token: token
+  })
+}
+
+function loginUser (req, res) {
   let email = req.body.email
   let password = req.body.password
 
@@ -42,113 +60,81 @@ router.post('/login', (req, res) => {
     if (err) {
       console.error(err)
     }
-    res.status(401).json({
-      error: utils.messages.INVALID_CREDENTIALS
-    })
+    return endError(res, 401, utils.messages.INVALID_CREDENTIALS)
   }
 
   function handleSuccess (user) {
     if (user) {
       let providedEncryptedPassword = security.hashify(password)
-
       if (user.password === providedEncryptedPassword) {
-        generateTokenForUser(user, res, utils.messages.USER_LOGGEDIN_SUCCESS)
-      } else {
-        res.status(401).json({
-          error: utils.messages.INVALID_CREDENTIALS
-        })
+        return generateTokenForUser(user, res, utils.messages.USER_LOGGEDIN_SUCCESS)
       }
-    } else {
-      res.status(401).json({
-        error: utils.messages.INVALID_CREDENTIALS
-      })
     }
+    return endError(res, 401, utils.messages.INVALID_CREDENTIALS)
   }
-})
-
-router.route('/:userId')
-  .all(middlewares.isValidParameters, middlewares.isAuthenticated, middlewares.isAllowedOperation)
-  .put((req, res) => {
-    if (req.body.password !== undefined) {
-      req.body.password = security.hashify(req.body.password)
-    }
-
-    if (req.body._id !== undefined) delete req.body._id
-
-    User.update({
-      _id: req.params.userId
-    }, {
-      '$set': req.body
-    }).then(handleSuccess)
-      .catch((err) => {
-        res.json({
-          error: utils.listifyErrors(err)
-        })
-      })
-
-    function handleSuccess (result) {
-      User.findOne({
-        _id: req.params.userId
-      }).then(generateToken)
-        .catch((err) => {
-          res.json({
-            error: utils.listifyErrors(err)
-          })
-        })
-
-      function generateToken (user) {
-        generateTokenForUser(user, res, utils.messages.USER_UPDATED_SUCCESS)
-      }
-    }
-  })
-
-  .get((req, res) => {
-    User.findOne({
-      _id: req.params.userId
-    }, {
-      password: 0
-    }).then(handleSuccess)
-      .catch((err) => {
-        res.json({
-          error: utils.listifyErrors(err)
-        })
-      })
-
-    function handleSuccess (user) {
-      if (user) {
-        return res.json(user)
-      } else {
-        return res.status(404).json({
-          error: utils.messages.USER_NOT_FOUND
-        })
-      }
-    }
-  })
-
-  .delete((req, res) => {
-    User.update({
-      _id: req.params.userId
-    }, {
-      '$set': {
-        deleted_at: new Date()
-      }
-    }).then(result => res.status(204).end(), (err) => {
-      res.json({
-        error: utils.listifyErrors(err)
-      })
-    })
-  })
-
-function generateTokenForUser (user, res) {
-  delete user.password
-  let token = jwt.sign(user, config.secretKey, {
-    expiresIn: 36000
-  })
-
-  return res.json({
-    user: user,
-    token: token
-  })
 }
 
-module.exports = router
+function updateUser (req, res) {
+  if (req.body.password !== undefined) {
+    req.body.password = security.hashify(req.body.password)
+  }
+
+  if (req.body._id !== undefined) delete req.body._id
+
+  User.update({
+    _id: req.params.userId
+  }, {
+    '$set': req.body
+  }).then(handleSuccess)
+    .catch(handleErrors(res))
+
+  function handleSuccess (result) {
+    User.findOne({
+      _id: req.params.userId
+    }).then(generateToken)
+      .catch(handleErrors(res))
+
+    function generateToken (user) {
+      generateTokenForUser(user, res, utils.messages.USER_UPDATED_SUCCESS)
+    }
+  }
+}
+
+function getUser (req, res) {
+  User.findOne({
+    _id: req.params.userId
+  }, {
+    password: 0
+  }).then(handleSuccess)
+    .catch(handleErrors(res))
+
+  function handleSuccess (user) {
+    if (user) {
+      return res.json(user)
+    } else {
+      return endError(res, 404, utils.messages.USER_NOT_FOUND)
+    }
+  }
+}
+
+function deleteUser (req, res) {
+  User.findByIdAndUpdate({
+    _id: req.params.userId
+  }, {
+    '$set': {
+      deleted_at: new Date()
+    }
+  })
+    .then(result => res.status(204).end())
+    .catch(handleErrors(res))
+}
+
+function handleErrors (res) {
+  return function (err) {
+    endError(res, 400, utils.listifyErrors(err))
+  }
+}
+
+function endError (res, code, error) {
+  res.status(code).json({error: error})
+}

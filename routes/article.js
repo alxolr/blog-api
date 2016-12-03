@@ -1,4 +1,5 @@
 'use strict'
+
 const router = require('express').Router()
 const mw = require('../middlewares/middlewares')
 const Article = require('../models/article')
@@ -12,140 +13,11 @@ const JSONStream = require('JSONStream')
 const upload = multer({
   dest: '/tmp/'
 })
+const imgDirectory = path.resolve('images/')
 
-let imgDirectory = path.resolve('images/')
-
-const createArticle = (req, res) => {
-  let article = new Article(req.body)
-  article.author = {
-    _id: req.decoded._doc._id,
-    name: req.decoded._doc.name,
-    surname: req.decoded._doc.surname
-  }
-  if (req.file !== undefined) {
-    uploadFile(req.file, imgDirectory).then(() => {
-      article.image = `/images/${req.file.originalname}`
-      saveArticle(article, res)
-    }).catch(handleErrors(res))
-  } else {
-    saveArticle(article, res)
-  }
-}
-
-const getArticleBy = (property) => {
-  return function (req, res) {
-    let query = {
-      deleted_at: {
-        '$exists': false
-      }
-    }
-    if (property === 'slug') {
-      query.slug = req.params[property]
-    } else {
-      query._id = req.params[property]
-    }
-    Article
-      .findOne(query)
-      .then((article) => {
-        if (article) {
-          res.json(article)
-        } else {
-          res.status(404).json({
-            error: utils.messages.ARTICLE_NOT_FOUND
-          })
-        }
-      })
-      .catch(handleErrors(res))
-  }
-}
-
-const updateArticle = (req, res) => {
-  if (req.body.title !== undefined) {
-    req.body.slug = utils.slugify(req.body.title)
-  }
-
-  if (req.body._id !== undefined) delete req.body._id
-
-  if (req.file !== undefined) {
-    uploadFile(req.file, imgDirectory)
-      .then(() => {
-        req.body.image = `/images/${req.file.originalname}`
-        Article.update({
-          _id: req.params.articleId
-        }, {
-          '$set': req.body
-        }).then(handleSuccess, handleErrors(res))
-      })
-      .catch(handleErrors(res))
-  } else {
-    Article.update({
-      _id: req.params.articleId
-    }, {
-      '$set': req.body
-    }).then(handleSuccess)
-      .catch(handleErrors(res))
-  }
-
-  function handleSuccess (result) {
-    Article.findOne({
-      _id: req.params.articleId
-    })
-      .then(article => res.json(article))
-      .catch(handleErrors(res))
-  }
-}
-
-const softDeleteArticle = (req, res) => {
-  Article
-    .update({
-      _id: req.params.articleId
-    }, {
-      $set: {
-        deleted_at: new Date()
-      }
-    })
-    .then((result) => {
-      // 204 No Content
-      res.status(204).end()
-    })
-    .catch(handleErrors(res))
-}
-
-function handleErrors (res) {
-  return (err) => {
-    res.status(400).json({
-      error: err
-    })
-  }
-}
-
-function saveArticle (article, res) {
-  article.save((err) => {
-    if (!err) {
-      res.json(article)
-    } else {
-      handleErrors(res)
-    }
-  })
-}
-
-const findArticles = (req, res) => {
-  let filters = fe.extract(req.query.filter)
-  let limit = parseInt(req.query.limit) || null
-  let query = qb.build(filters)
-  let builder = Article.find(query)
-
-  if (limit) {
-    builder.limit(limit)
-  }
-
-  let stream = builder.cursor()
-  res.set('Content-Type', 'application/json')
-  stream.pipe(JSONStream.stringify()).pipe(res)
-}
+module.exports = router
 
 router.get('', findArticles)
-
 /**
  * @apiDefine ArticleSuccess
  *
@@ -212,7 +84,7 @@ router.route('/:articleId([0-9a-f]{24})')
    * @apiSuccess {Object} article The requested article object.
    * @apiSuccess {Boolean} success The status of the transaction.
    */
-  .get(getArticleBy('articleId'))
+  .get(getArticleByProperty('articleId'))
   /**
    * @api {delete} /api/v1/articles/{articleId}
    * @apiName softDeleteArticle
@@ -239,6 +111,141 @@ router.route('/:slug')
    * @apiSuccess {Object} article The requested article object.
    * @apiSuccess {Boolean} success The status of the transaction.
    */
-  .get(getArticleBy('slug'))
+  .get(getArticleByProperty('slug'))
 
-module.exports = router
+function createArticle (req, res) {
+  let article = new Article(req.body)
+
+  article.author = {
+    _id: req.decoded._doc._id,
+    name: req.decoded._doc.name,
+    surname: req.decoded._doc.surname
+  }
+
+  if (req.file !== undefined) {
+    uploadFile(req.file, imgDirectory).then(() => {
+      article.image = `/images/${req.file.originalname}`
+      saveArticle(article, res)
+    }).catch(handleErrors(res))
+  } else {
+    saveArticle(article, res)
+  }
+}
+
+function saveArticle (article, res) {
+  article.save((err) => {
+    if (!err) {
+      res.json(article)
+    } else {
+      handleErrors(res)
+    }
+  })
+}
+
+function handleErrors (res) {
+  return (err) => {
+    res.status(400).json({
+      error: err
+    })
+  }
+}
+
+function getArticleByProperty (property) {
+  return function (req, res) {
+    let query = {
+      deleted_at: {
+        '$exists': false
+      }
+    }
+
+    if (property === 'slug') {
+      query.slug = req.params[property]
+    } else {
+      query._id = req.params[property]
+    }
+
+    Article
+      .findOne(query)
+      .then((article) => {
+        if (article) {
+          res.json(article)
+        } else {
+          res.status(404).json({
+            error: utils.messages.ARTICLE_NOT_FOUND
+          })
+        }
+      })
+      .catch(handleErrors(res))
+  }
+}
+
+function updateArticle (req, res) {
+  if (req.body.title !== undefined) {
+    req.body.slug = utils.slugify(req.body.title)
+  }
+
+  if (req.body._id !== undefined) delete req.body._id
+
+  if (req.file !== undefined) {
+    uploadFile(req.file, imgDirectory).then(() => {
+      req.body.image = `/images/${req.file.originalname}`
+      Article.update({
+        _id: req.params.articleId
+      }, {
+        '$set': req.body
+      }).then(handleSuccess, handleErrors(res))
+    })
+      .catch(handleErrors(res))
+  } else {
+    Article.update({
+      _id: req.params.articleId
+    }, {
+      '$set': req.body
+    }).then(handleSuccess)
+      .catch(handleErrors(res))
+  }
+
+  function handleSuccess (result) {
+    Article.findOne({
+      _id: req.params.articleId
+    })
+      .then(article => res.json(article))
+      .catch(handleErrors(res))
+  }
+}
+
+function softDeleteArticle (req, res) {
+  Article
+    .update({
+      _id: req.params.articleId
+    }, {
+      $set: {
+        deleted_at: new Date()
+      }
+    })
+    .then((result) => {
+      // 204 No Content
+      res.status(204).end()
+    })
+    .catch(handleErrors(res))
+}
+
+function findArticles (req, res) {
+  let filters = fe.extract(req.query.filter)
+  let limit = parseInt(req.query.limit) || null
+  let offset = parseInt(req.query.offset) || null
+  let query = qb.build(filters)
+  let builder = Article.find(query)
+
+  if (offset) {
+    builder.offset(offset)
+  }
+
+  if (limit) {
+    builder.limit(limit)
+  }
+
+  let stream = builder.cursor()
+  res.set('Content-Type', 'application/json')
+  stream.pipe(JSONStream.stringify()).pipe(res)
+}
