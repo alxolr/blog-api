@@ -2,8 +2,7 @@
 
 const MongoClient = require('mongodb').MongoClient
 const async = require('async')
-const users = require('../test/fixtures/users')
-const articles = require('../test/fixtures/articles')
+const fixtures = require('../test/fixtures')
 const config = require('config')
 const assert = require('assert')
 
@@ -53,17 +52,17 @@ MongoClient.connect(config.database, (err, db) => {
     (err, results) => {
       assert.equal(err, null)
       function insertUsers (cb) {
-        async.map(users, insertUser, (err, result) => {
+        async.map(fixtures.users, insertUser, (err, result) => {
           assert.equal(err, null)
-          log('Users collection was updated with ' + users.length + ' documents')
-          cb(null, null)
+          log('Users collection was updated with ' + fixtures.users.length + ' documents')
+          cb(null)
         })
       }
       function insertArticles (cb) {
-        async.map(articles, insertArticle, (err, result) => {
+        async.map(fixtures.articles, insertArticle, (err, result) => {
           assert.equal(err, null)
-          log('Article collection was updated with ' + articles.length + ' documents')
-          cb(null, null)
+          log('Article collection was updated with ' + fixtures.articles.length + ' documents')
+          cb(null)
         })
       }
 

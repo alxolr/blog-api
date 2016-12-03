@@ -86,16 +86,18 @@ let articles = [
     created_at: new Date(2016, 4, 11),
     updated_at: new Date(),
     comments: [{
+      _id: new ObjectId('58433b3e2c08a70259deca1d'),
       author: {
-        _id: '582ed9b47713c21ea1b04f30',
+        _id: new ObjectId('582ed9b47713c21ea1b04f30'),
         firstname: 'France',
         lastname: 'Capca'
       },
       message: 'This article is not relevant at all',
       created_at: new Date()
     }, {
+      _id: new ObjectId('58433b31797f430225f0a4ef'),
       author: {
-        _id: '582ed973861cf81df5018309',
+        _id: new ObjectId('582ed973861cf81df5018309'),
         firstname: 'Alex',
         lastname: 'Scripca'
       },

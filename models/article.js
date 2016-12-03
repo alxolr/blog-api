@@ -4,6 +4,17 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const utils = require('../services/utils')
 
+const AuthorSchema = new Schema({
+  firstname: String,
+  lastname: String
+})
+
+const CommentsSchema = new Schema({
+  author: AuthorSchema,
+  message: { type: String, required: true },
+  created_at: { type: Date, default: new Date() }
+})
+
 const ArticleSchema = new Schema({
   'title': {
     type: String,
@@ -33,24 +44,7 @@ const ArticleSchema = new Schema({
   'created_at': Date,
   'updated_at': Date,
   'deleted_at': Date,
-  'comments': {
-    type: [{
-      author: {
-        type: {
-          _id: String,
-          firstname: String,
-          lastname: String
-        },
-        required: true
-      },
-      created_at: {
-        type: Date,
-        default: new Date()
-      },
-      message: String
-    }],
-    required: false
-  },
+  'comments': [CommentsSchema],
   image: String
 })
 

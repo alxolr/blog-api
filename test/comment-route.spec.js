@@ -15,7 +15,6 @@ const config = require('config')
 const shared = require('./shared')
 const server = require('../server')
 
-
 chai.use(chaiHttp)
 
 MongoClient.connect(config.database, (err, db) => {
@@ -60,6 +59,9 @@ MongoClient.connect(config.database, (err, db) => {
               }).toArray((err, items) => {
                 assert.equal(err, null)
                 items[0].comments[0].should.have.property('message').eql(message)
+                items[0].comments[0].should.have.property('author')
+                items[0].comments[0].author.should.have.property('firstname').eql(shared.user.firstname)
+                items[0].comments[0].author.should.have.property('lastname').eql(shared.user.lastname)
                 done()
               })
             })
