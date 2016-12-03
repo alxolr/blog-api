@@ -18,6 +18,7 @@ const imgDirectory = path.resolve('images/')
 module.exports = router
 
 router.get('', findArticles)
+
 /**
  * @apiDefine ArticleSuccess
  *
@@ -235,17 +236,17 @@ function findArticles (req, res) {
   let limit = parseInt(req.query.limit) || null
   let offset = parseInt(req.query.offset) || null
   let query = qb.build(filters)
-  let builder = Article.find(query)
+  let results = Article.find(query)
 
   if (offset) {
-    builder.offset(offset)
+    results.offset(offset)
   }
 
   if (limit) {
-    builder.limit(limit)
+    results.limit(limit)
   }
 
-  let stream = builder.cursor()
+  let stream = results.cursor() // will return a pipeable stream
   res.set('Content-Type', 'application/json')
   stream.pipe(JSONStream.stringify()).pipe(res)
 }
