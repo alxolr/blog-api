@@ -7,7 +7,6 @@ process.env.NODE_ENV = 'test'
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const Article = require('../models/article')
-const User = require('../models/user')
 const server = require('../server')
 const shared = require('./shared')
 const utils = require('../services/utils')
