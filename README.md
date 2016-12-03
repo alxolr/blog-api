@@ -21,10 +21,10 @@ sudo apt-get install -y nodejs
 ## Starting the project
 - Open the project folder and run `npm install`
 - run the command `apidoc -e node_modules/` and it will generate the api documentation
-- optionally you can run `istanbul covers _mocha` in the same folder
+- optionally you can run `istanbul cover _mocha` in the same folder
 - finaly run `npm start` - to start the api server
 - `npm test` - to run the tests
 
 ## Routes
-- to access the api documentation you can follow [Api Docs](http://localhost:8080/api/doc), after the server started.
-- to access the code coverage reports you can follow [Code Coverage](http://localhost:8080/coverage), after the server started.
+- to access the api documentation you can follow [Api Docs](http://localhost:3000/api/doc), after the server started.
+- to access the code coverage reports you can follow [Code Coverage](http://localhost:3000/coverage), after the server started.
