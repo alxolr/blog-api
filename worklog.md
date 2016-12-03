@@ -1,5 +1,4 @@
 # Work log
 
-- Create a route that is able to filter the articles
-in a flexible way
-  - [] limit the amount of results
+- As a registered user I should be able to add a comment on the bottom of the page
+  [ ] add the crud for the comments

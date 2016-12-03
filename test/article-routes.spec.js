@@ -15,9 +15,6 @@ const config = require('config')
 const fs = require('fs')
 const assert = require('assert')
 const path = require('path')
-const async = require('async')
-const users = require('./fixtures/users')
-const articles = require('./fixtures/articles')
 const MongoClient = require('mongodb').MongoClient
 
 let photo = 'big-boobs-photo-450x299.png'
@@ -28,41 +25,9 @@ MongoClient.connect(config.database, (err, db) => {
   chai.use(chaiHttp)
 
   describe('Articles', () => {
-    beforeEach((done) => {
-      function insertUser (user, cb) {
-        db.collection('users').insertOne(user, (err) => {
-          assert.equal(err, null)
-          cb()
-        })
-      }
-      function insertArticle (article, cb) {
-        db.collection('articles').insertOne(article, (err) => {
-          assert.equal(err, null)
-          cb()
-        })
-      }
-      async.map(users, insertUser, (err, result) => {
-        assert.equal(err, null)
-        async.map(articles, insertArticle, (err, results) => {
-          assert.equal(err, null)
-          done()
-        })
-      })
-    })
-
-    afterEach((done) => {
-      Article.remove({}, (err) => {
-        assert.equal(err, null)
-        User.remove({}, (err) => {
-          assert.equal(err, null)
-          done()
-        })
-      })
-    })
-
-    after(() => {
-      db.close()
-    })
+    beforeEach((done) => shared.insertFixtures(db, done))
+    afterEach((done) => shared.cleanupDatabase(db, done))
+    after(() => db.close())
 
     describe('[POST] /api/v1/articles', () => {
       it('should not be able to create article without token', (done) => {
@@ -72,11 +37,11 @@ MongoClient.connect(config.database, (err, db) => {
             title: shared.article.title,
             body: shared.article.body
           }).end((err, res) => {
-          assert.notEqual(err, null)
-          res.status.should.be.eql(401)
-          res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED)
-          done()
-        })
+            assert.notEqual(err, null)
+            res.status.should.be.eql(401)
+            res.body.should.have.property('error').eql(utils.messages.TOKEN_NOT_PROVIDED)
+            done()
+          })
       })
 
       it('should create the article if token provided', (done) => {
@@ -89,12 +54,12 @@ MongoClient.connect(config.database, (err, db) => {
               body: shared.article.body,
               token: token
             }).end((err, res) => {
-            assert.equal(err, null)
-            res.status.should.be.eql(200)
-            res.body.should.have.property('author')
-            res.body.should.have.property('slug').eql(utils.slugify(shared.article.title))
-            done()
-          })
+              assert.equal(err, null)
+              res.status.should.be.eql(200)
+              res.body.should.have.property('author')
+              res.body.should.have.property('slug').eql(utils.slugify(shared.article.title))
+              done()
+            })
         })
       })
 
@@ -150,11 +115,11 @@ MongoClient.connect(config.database, (err, db) => {
               token: token,
               title: 'New title for the article'
             }).end((err, res) => {
-            assert.equal(err, null)
-            res.status.should.be.eql(200)
-            res.body.should.have.property('title').eql('New title for the article')
-            done()
-          })
+              assert.equal(err, null)
+              res.status.should.be.eql(200)
+              res.body.should.have.property('title').eql('New title for the article')
+              done()
+            })
         })
       })
 
@@ -172,11 +137,11 @@ MongoClient.connect(config.database, (err, db) => {
                 token: token,
                 title: 'Should not be possible'
               }).end((err, res) => {
-              assert.notEqual(err, null)
-              res.status.should.be.eql(401)
-              res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED)
-              done()
-            })
+                assert.notEqual(err, null)
+                res.status.should.be.eql(401)
+                res.body.error.should.be.eql(utils.messages.TOKEN_HIGHJACKED)
+                done()
+              })
           })
         })
       })
@@ -192,11 +157,11 @@ MongoClient.connect(config.database, (err, db) => {
                 token: token,
                 title: 'Modified by admin'
               }).end((err, res) => {
-              assert.equal(err, null)
-              res.status.should.be.eql(200)
-              res.body.title.should.be.eql('Modified by admin')
-              done()
-            })
+                assert.equal(err, null)
+                res.status.should.be.eql(200)
+                res.body.title.should.be.eql('Modified by admin')
+                done()
+              })
           })
         })
       })

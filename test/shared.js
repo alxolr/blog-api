@@ -8,6 +8,8 @@
   const chai = require('chai')
   const chaiHttp = require('chai-http')
   const assert = require('assert')
+  const fixtures = require('./fixtures')
+  const async = require('async')
   chai.use(chaiHttp)
   /* eslint-disable */
   const should = chai.should()
@@ -68,10 +70,56 @@
     })
   }
 
+  const insertFixtures = (db, done) => {
+    function insertUser (user, cb) {
+      db.collection('users').insertOne(user, (err) => {
+        assert.equal(err, null)
+        cb(null)
+      })
+    }
+    function insertArticle (article, cb) {
+      db.collection('articles').insertOne(article, (err) => {
+        assert.equal(err, null)
+        cb(null)
+      })
+    }
+    async.map(fixtures.users, insertUser, (err, result) => {
+      assert.equal(err, null)
+
+      async.map(fixtures.articles, insertArticle, (err, results) => {
+        assert.equal(err, null)
+        done()
+      })
+    })
+  }
+
+  const cleanupDatabase = (db, done) => {
+    function cleanUsers (cb) {
+      db.collection('users').drop((err) => {
+        if (err) cb(err)
+        cb(null)
+      })
+    }
+
+    function cleanArticles (cb) {
+      db.collection('articles').drop(err => {
+        if (err) cb(err)
+        cb(null)
+      })
+    }
+
+    async.parallel([cleanUsers, cleanArticles], (err, results) => {
+      if (err) done(err)
+      else done()
+    })
+  }
+
   exports.createUser = createUser
   exports.createArticle = createArticle
   exports.user = user
   exports.admin = admin
   exports.article = article
   exports.comment = comment
+  exports.insertFixtures = insertFixtures
+  exports.cleanupDatabase = cleanupDatabase
 })()
