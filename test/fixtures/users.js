@@ -35,6 +35,17 @@ let users = [
     updated_at: new Date(),
     is_subscribed: true,
     rights: ['ADMIN']
+  },
+  {
+    _id: new ObjectId('5842f7c99a5df037e33080a4'),
+    firstname: 'Jimmy',
+    lastname: 'Goenga',
+    email: 'jgoenca@torry.com',
+    password: security.hashify('simplepassword'),
+    created_at: new Date(),
+    updated_at: new Date(),
+    is_subscribed: true,
+    rights: ['USER']
   }
 ]
 

@@ -85,7 +85,23 @@ let articles = [
     },
     created_at: new Date(2016, 4, 11),
     updated_at: new Date(),
-    comments: []
+    comments: [{
+      author: {
+        _id: '582ed9b47713c21ea1b04f30',
+        firstname: 'France',
+        lastname: 'Capca'
+      },
+      message: 'This article is not relevant at all',
+      created_at: new Date()
+    }, {
+      author: {
+        _id: '582ed973861cf81df5018309',
+        firstname: 'Alex',
+        lastname: 'Scripca'
+      },
+      message: 'I actually liked it',
+      created_at: new Date()
+    }]
   }
 ]
 
