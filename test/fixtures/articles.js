@@ -26,7 +26,7 @@ let articles = [
     slug: utils.slugify('Started the job to be a master of nodejs programming'),
     body: `This is a quite interesting experience what to say, somewhat very interesting`,
     author: {
-      _id: '582ed973861cf81df5018309',
+      _id: new ObjectId('582ed973861cf81df5018309'),
       firstname: 'Alex',
       lastname: 'Scripca'
     },
@@ -44,7 +44,7 @@ let articles = [
     others. Sometimes is far better to not exist or to exist not as good
     but other times this stuff is not working as expected.`,
     author: {
-      _id: '582ed973861cf81df5018309',
+      _id: new ObjectId('582ed973861cf81df5018309'),
       firstname: 'Alex',
       lastname: 'Scripca'
     },
@@ -62,7 +62,7 @@ let articles = [
     others. Other text usefull shit and something unbelivable awefull is going 
     on this types of fixtures`,
     author: {
-      _id: '582ed9b47713c21ea1b04f30',
+      _id: new ObjectId('582ed9b47713c21ea1b04f30'),
       firstname: 'France',
       lastname: 'Capca'
     },
@@ -79,7 +79,7 @@ let articles = [
     others. Other text usefull shit and something unbelivable awefull is going 
     on this types of fixtures`,
     author: {
-      _id: '582ed9a687fdc41e6c0d9ce9',
+      _id: new ObjectId('582ed9a687fdc41e6c0d9ce9'),
       firstname: 'Johny',
       lastname: 'Depp'
     },
