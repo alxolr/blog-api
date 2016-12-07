@@ -44,14 +44,15 @@
   const loginUser = (userId, cb) => {
     User.findById(userId)
     .then(user => {
+      // console.log(user)
       chai.request(server)
         .post('/api/v1/users/login')
         .send({
           email: user.email,
-          password: user.password
+          password: 'simplepassword'
         })
         .end((err, res) => {
-          cb(err, res.body.user, res.body.token)
+          cb(null, res.body.user, res.body.token)
         })
     })
     .catch((err) => cb(err))

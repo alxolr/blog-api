@@ -11,6 +11,10 @@ router.route('/:articleId/comments')
   .get(getComments)
   .post(mw.isAuthenticated, addComment)
 
+router.route('/:articleId/comments/:commentId')
+  .all(mw.isAuthenticated)
+  .put(updateComment)
+
 function getComments (req, res) {
   let articleId = req.params.articleId
   Article.findById(articleId, 'comments', (err, result) => {
@@ -31,6 +35,20 @@ function addComment (req, res) {
   }
   Article.findOneAndUpdate({ _id: articleId }, {'$push': { comments: comment }})
     .then(doc => res.json(doc.comments))
+    .catch(handleError(res, 404))
+}
+
+function updateComment (req, res) {
+  let commentId = req.params.commentId
+  let message = req.body.message
+
+  Article.update(
+    {'comments._id': commentId},
+    {'$set': {
+      'comments.$.message': message
+    }}).then((result) => {
+      return res.json(result)
+    })
     .catch(handleError(res, 404))
 }
 
