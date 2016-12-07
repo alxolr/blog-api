@@ -41,6 +41,22 @@
     message: 'This article is not that good as the people say'
   }
 
+  const loginUser = (userId, cb) => {
+    User.findById(userId)
+    .then(user => {
+      chai.request(server)
+        .post('/api/v1/users/login')
+        .send({
+          email: user.email,
+          password: user.password
+        })
+        .end((err, res) => {
+          cb(err, res.body.user, res.body.token)
+        })
+    })
+    .catch((err) => cb(err))
+  }
+
   const createUser = (user, cb) => {
     let userObj = new User(user)
     userObj.save((err, doc) => {
@@ -115,6 +131,7 @@
   }
 
   exports.createUser = createUser
+  exports.loginUser = loginUser
   exports.createArticle = createArticle
   exports.user = user
   exports.admin = admin

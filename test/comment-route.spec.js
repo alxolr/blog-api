@@ -67,6 +67,38 @@ MongoClient.connect(config.database, (err, db) => {
             })
         })
       })
+
+      describe('PUT /api/v1/articles/:articleId/comments/:commentId', () => {
+        it('should be able to update the message of the comment if author or admin', (done) => {
+          let articleId = '582f04d03f2df754121281c0'
+          let commentId = '58433b31797f430225f0a4ef'
+          let updateUrl = `/api/v1/articles/${articleId}/comments/${commentId}`
+          let message = 'Actually I do not like your comment'
+          let userId = '582ed973861cf81df5018309'
+
+          shared.loginUser(userId, (err, user, token) => {
+            chai.request(server)
+              .put(updateUrl)
+              .send({
+                token: token,
+                message: message
+              }).end((err, res) => {
+                console.log(res)
+                assert.equal(err, null)
+                res.status.should.be.eql(200)
+                db.collection('articles').find({
+                  'comments._id': new ObjectId(commentId),
+                }).toArray((err, items) => {
+                  assert.equal(err, null)
+                  let comments = items[0].comments
+                  let modified = comments.filter(comment => comment._id === commentId)[0]
+                  assert.equal(modified.message, message)
+                  done()
+                })
+              })
+          })
+        })
+      })
     })
   })
 })
