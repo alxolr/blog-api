@@ -12,7 +12,8 @@ const AuthorSchema = new Schema({
 const CommentsSchema = new Schema({
   author: AuthorSchema,
   message: { type: String, required: true },
-  created_at: { type: Date, default: new Date() }
+  created_at: { type: Date, default: new Date() },
+  updated_at: { type: Date, required: true }
 })
 
 const ArticleSchema = new Schema({

@@ -45,7 +45,8 @@ function updateComment (req, res) {
   Article.update(
     {'comments._id': commentId},
     {'$set': {
-      'comments.$.message': message
+      'comments.$.message': message,
+      'comments.$.updated_at': new Date()
     }}).then((result) => {
       return res.json(result)
     })
