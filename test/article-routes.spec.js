@@ -272,7 +272,6 @@ MongoClient.connect(config.database, (err, db) => {
           chai.request(server)
             .get(`/api/v1/articles?filter=${filter}`)
             .end((err, res) => {
-              console.log(res.body)
               assert.equal(err, null)
               res.status.should.be.eql(200)
               res.body.should.be.a('array')

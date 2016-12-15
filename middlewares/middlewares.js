@@ -5,6 +5,20 @@ const utils = require('../services/utils')
 const config = require('config')
 const Article = require('../models/article')
 
+const getFromAuthorizationBearer = (req) => {
+  if (req.headers.hasOwnProperty('authorization')) {
+    return req.headers.authorization.replace('Bearer ', '')
+  }
+}
+
+function getToken (req) {
+  let token = req.query.token || req.body.token ||
+              req.headers['x-access-token'] ||
+              getFromAuthorizationBearer(req)
+
+  return token
+}
+
 const tokenHighjacked = (res) => {
   return res.status(401).json({
     error: utils.messages.TOKEN_HIGHJACKED
@@ -12,7 +26,7 @@ const tokenHighjacked = (res) => {
 }
 
 const isAuthenticated = (req, res, next) => {
-  let token = req.query.token || req.body.token || req.headers['x-access-token']
+  let token = getToken(req)
   if (token) {
     jwt.verify(token, config.secretKey, function (err, decoded) {
       if (err) {
@@ -53,7 +67,7 @@ const isValidParameters = (req, res, next) => {
 
 const isAllowedOperation = (req, res, next) => {
   let userId = req.params.userId
-  let token = req.query.token || req.body.token || req.headers['x-access-token']
+  let token = getToken(req)
 
   jwt.verify(token, config.secretKey, (err, decoded) => {
     if (err) console.error(err)
