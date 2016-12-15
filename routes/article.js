@@ -8,6 +8,7 @@ const multer = require('multer')
 const path = require('path')
 const fe = require('../services/filter-extractor')
 const qb = require('../services/query-builder')
+const config = require('config')
 const uploadFile = require('../services/upload-file')
 const JSONStream = require('JSONStream')
 const upload = multer({
@@ -232,11 +233,13 @@ function softDeleteArticle (req, res) {
 }
 
 function findArticles (req, res) {
-  let filters = fe.extract(req.query.filter)
+  let filter = req.query.filter || null
+  let filters = fe.extract(filter)
   let limit = parseInt(req.query.limit) || null
   let offset = parseInt(req.query.offset) || null
+
   let query = qb.build(filters)
-  let results = Article.find(query)
+  let results = Article.find(query).sort({'updated_at': -1})
 
   if (offset) {
     results.offset(offset)
@@ -244,6 +247,8 @@ function findArticles (req, res) {
 
   if (limit) {
     results.limit(limit)
+  } else {
+    results.limit(config.perPage)
   }
 
   let stream = results.cursor() // will return a pipeable stream

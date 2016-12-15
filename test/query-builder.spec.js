@@ -15,6 +15,10 @@ const configs = [
         '$gt': new Date('2016-09-15')
       }
     }
+  },
+  {
+    in: null,
+    out: {}
   }
 ]
 

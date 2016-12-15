@@ -2,5 +2,6 @@
   "database": "mongodb://localhost:27017/blog",
   "port": 3000,
   "secretKey": "MegaSuperSecretKeyImpossibleToCrack",
-  "salt": "oyoutamago"
+  "salt": "oyoutamago",
+  "perPage": 5
 }

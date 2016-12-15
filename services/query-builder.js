@@ -23,6 +23,7 @@ function isDate (value) {
 }
 
 module.exports.build = (filters) => {
+  if (!filters) return {}
   return filters.reduce((acc, filter) => {
     acc[filter.property] = buildOperatorValue(filter)
 
