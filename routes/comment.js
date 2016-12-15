@@ -14,6 +14,7 @@ router.route('/:articleId/comments')
 router.route('/:articleId/comments/:commentId')
   .all(mw.isAuthenticated)
   .put(updateComment)
+  .delete(deleteComment)
 
 function getComments (req, res) {
   let articleId = req.params.articleId
@@ -51,6 +52,18 @@ function updateComment (req, res) {
       return res.json(result)
     })
     .catch(handleError(res, 404))
+}
+
+function deleteComment (req, res) {
+  let articleId = req.params.articleId
+  let commentId = req.params.commentId
+
+  Article.update(
+    { _id: articleId },
+    { $pull: { comments: { _id: commentId } } },
+    { safe: true }
+  ).then((doc) => res.status(204).end())
+  .catch(handleError(res, 404))
 }
 
 function handleError (res, code) {

@@ -99,5 +99,28 @@ MongoClient.connect(config.database, (err, db) => {
         })
       })
     })
+
+    describe('DELETE /api/v1/articles/:articleId/comments/:commentId', () => {
+      it('should delete an existing comment given admin rights', (done) => {
+        shared.createUser(shared.admin, (err, admin, token) => {
+          let articleId = '582f04d03f2df754121281c0'
+          let commentId = '58433b3e2c08a70259deca1d'
+
+          chai.request(server)
+            .delete(`/api/v1/articles/${articleId}/comments/${commentId}`)
+            .set('Authorization', 'Bearer ' + token)
+            .end((err, res) => {
+              assert.equal(err, null)
+              res.status.should.be.eql(204) // success no content
+              db.collection('articles').find({"comments._id": new ObjectId(commentId)})
+                .toArray((err, docs) => {
+                assert.equal(err, null)
+                docs.length.should.be.eql(0)
+                done()
+              })
+            })
+        })
+      })
+    })
   })
 })
