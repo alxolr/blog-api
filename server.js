@@ -11,6 +11,7 @@
   let commentRoutes = require('./routes/comment')
   let morgan = require('morgan')
   let config = require('config')
+  let cors = require('corse')
 
   if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('combined'))
@@ -20,6 +21,8 @@
   mongoose.connect(config.database, (err) => {
     assert.equal(err, null)
   })
+
+  app.use(cors())
 
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({

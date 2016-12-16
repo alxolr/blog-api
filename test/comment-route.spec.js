@@ -68,7 +68,6 @@ MongoClient.connect(config.database, (err, db) => {
         })
       })
     })
-
     describe('PUT /api/v1/articles/:articleId/comments/:commentId', () => {
       it('should be able to update the message of the comment if author or admin', (done) => {
         let articleId = '582f04d03f2df754121281c0'
@@ -99,7 +98,6 @@ MongoClient.connect(config.database, (err, db) => {
         })
       })
     })
-
     describe('DELETE /api/v1/articles/:articleId/comments/:commentId', () => {
       it('should delete an existing comment given admin rights', (done) => {
         shared.createUser(shared.admin, (err, admin, token) => {
