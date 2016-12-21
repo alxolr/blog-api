@@ -16,12 +16,17 @@ router.route('/:articleId/comments/:commentId')
   .put(updateComment)
   .delete(deleteComment)
 
-function getComments (req, res) {
-  let articleId = req.params.articleId
+
+function getCommentsForArticleId (articleId, res) {
   Article.findById(articleId, 'comments', (err, result) => {
     if (err) return handleError(res, 404)(err)
     res.json(result.comments)
   })
+}
+
+function getComments (req, res) {
+  let articleId = req.params.articleId
+  return getCommentsForArticleId(articleId, res)
 }
 
 function addComment (req, res) {
@@ -35,7 +40,7 @@ function addComment (req, res) {
     }
   }
   Article.findOneAndUpdate({ _id: articleId }, {'$push': { comments: comment }})
-    .then(doc => res.json(doc.comments))
+    .then(doc => getCommentsForArticleId(articleId, res))
     .catch(handleError(res, 404))
 }
 
@@ -63,7 +68,7 @@ function deleteComment (req, res) {
     { $pull: { comments: { _id: commentId } } },
     { safe: true }
   ).then((doc) => res.status(204).end())
-  .catch(handleError(res, 404))
+    .catch(handleError(res, 404))
 }
 
 function handleError (res, code) {

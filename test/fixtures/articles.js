@@ -93,7 +93,7 @@ let articles = [
         lastname: 'Capca'
       },
       message: 'This article is not relevant at all',
-      created_at: new Date()
+      created_at: new Date(2015, 4, 11)
     }, {
       _id: new ObjectId('58433b31797f430225f0a4ef'),
       author: {
@@ -102,7 +102,7 @@ let articles = [
         lastname: 'Scripca'
       },
       message: 'I actually liked it',
-      created_at: new Date()
+      created_at: new Date(2016, 4, 11)
     }]
   }
 ]

@@ -53,6 +53,7 @@ MongoClient.connect(config.database, (err, db) => {
             .end((err, res) => {
               assert.equal(err, null)
               res.status.should.be.eql(200)
+              res.body.length.should.be.eql(1)
 
               db.collection('articles').find({
                 _id: new ObjectId(articleId)
