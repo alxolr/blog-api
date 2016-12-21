@@ -259,8 +259,8 @@ MongoClient.connect(config.database, (err, db) => {
           .end((err, res) => {
             assert.equal(err, null)
             res.status.should.be.eql(200)
-            res.body.should.be.a('array')
-            res.body.length.should.be.eql(5)
+            res.body.articles.should.be.a('array')
+            res.body.articles.length.should.be.eql(5)
             done()
           })
       })
@@ -274,7 +274,7 @@ MongoClient.connect(config.database, (err, db) => {
             .end((err, res) => {
               assert.equal(err, null)
               res.status.should.be.eql(200)
-              res.body.should.be.a('array')
+              res.body.articles.should.be.a('array')
               done()
             })
         })
@@ -286,8 +286,8 @@ MongoClient.connect(config.database, (err, db) => {
           .end((err, res) => {
             assert.equal(err, null)
             res.status.should.be.eql(200)
-            res.body.should.be.a('array')
-            res.body.length.should.be.eql(5)
+            res.body.articles.should.be.a('array')
+            res.body.articles.length.should.be.eql(5)
             done()
           })
       })
@@ -298,8 +298,8 @@ MongoClient.connect(config.database, (err, db) => {
           .end((err, res) => {
             assert.equal(err, null)
             res.status.should.be.eql(200)
-            res.body.should.be.a('array')
-            res.body.length.should.be.eql(2)
+            res.body.articles.should.be.a('array')
+            res.body.articles.length.should.be.eql(2)
             done()
           })
       })
@@ -310,7 +310,7 @@ MongoClient.connect(config.database, (err, db) => {
           .end((err, res) => {
             assert.equal(err, null)
             res.status.should.be.eql(200)
-            res.body.length.should.be.eql(2)
+            res.body.articles.length.should.be.eql(2)
             done()
           })
       })

@@ -235,23 +235,26 @@ function softDeleteArticle (req, res) {
 function findArticles (req, res) {
   let filter = req.query.filter || null
   let filters = fe.extract(filter)
-  let limit = parseInt(req.query.limit) || null
-  let offset = parseInt(req.query.offset) || null
-
+  let limit = parseInt(req.query.limit) || config.perPage
+  let offset = parseInt(req.query.offset) || 0
   let query = qb.build(filters)
-  let results = Article.find(query).sort({'updated_at': -1})
 
-  if (offset) {
-    results.offset(offset)
-  }
-
-  if (limit) {
+  Article.find(query).count().exec((err, count) => {
+    if (err) handleErrors(res)(404)
+    let results = Article.find(query).sort({'updated_at': -1})
     results.limit(limit)
-  } else {
-    results.limit(config.perPage)
-  }
+    results.skip(offset)
 
-  let stream = results.cursor() // will return a pipeable stream
-  res.set('Content-Type', 'application/json')
-  stream.pipe(JSONStream.stringify()).pipe(res)
+    results.exec((err, articles) => {
+      if (err) handleErrors(res)(404)
+      let response = {
+        count: count,
+        limit: limit,
+        offset: offset,
+        articles: articles
+      }
+
+      return res.json(response)
+    })
+  })
 }
