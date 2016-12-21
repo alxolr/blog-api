@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const utils = require('../services/utils')
 const config = require('config')
 const Article = require('../models/article')
+const cryptography = require('../services/cryptography')(config)
 
 const getFromAuthorizationBearer = (req) => {
   if (req.headers.hasOwnProperty('authorization')) {
@@ -35,7 +36,7 @@ const isAuthenticated = (req, res, next) => {
           message: utils.messages.TOKEN_EXPIRED
         })
       } else {
-        req.decoded = decoded
+        req.decoded = cryptography.decrypt(decoded)
         next()
       }
     })
@@ -71,7 +72,8 @@ const isAllowedOperation = (req, res, next) => {
 
   jwt.verify(token, config.secretKey, (err, decoded) => {
     if (err) console.error(err)
-    if ((userId === decoded._doc._id) || (decoded._doc.rights.indexOf('ADMIN') !== -1)) {
+    decoded = cryptography.decrypt(decoded)
+    if ((userId === decoded._id) || (decoded.rights.indexOf('ADMIN') !== -1)) {
       next()
     } else {
       return res.status(401).json({
@@ -106,7 +108,7 @@ const isArticleAuthor = (user, articleId) => {
 }
 
 const isAdminOrArticleAuthor = (req, res, next) => {
-  let user = req.decoded._doc
+  let user = req.decoded
   let articleId = req.params.articleId
 
   if (isAdmin(user)) {

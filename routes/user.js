@@ -5,6 +5,7 @@ const User = require('../models/user')
 const config = require('config')
 const utils = require('../services/utils')
 const security = require('../services/security')(config)
+const cryptography = require('../services/cryptography')(config)
 const jwt = require('jsonwebtoken')
 const mw = require('../middlewares/middlewares')
 
@@ -35,7 +36,8 @@ function createUser (req, res) {
 
 function generateTokenForUser (user, res) {
   delete user.password
-  let token = jwt.sign(user, config.secretKey, {
+  let encoded = cryptography.encrypt(user)
+  let token = jwt.sign(encoded, config.secretKey, {
     expiresIn: 36000
   })
 

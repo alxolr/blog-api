@@ -119,9 +119,9 @@ function createArticle (req, res) {
   let article = new Article(req.body)
 
   article.author = {
-    _id: req.decoded._doc._id,
-    name: req.decoded._doc.name,
-    surname: req.decoded._doc.surname
+    _id: req.decoded._id,
+    name: req.decoded.firstname,
+    surname: req.decoded.lastname
   }
 
   if (req.file !== undefined) {

@@ -3,5 +3,6 @@
   "port": 8888,
   "secretKey": "MegaSuperSecretKeyImpossibleToCrack",
   "salt": "oyoutamago",
-  "perPage": 5
+  "perPage": 5,
+  "cipher": "@s1fa#f123!!2"
 }

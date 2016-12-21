@@ -34,9 +34,9 @@ function addComment (req, res) {
   let comment = {
     message: req.body.message,
     author: {
-      _id: req.decoded._doc._id,
-      firstname: req.decoded._doc.firstname,
-      lastname: req.decoded._doc.lastname
+      _id: req.decoded._id,
+      firstname: req.decoded.firstname,
+      lastname: req.decoded.lastname
     }
   }
   Article.findOneAndUpdate({ _id: articleId }, {'$push': { comments: comment }})
