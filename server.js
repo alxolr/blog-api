@@ -11,7 +11,7 @@
   let commentRoutes = require('./routes/comment')
   let morgan = require('morgan')
   let config = require('config')
-  let cors = require('corse')
+  let cors = require('cors')
 
   if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('combined'))
