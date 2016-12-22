@@ -10,7 +10,6 @@ const fe = require('../services/filter-extractor')
 const qb = require('../services/query-builder')
 const config = require('config')
 const uploadFile = require('../services/upload-file')
-const JSONStream = require('JSONStream')
 const upload = multer({
   dest: '/tmp/'
 })
