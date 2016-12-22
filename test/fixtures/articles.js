@@ -3,6 +3,22 @@ const utils = require('../../services/utils')
 
 let articles = [
   {
+    _id: new ObjectId('585bdd93cacd525c91e177dd'),
+    title: 'Some random softedelete article',
+    category: ['articles', 'frontend'],
+    slug: utils.slugify('Some random softedelete article'),
+    body: `I do expect this stuff to be softedeleted very fast`,
+    author: {
+      _id: '582ed973861cf81df5018309',
+      firstname: 'Alex',
+      lastname: 'Scripca'
+    },
+    created_at: new Date(2016, 12, 21),
+    updated_at: new Date(),
+    deleted_at: new Date(),
+    comments: []
+  },
+  {
     _id: new ObjectId('582f0266019cd449e3771955'),
     title: 'Angular is the mother of all js projects',
     category: ['articles', 'frontend'],

@@ -264,7 +264,6 @@ MongoClient.connect(config.database, (err, db) => {
             done()
           })
       })
-
       it('should be able to `filter` the article collection', (done) => {
         let filter = 'created_at::>2016-09-15'
         shared.createArticle(shared.user, shared.article, (err, article, token) => {
@@ -311,6 +310,18 @@ MongoClient.connect(config.database, (err, db) => {
             assert.equal(err, null)
             res.status.should.be.eql(200)
             res.body.articles.length.should.be.eql(2)
+            done()
+          })
+      })
+
+      it('should not return the softedeleted articles', done => {
+        let filter = 'created_at::>=2016-12-21'
+        chai.request(server)
+          .get(`/api/v1/articles?filter=${filter}`)
+          .end((err, res) => {
+            assert.equal(err, null)
+            res.status.should.be.eql(200)
+            res.body.articles.length.should.be.eql(0)
             done()
           })
       })

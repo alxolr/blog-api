@@ -238,6 +238,10 @@ function findArticles (req, res) {
   let limit = parseInt(req.query.limit) || config.perPage
   let offset = parseInt(req.query.offset) || 0
   let query = qb.build(filters)
+  // remove the softdeleted elements
+  query.deleted_at = {
+    '$exists': false
+  }
 
   Article.find(query).count().exec((err, count) => {
     if (err) handleErrors(res)(404)
