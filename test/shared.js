@@ -44,7 +44,6 @@
   const loginUser = (userId, cb) => {
     User.findById(userId)
     .then(user => {
-      // console.log(user)
       chai.request(server)
         .post('/api/v1/users/login')
         .send({

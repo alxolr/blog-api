@@ -135,18 +135,18 @@ function createArticle (req, res) {
 
 function saveArticle (article, res) {
   article.save((err) => {
-    if (!err) {
-      res.json(article)
+    if (err) {
+      return handleErrors(res)(err)
     } else {
-      handleErrors(res)
+      return res.json(article)
     }
   })
 }
 
 function handleErrors (res) {
-  return (err) => {
+  return function (err) {
     res.status(400).json({
-      error: err
+      error: utils.listifyErrors(err)
     })
   }
 }

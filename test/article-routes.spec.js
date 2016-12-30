@@ -42,7 +42,22 @@ MongoClient.connect(config.database, (err, db) => {
             done()
           })
       })
-
+      it('should return an apropriate message when title or body missing', done => {
+        shared.createUser(shared.user, (err, user, token) => {
+          assert.equal(err, null)
+          chai.request(server)
+            .post('/api/v1/articles')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+              body: shared.article.body
+            })
+            .end((err, res) => {
+              assert.notEqual(err, null)
+              res.body.should.have.property('error')
+              done()
+            })
+        })
+      })
       it('should create the article if token provided', (done) => {
         shared.createUser(shared.user, (err, user, token) => {
           assert.equal(err, null)
@@ -217,7 +232,7 @@ MongoClient.connect(config.database, (err, db) => {
         })
       })
 
-      it('should should not return the details of a softdeleted article', (done) => {
+      it('should not return the details of a softdeleted article', (done) => {
         let article = Object.assign({}, shared.article)
         article.deleted_at = new Date()
         shared.createArticle(shared.user, article, (err, article, token) => {
