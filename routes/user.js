@@ -14,12 +14,15 @@ module.exports = router
 router.post('/', createUser)
 router.post('/login', loginUser)
 
-/**
+router.route('/:userId')
+  .all(mw.isValidParameters, mw.isAuthenticated, mw.isAllowedOperation)
+  /**
  * @api {get} /api/v1/users/:id Request User information
  * @apiVersion 1.0.0
  * @apiName GetUser
  * @apiGroup Users
  * @apiParam {String} id Users unique ID.
+ * @apiPermission ADMIN | USER
  * @apiHeaderExample {json} Headers:
  * {
  *   "Authorization": "Bearer token",
@@ -28,19 +31,44 @@ router.post('/login', loginUser)
  * @apiSuccessExample {json} Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "_id": "582ed973861cf81df5018309",
- *   "email": "ascripca@joli.com",
- *   "firstname": "Alex",
- *   "lastname": "Scripca",
- *   "created_at": "2014-11-22T22:00:00.000Z",
- *   "updated_at": "2014-11-22T22:00:00.000Z",
- *   "is_subscribed": true,
- *   "rights": [USER]
+ *     "_id": "582ed973861cf81df5018309",
+ *     "email": "ascripca@joli.com",
+ *     "firstname": "Alex",
+ *     "lastname": "Scripca",
+ *     "created_at": "2014-11-22T22:00:00.000Z",
+ *     "updated_at": "2014-11-22T22:00:00.000Z",
+ *     "is_subscribed": true,
+ *     "rights": [USER]
  * }
  */
-router.route('/:userId')
-  .all(mw.isValidParameters, mw.isAuthenticated, mw.isAllowedOperation)
   .get(getUser)
+
+  /**
+ * @api {put} /api/v1/users/:id Update User information
+ * @apiVersion 1.0.0
+ * @apiName UpdateUser
+ * @apiGroup Users
+ * @apiParam {String} id Users unique ID.
+ * @apiPermission ADMIN | USER
+ * @apiHeaderExample {json} Headers:
+ * {
+ *   "Authorization": "Bearer token",
+ *   "Content-Type": "application/json"
+ * }
+ * @apiSampleRequest http://localhost:3000/api/v1/users/:id
+ * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *     "_id": "582ed973861cf81df5018309",
+ *     "email": "ascripca@joli.com",
+ *     "firstname": "Alex",
+ *     "lastname": "Scripca",
+ *     "created_at": "2014-11-22T22:00:00.000Z",
+ *     "updated_at": "2014-11-22T22:00:00.000Z",
+ *     "is_subscribed": true,
+ *     "rights": [USER]
+ * }
+ */
   .put(updateUser)
   .delete(deleteUser)
 
