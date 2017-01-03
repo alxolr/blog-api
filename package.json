@@ -15,7 +15,8 @@
     "jsonwebtoken": "^7.1.7",
     "mongoose": "^4.5.8",
     "morgan": "^1.7.0",
-    "multer": "^1.2.0"
+    "multer": "^1.2.0",
+    "voca": "^1.1.0"
   },
   "scripts": {
     "start": "export NODE_ENV=dev && node server.js",
