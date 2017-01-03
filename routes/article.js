@@ -37,13 +37,17 @@ router.get('', findArticles)
  * @apiParam {String} title Article title
  * @apiParam {String} body Article body
  * @apiParam {String} [image] Image for the article
- * @apiParam {String} token Access Token
  *
  * @apiParamExample {json} Request-Example:
  *     {
  *       "title": "Interesting awesome title",
  *       "body": "Here will be the body of the article",
  *       "token": "anexampleoftoken"
+ *     }
+  *@apiHeader (Headers) {String} Authorization Bearer token.
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer token"
  *     }
  *
  * @apiUse ArticleSuccess
@@ -54,7 +58,7 @@ router.route('/:articleId([0-9a-f]{24})')
   /**
    * @api {put} /api/v1/articles/{articleId}
    * @apiName updateArticle
-   * @apiVersion 1.0.0
+   * @apiVersion 0.0.1
    * @apiGroup Article
    * @apiPermission USER
    * @apiDescription Is updating the requested article which is defined by :articleId mongodb _id equivalent.
@@ -77,7 +81,7 @@ router.route('/:articleId([0-9a-f]{24})')
   /**
    * @api {get} /api/v1/articles/{articleId}
    * @apiName getArticleByArticleId
-   * @apiVersion 1.0.0
+   * @apiVersion 0.0.1
    * @apiGroup Article
    * @apiPermission GUEST
    * @apiDescription Is returning the request article by articleId.
@@ -89,7 +93,7 @@ router.route('/:articleId([0-9a-f]{24})')
   /**
    * @api {delete} /api/v1/articles/{articleId}
    * @apiName softDeleteArticle
-   * @apiVersion 1.0.0
+   * @apiVersion 0.0.1
    * @apiGroup Article
    * @apiPermission ARTICLE_AUTHOR
    *
@@ -104,7 +108,7 @@ router.route('/:slug')
   /**
    * @api {get} /api/v1/articles/{slug}
    * @apiName getArticleBySlug
-   * @apiVersion 1.0.0
+   * @apiVersion 0.0.1
    * @apiGroup Article
    * @apiPermission GUEST
    * @apiDescription Is returning the request article by slug.
@@ -235,7 +239,7 @@ function findArticles (req, res) {
   let filter = req.query.filter || null
   let filters = fe.extract(filter)
   let limit = parseInt(req.query.limit) || config.perPage
-  let offset = parseInt(req.query.offset) || 0
+  let skip = parseInt(req.query.skip) || 0
   let query = qb.build(filters)
   // remove the softdeleted elements
   query.deleted_at = {
@@ -246,14 +250,14 @@ function findArticles (req, res) {
     if (err) handleErrors(res)(404)
     let results = Article.find(query).sort({'updated_at': -1})
     results.limit(limit)
-    results.skip(offset)
+    results.skip(skip)
 
     results.exec((err, articles) => {
       if (err) handleErrors(res)(404)
       let response = {
         count: count,
         limit: limit,
-        offset: offset,
+        skip: skip,
         articles: articles
       }
 

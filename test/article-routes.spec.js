@@ -324,6 +324,8 @@ MongoClient.connect(config.database, (err, db) => {
           .end((err, res) => {
             assert.equal(err, null)
             res.status.should.be.eql(200)
+            res.body.should.have.property('skip')
+            res.body.should.have.property('limit')
             res.body.articles.length.should.be.eql(2)
             done()
           })
