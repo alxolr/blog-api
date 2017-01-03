@@ -13,6 +13,31 @@ module.exports = router
 
 router.post('/', createUser)
 router.post('/login', loginUser)
+
+/**
+ * @api {get} /api/v1/users/:id Request User information
+ * @apiVersion 1.0.0
+ * @apiName GetUser
+ * @apiGroup Users
+ * @apiParam {String} id Users unique ID.
+ * @apiHeaderExample {json} Headers:
+ * {
+ *   "Authorization": "Bearer token",
+ *   "Content-Type": "application/json"
+ * }
+ * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "_id": "582ed973861cf81df5018309",
+ *   "email": "ascripca@joli.com",
+ *   "firstname": "Alex",
+ *   "lastname": "Scripca",
+ *   "created_at": "2014-11-22T22:00:00.000Z",
+ *   "updated_at": "2014-11-22T22:00:00.000Z",
+ *   "is_subscribed": true,
+ *   "rights": [USER]
+ * }
+ */
 router.route('/:userId')
   .all(mw.isValidParameters, mw.isAuthenticated, mw.isAllowedOperation)
   .get(getUser)
