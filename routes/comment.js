@@ -26,12 +26,13 @@ function getComment (req, res) {
     'comments._id': commentId
   }, {
     'comments.$': 1
-  }, (err, docs) => {
-    if (err) handleError(res, 404)(err)
-    if (docs.comments.length) {
-      res.json(docs.comments[0])
+  }).then((docs) => {
+    if (docs && docs.comments.length) {
+      return res.json(docs.comments[0])
     }
+    throw Error(utils.messages.COMMENT_NOT_FOUND)
   })
+  .catch(err => handleError(res, 404)(err))
 }
 
 function getCommentsForArticleId (articleId, res) {
@@ -90,6 +91,6 @@ function deleteComment (req, res) {
 
 function handleError (res, code) {
   return function (err) {
-    return res.status(code).json({error: utils.listifyErrors(err)})
+    return res.status(code).json({ error: err.message })
   }
 }

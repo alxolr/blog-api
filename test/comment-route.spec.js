@@ -14,6 +14,7 @@ const ObjectId = require('mongodb').ObjectID
 const config = require('config')
 const shared = require('./shared')
 const server = require('../server')
+const utils = require('../services/utils')
 
 chai.use(chaiHttp)
 
@@ -39,19 +40,29 @@ MongoClient.connect(config.database, (err, db) => {
           })
       })
 
-      it('should return the comment by id', (done) => {
+      it('should return 200 OK when requesting a valid comment by id', (done) => {
         let articleId = '582f04d03f2df754121281c0'
         let commentId = '58433b3e2c08a70259deca1d'
-
         chai.request(server)
           .get(`/api/v1/articles/${articleId}/comments/${commentId}`)
           .end((err, res) => {
-            // console.log(res)
             assert.equal(err, null)
             res.status.should.be.eql(200)
             res.body.should.have.property('message').eql('This article is not relevant at all')
             done()
           })
+      })
+      it('should return 404 when requesting a comment with invalid _id', (done) => {
+         let articleId = '582f04d03f2df754121181c0'
+         let commentId = '58433b3e2c01170259deca1d'
+          chai.request(server)
+            .get(`/api/v1/articles/${articleId}/comments/${commentId}`)
+            .end((err, res) => {
+              assert.notEqual(err, null)
+              res.status.should.be.eql(404)
+              res.body.should.have.property('error').eql(utils.messages.COMMENT_NOT_FOUND)
+              done()
+            })
       })
     })
     describe('POST /api/v1/articles/:articleId/comments', () => {

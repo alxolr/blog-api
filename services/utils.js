@@ -37,6 +37,7 @@ module.exports = {
     TOKEN_HIGHJACKED: 'Access denied. Provided token was highjacked',
     MONGOID_INVALID: 'Provided ID is not a valid one.',
     ARTICLE_NOT_FOUND: 'Requested article was not found',
+    COMMENT_NOT_FOUND: 'Requested comment was not found',
     COMMENT_CREATE_FAIL: 'The comment was not been succesfull'
   }
 }
