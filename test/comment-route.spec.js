@@ -38,6 +38,21 @@ MongoClient.connect(config.database, (err, db) => {
             done()
           })
       })
+
+      it('should return the comment by id', (done) => {
+        let articleId = '582f04d03f2df754121281c0'
+        let commentId = '58433b3e2c08a70259deca1d'
+
+        chai.request(server)
+          .get(`/api/v1/articles/${articleId}/comments/${commentId}`)
+          .end((err, res) => {
+            // console.log(res)
+            assert.equal(err, null)
+            res.status.should.be.eql(200)
+            res.body.should.have.property('message').eql('This article is not relevant at all')
+            done()
+          })
+      })
     })
     describe('POST /api/v1/articles/:articleId/comments', () => {
       it('should create comment by a registered user', (done) => {
@@ -111,12 +126,12 @@ MongoClient.connect(config.database, (err, db) => {
             .end((err, res) => {
               assert.equal(err, null)
               res.status.should.be.eql(204) // success no content
-              db.collection('articles').find({"comments._id": new ObjectId(commentId)})
+              db.collection('articles').find({'comments._id': new ObjectId(commentId)})
                 .toArray((err, docs) => {
-                assert.equal(err, null)
-                docs.length.should.be.eql(0)
-                done()
-              })
+                  assert.equal(err, null)
+                  docs.length.should.be.eql(0)
+                  done()
+                })
             })
         })
       })

@@ -12,10 +12,27 @@ router.route('/:articleId/comments')
   .post(mw.isAuthenticated, addComment)
 
 router.route('/:articleId/comments/:commentId')
-  .all(mw.isAuthenticated)
-  .put(updateComment)
-  .delete(deleteComment)
+  .get(getComment)
+  .put(mw.isAuthenticated, updateComment)
+  .delete(mw.isAuthenticated, deleteComment)
 
+
+function getComment (req, res) {
+  const commentId = req.params.commentId
+  const articleId = req.params.articleId
+
+  Article.findOne({
+    '_id': articleId,
+    'comments._id': commentId
+  }, {
+    'comments.$': 1
+  }, (err, docs) => {
+    if (err) handleError(res, 404)(err)
+    if (docs.comments.length) {
+      res.json(docs.comments[0])
+    }
+  })
+}
 
 function getCommentsForArticleId (articleId, res) {
   Article.findById(articleId, 'comments', (err, result) => {
