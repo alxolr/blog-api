@@ -16,7 +16,6 @@ router.route('/:articleId/comments/:commentId')
   .put(mw.isAuthenticated, updateComment)
   .delete(mw.isAuthenticated, deleteComment)
 
-
 function getComment (req, res) {
   const commentId = req.params.commentId
   const articleId = req.params.articleId
