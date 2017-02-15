@@ -241,18 +241,18 @@ function findArticles (req, res) {
   let limit = parseInt(req.query.limit) || config.perPage
   let skip = parseInt(req.query.skip) || 0
   let query = qb.build(filters)
-  // remove the softdeleted elements
+
   query.deleted_at = {
     '$exists': false
   }
 
-  Article.find(query).count().exec((err, count) => {
+  Article.find(query).count().lean().exec((err, count) => {
     if (err) handleErrors(res)(404)
     let results = Article.find(query).sort({'updated_at': -1})
     results.limit(limit)
     results.skip(skip)
 
-    results.exec((err, articles) => {
+    results.lean().exec((err, articles) => {
       if (err) handleErrors(res)(404)
       let response = {
         count: count,
