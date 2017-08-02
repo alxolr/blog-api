@@ -1,45 +1,42 @@
-(() => {
-  'use strict'
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const assert = require('assert');
+const userRoutes = require('./routes/user');
+const articleRoutes = require('./routes/article');
+const commentRoutes = require('./routes/comment');
+const morgan = require('morgan');
+const config = require('config');
+const cors = require('cors');
 
-  let express = require('express')
-  let app = express()
-  let bodyParser = require('body-parser')
-  let mongoose = require('mongoose')
-  let assert = require('assert')
-  let userRoutes = require('./routes/user')
-  let articleRoutes = require('./routes/article')
-  let commentRoutes = require('./routes/comment')
-  let morgan = require('morgan')
-  let config = require('config')
-  let cors = require('cors')
+const app = express();
 
-  if (process.env.NODE_ENV !== 'test') {
-    app.use(morgan('combined'))
-  }
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('combined'));
+}
 
-  mongoose.Promise = global.Promise
-  mongoose.connect(config.database, (err) => {
-    assert.equal(err, null)
-  })
+mongoose.Promise = global.Promise;
+mongoose.connect(config.database, (err) => {
+  assert.equal(err, null);
+});
 
-  app.use(cors())
+app.use(cors());
 
-  // parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({
-    extended: false
-  }))
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+  extended: false,
+}));
 
-  // parse application/json
-  app.use(bodyParser.json())
-  app.use('/images', express.static('images'))
-  app.use('/coverage', express.static('coverage/lcov-report/'))
-  app.use('/api/doc', express.static('doc/'))
+// parse application/json
+app.use(bodyParser.json());
+app.use('/images', express.static('images'));
+// app.use('/coverage', express.static('coverage/lcov-report/'));
+// app.use('/api/doc', express.static('doc/'));
 
-  app.use('/api/v1/users', userRoutes)
-  app.use('/api/v1/articles', articleRoutes)
-  app.use('/api/v1/articles/', commentRoutes)
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/articles', articleRoutes);
+app.use('/api/v1/articles/', commentRoutes);
 
-  app.listen(config.port)
+app.listen(config.port);
 
-  module.exports = app
-})()
+module.exports = app;
