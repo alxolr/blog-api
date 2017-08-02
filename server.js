@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const assert = require('assert');
 const userRoutes = require('./routes/user');
 const articleRoutes = require('./routes/article');
-const commentRoutes = require('./routes/comment');
 const morgan = require('morgan');
 const config = require('config');
 const cors = require('cors');
@@ -30,12 +29,9 @@ app.use(bodyParser.urlencoded({
 // parse application/json
 app.use(bodyParser.json());
 app.use('/images', express.static('images'));
-// app.use('/coverage', express.static('coverage/lcov-report/'));
-// app.use('/api/doc', express.static('doc/'));
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/articles', articleRoutes);
-app.use('/api/v1/articles/', commentRoutes);
 
 app.listen(config.port);
 
